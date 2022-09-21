@@ -1,0 +1,20 @@
+# Hidden system files
+.DS_Store
+
+# Hide idea folder
+.idea/
+
+# Help files
+*/docs/
+
+# High size files
+
+
+# Matlab files
+*.asv
+
+# R files
+*.Rhistory
+
+# Keynote files
+*.key
