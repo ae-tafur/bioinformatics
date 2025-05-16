@@ -6,7 +6,17 @@ El modelado por homología es una técnica utilizada para predecir la estructura
 
 2. De click en ```startmodeling```
 
-3. En el promt pegue la secuencia de la proteina de la cual quiere predecir su estructura tridimensional
+3. En el promt pegue la secuencia de la proteina de la cual quiere predecir su estructura tridimensional. Para este ejercicio usaremos la sigueinte secuencia.
+   
+    ```
+    >Pathogenic Mistery Protein
+    MELHILFFILAGLLIAVLISFSLWSARREKSRIFSNTFSTRPPSTPINNIVSDVPPSLNPQSYAQT
+    TGQHGETEADNPVQIQQEVESSLREIKINLPGQDSAAYQSKVEETPIYSGQPVLPVQPQYQTQVQY
+    QTQPQHIEPAFTQAPQSPIAEATSVLEQSVEELERQAAQGDVDIYSDASVRVELAKNSMQADSVAE
+    QKPVAENNMLTLYVVAPEGQQFRGDYVVQSLEALGFQYGEYQIFHRHQHMGNSASPVIFSVANMMQ
+    PGIFDLTKIEHFSTVGLVLFMHLPSEGNDVVNFKLLLKTTENLAQALGGFVLNEHREIFDENSRQS
+    YLARVS
+    ```
 
 4. Defina un titulo para el trabajo y si lo desea puede escribir un correo para ser notificado cual es trabajo termine, esto puede tomar algunos minutos dependiendo del servidor y la lista de espera.
 
