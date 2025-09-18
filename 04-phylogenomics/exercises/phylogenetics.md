@@ -135,8 +135,9 @@ tree.nwk     # Archivo del árbol en formato Newick
 ```
 
 ## ❓ Preguntas para reflexionar
-1. ¿Las secuencias de E. coli se agruparon juntas como se esperaba?
-2. ¿Qué tan diferentes son E. coli y Salmonella Typhi en el árbol?
-3. ¿Por qué Bacillus subtilis aparece en una rama más alejada?
+1. ¿Las secuencias de _E. coli_ se agruparon juntas como se esperaba?
+2. ¿Qué tan diferentes son _E. coli_ y _Salmonella enterica serovar Typhi_ en el árbol?
+3. ¿Por qué _Bacillus subtilis_ aparece en una rama más alejada?
 4. ¿Qué representan los valores de bootstrap en el árbol?
 5. ¿Qué aplicaciones prácticas tiene el análisis de 16S rRNA en microbiología clínica y ambiental?
+6. ¿Cúal es el microorganismo desconocido?
