@@ -1,18 +1,11 @@
-# 🧬 Práctica: Análisis de secuencias 16S rRNA y construcción de un árbol filogenético en MEGA
+# 🧬 Práctica: Análisis de secuencias 16S rRNA y construcción de un árbol filogenético
 
 Para realizar la siguiente práctica por favor use el software **MEGA X**, disponible de forma gratuita en el siguiente enlace oficial:  
 <https://www.megasoftware.net/>  
 
 El programa se puede instalar en sistemas operativos **Windows**, **macOS** o **Linux**. Si no lo tiene instalado previamente, descárguelo e instálelo antes de comenzar la práctica.  
 
-# Práctica de análisis 16S rRNA y construcción de árboles filogenéticos
-
-Para realizar la siguiente práctica por favor use el software **MEGA X**, disponible de forma gratuita en el siguiente enlace oficial:  
-<https://www.megasoftware.net/>  
-
-El programa se puede instalar en sistemas operativos **Windows**, **macOS** o **Linux**. Si no lo tiene instalado previamente, descárguelo e instálelo antes de comenzar la práctica.  
-
-# Práctica de análisis 16S rRNA y construcción de árboles filogenéticos
+## Introducción
 
 El análisis del gen 16S rRNA es una de las herramientas más utilizadas en microbiología para estudiar la diversidad bacteriana y establecer relaciones evolutivas entre especies. Este gen se encuentra en todos los procariotas y contiene regiones altamente conservadas junto con otras más variables, lo que lo convierte en un marcador molecular ideal para la identificación y clasificación bacteriana.  
 
