@@ -100,7 +100,61 @@ AATGCTACGGTGAATACGTTCCCGGGCCTTGTACACACCGCCCGTCACACCATGGGAGTGGGTTGCAAAA
 GAAGTAGGTAGCTTAACCTTCGGGAGGGCGCTTACCACTTTGTGATTCATGA
 ```
 
-### 3. Alineamiento múltiple en MEGA
+### 3. Identificación de la secuencia desconocida mediante BLAST (NCBI)
+
+Durante la práctica hemos añadido una secuencia 16S rRNA **desconocida** (tinción Gram negativa, bacilo) al archivo `16S_all.fasta`. Antes de construir el árbol filogenético definitivo, identifique esta secuencia usando **BLASTn** en NCBI para evaluar a qué microorganismo se parece más.
+
+#### 3.1 Preparación
+1. Copie la secuencia en FASTA (incluyendo la línea de encabezado `>`).
+
+#### 3.2 Ejecutar BLASTn en NCBI
+1. Ir a: **https://blast.ncbi.nlm.nih.gov/Blast.cgi** → **Nucleotide BLAST (BLASTn)**.  
+2. Pegue la secuencia en el recuadro *Enter Query Sequence* o use *Choose file* para subir `unknown_16S.fasta`.  
+3. En **Database**, seleccionar preferentemente:  
+   - **`16S ribosomal RNA sequences (Bacteria and Archaea)`** si está disponible, **o**  
+   - **`nr/nt (nucleotide collection)`** si desea búsqueda más amplia.  
+4. Ajustar parámetros recomendados:  
+   - **Max target sequences:** 10–50 (para ver varias coincidencias).  
+   - **Expect threshold (E-value):** 1e-5 (por defecto está bien).  
+   - Mantener el resto como predeterminado.  
+   - **Truco**: Seleccione la casilla abrir en una nueva ventana para no perder la página actual.
+5. Ejecutar **BLAST** y esperar a que aparezcan los resultados.
+
+#### 3.3 Interpretación de resultados
+Revise la lista de hits alineados y registre para las mejores coincidencias (ordenadas por bit score / % identidad):
+
+- **Accession / Organism** (nombre del organismo y acceso).  
+- **% Identity** (porcentaje de identidades en la alineación).  
+- **Query cover** (porcentaje de la secuencia consulta que está alineada).  
+- **Alignment length** (número de nucleótidos alineados).  
+- **E-value** y **Bit score**.  
+- **Descripción del acceso (strain/cepa)** si está disponible.
+
+Criterios prácticos para interpretación (reglas empíricas comunes en 16S):  
+- **≥ 99% identidad** y **query cover alta (≥ 95%)** → Muy probable correspondencia a la **misma especie**.  
+- **97–99% identidad** → Probable correspondencia a **misma especie o especie cercana**; revisar alineamiento completo y descripciones de cepas.  
+- **< 97% identidad** → Probable correspondencia **solo a nivel de género** o posible organismo no descrito con exactitud por 16S; se requieren genes adicionales o genómica completa para identificación de especie.
+
+> Nota: Estos umbrales son orientativos. La identificación definitiva puede requerir marcadores adicionales o análisis genómico.
+
+#### 3.4 Acciones tras BLAST
+1. Anote la **mejor coincidencia** (organismo, acceso, % identity, query cover). Incluya el enlace o accession (por ejemplo: `NR_XXXXX`) en su informe.  
+2. Si la mejor coincidencia concuerda con una de las seis especies objetivo (por ejemplo *Klebsiella pneumoniae*), anote la **probable identificación** y la evidencia (valores arriba).  
+3. Si la coincidencia es ambigua, considere:  
+   - Ejecutar BLAST contra la base `nr/nt` adicionalmente.  
+   - Comparar top-hits y sus alineamientos completos.  
+   - Construir un árbol filogenético que incluya las secuencias top-hit (descargue la referencia desde NCBI) para confirmación visual.  
+
+#### 3.5 Exportar y documentar resultados
+- Descargar y guardar la página de resultados BLAST (opción **Download** → formatos disponibles) como `unknown_blast_results.html` o `unknown_blast.tsv`.  
+- Registrar en la entrega: accession, nombre del mejor hit, % identity, query cover, E-value, y una breve conclusión (1–2 líneas) sobre la identificación probable.  
+- Incorporar la identificación (por ejemplo, `unknown -> Klebsiella pneumoniae (accession XXXXX)`) como etiqueta adicional en el árbol filogenético final o en el informe.
+
+#### 3.6 (Opcional) Re-evaluación filogenética
+Si BLAST sugiere que la secuencia desconocida pertenece a una de las especies incluidas en el experimento (p. ej. *E. coli*), vamos a construir el árbol filogenético y observar la posición de la secuencia desconocida frente a las secuencias de referencia descargadas: ¿se agrupa con la especie sugerida por BLAST? Esto proporciona una verificación filogenética visual de la llamada taxonómica.
+
+
+### 4. Alineamiento múltiple en MEGA
 1. Abrir MEGA X.
 2. Ir a: Align → Edit/Build Alignment.
 3. Crear un nuevo archivo de alineamiento seleccionando DNA como tipo de datos.
@@ -114,7 +168,7 @@ GAAGTAGGTAGCTTAACCTTCGGGAGGGCGCTTACCACTTTGTGATTCATGA
 16S_alignment.meg
 ```
 
-### 4. Construcción del árbol filogenético
+### 5. Construcción del árbol filogenético
 1. Abrir el archivo de alineamiento en MEGA.
 2. Ir a: Phylogeny → Construct/Test Maximum Likelihood Tree. 
    - Alternativa rápida: Neighbor-Joining Tree.
@@ -122,7 +176,7 @@ GAAGTAGGTAGCTTAACCTTCGGGAGGGCGCTTACCACTTTGTGATTCATGA
 4. Activar la opción de Bootstrap (500 repeticiones) para evaluar soporte estadístico.
 5. Generar el árbol.
 
-### 5. Visualización y exportación
+### 6. Visualización y exportación
 1. Explorar el árbol y verificar la agrupación:
 	- _E. coli_ debe agruparse con _Salmonella typhi_ y _K. pneumoniae_ (Proteobacterias γ).
 	- _Bacillus subtilis_ (Firmicutes) debe aparecer más distante.
