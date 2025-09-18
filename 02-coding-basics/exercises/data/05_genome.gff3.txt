@@ -1,0 +1,6 @@
+##gff-version 3
+chr1 . gene 100 900 . + . ID=gene1
+chr1 . mRNA 100 900 . + . ID=mrna1
+chr1 . gene 950 1500 . - . ID=gene2
+chr2 . gene 300 600 . + . ID=gene3
+chr2 . gene 700 1200 . - . ID=gene4

@@ -1,0 +1,6 @@
+Cepa,Antibiotico,Resultado
+E.coli,Ampicilina,R
+E.coli,Ciprofloxacina,S
+S.aureus,Ampicilina,R
+S.aureus,Eritromicina,I
+K.pneumoniae,Ampicilina,S
