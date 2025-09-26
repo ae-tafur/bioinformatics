@@ -201,6 +201,31 @@ plantearse sobre las lecturas de entrada son:
 -   ¿Necesito solicitar una nueva secuencia?
 -   ¿Es adecuada para el análisis que necesito hacer?
 
+Uno de los parametros importantes es la calidad de las lecturas. La calidad
+de las lecturas se representa mediante la puntuación Phred, que es una
+medida logarítmica de la probabilidad de que una base se haya llamado
+incorrectamente. La puntuación Phred (Q) se calcula utilizando la siguiente
+fórmula: 
+
+$Q = -10 \log_{10}(P)$
+
+donde P es la probabilidad de que la base se haya  llamado incorrectamente. 
+Por ejemplo, una puntuación Phred de 20 indica que hay un 1% de probabilidad 
+de que la base se haya llamado incorrectamente, mientras que una puntuación 
+de 30 indica una probabilidad del 0,1%.
+
+Acá te presento una tabla con los valores de calidad y su significado:
+
+#### Tabla 1. Calidad Phred
+| Nivel de calidad Phred (Q) | Probabilidad de error de base (Pe) | Precisión de la base |
+|----------------------------|------------------------------------|----------------------|
+| 10                         | 1 en 10                            | 90%                  |
+| 20                         | 1 en 100                           | 99%                  |
+| 30                         | 1 en 1000                          | 99.9%                |
+| 40                         | 1 en 10.000                        | 99.99%               |
+| 50                         | 1 en 100.000                       | 99.999%              |
+
+Ahora vamos a evaluar la calidad de las lecturas utilizando Falco:
 
 1. **Falco** (Galaxy version 1.2.4+galaxy0) con los siguientes
     parametros:
