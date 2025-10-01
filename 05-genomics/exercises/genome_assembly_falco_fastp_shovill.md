@@ -226,13 +226,20 @@ Acá te presento una tabla con los valores de calidad y su significado:
 | 40                         | 1 en 10.000                        | 99.99%               |
 | 50                         | 1 en 100.000                       | 99.999%              |
 
-Ahora vamos a evaluar la calidad de las lecturas utilizando Falco:
+Ahora vamos a evaluar la calidad de las lecturas utilizando Falco. Para usar 
+las herramientas en Galaxy, simplemente haga clic en `tools` en la parte 
+izquierda superior de la pantalla y busque la herramienta por su nombre en la
+barra de búsqueda. Luego, haga clic en el nombre de la herramienta para abrir
+el formulario de parámetros.
 
 4. **Falco** (Galaxy version 1.2.4+galaxy0) con los siguientes
     parametros:
 
     -   “Raw read data from your current history”: both `*_1.fastq`
-        and `*_2.fastq`
+        and `*_2.fastq`. Para seleccionar ambos archivos: de click en 
+        seleccionar multiples datasets (el icono con dos archivos ubicado en 
+        la parte izquierda del recuadro de selección de archivos)
+    - Luego Run Tool
 
 5. Revisa el archivo html de los resultados de Falco.
 
