@@ -325,8 +325,8 @@ mayor conectividad, pero los k-mers grandes darán mayor especificidad.
     siguientes parametros:
 
    - “Input reads type, collection or single library”: `Paired End`
-     - “Forward reads (R1)”: **fastp** `Read 1 output`
-     - “Reverse reads (R2)”: **fastp** `Read 2 output`
+     - “Forward reads (R1)”: **trimmomatic** `Read 1 paired output`
+     - “Reverse reads (R2)”: **trimmomatic** `Read 2 paired output`
    
 
 Nota: en otros ensambladores, una lista de valores k puede ser introducida, y el
