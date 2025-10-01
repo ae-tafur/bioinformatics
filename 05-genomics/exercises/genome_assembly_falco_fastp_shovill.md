@@ -301,6 +301,9 @@ salidas «emparejadas» y otra para las «no emparejadas» (como se ha descrito 
 Mantener el mismo orden y número de lecturas en los archivos fastq de salida filtrados 
 es esencial para muchas herramientas de análisis posteriores.
 
+7. Ahora es necesario volver a correr falco para evaluar si mejoró la calidad
+   de las lecturas. Use los archivos emparejados (paired) de trimmomatic.
+
 ### Ensamblar lecturas con Shovill
 
 Ahora que se ha determinado la calidad de las lecturas y se han filtrado 
@@ -318,7 +321,7 @@ longitud k. El ensamblador requiere que el usuario introduzca un valor de k
 (tamaño k-mer) para el proceso de ensamblaje. Los k-mers pequeños darán
 mayor conectividad, pero los k-mers grandes darán mayor especificidad.
 
-7. **Shovill** (Galaxy version 1.1.0+galaxy1) con los
+8. **Shovill** (Galaxy version 1.1.0+galaxy1) con los
     siguientes parametros:
 
    - “Input reads type, collection or single library”: `Paired End`
@@ -344,7 +347,7 @@ aproximación.
 Esta tabla es limitada, pero ahora recopilaremos estadísticas más
 básicas sobre nuestro ensamblaje.
 
-8. **Quast** (Galaxy version 5.2.0+galaxy1) con los siquientes
+9. **Quast** (Galaxy version 5.2.0+galaxy1) con los siquientes
     parametros:
 
     -   “Assembly mode”: `Co-assembly`
