@@ -104,29 +104,31 @@ errores y la simplificación de regiones repetidas.
 
 ## Procedimiento
 
+1.  Cree y nombre un nuevo historial para este tutorial. En la parte
+    superior derecha de sus pantallas encontraran un simbolo (+) donde
+    podrán crear una nueva historia y dando click en el simbolo de lapiz
+    podrá editar el nombre
+
 ### Cargar los reads
 
 Las lecturas han sido secuenciadas utilizando un instrumento de 
 secuenciación de ADN Illumina. Obtuvimos los 2 archivos que importamos 
 que finalizan en `_1` y `_2`
 
-1.  Cree y nombre un nuevo historial para este tutorial. En la parte
-    superior derecha de sus pantallas encontraran un simbolo (+) donde
-    podrán crear una nueva historia y dando click en el simbolo de lapiz
-    podrá editar el nombre
-
-Importa desde Zenodo o desde la biblioteca de datos los archivos, solo 
-seleccione un set de datos para esta practicas. Para
-esto de click en `Upload` en la parte superior izquierda de las
-pantallas. Alli luego mantenga la pestaña `regular` y en la parte
-inferior del lado derecho de click en `Paste/Fecth data`. Luego copie
-los link de abajo y continuar. Cierre la ventana y luego en la parte
-derecha podrá ver que se estan cargando los archivos, espere a que este
-en verde. Esto indica que ya esta listo. Naranja indica que esta en
-proceso y rojo que no se pudo realizar y debe repetir el cargue.
+2. Vamos a importar desde Zenodo o desde la biblioteca de datos los 
+archivos. Para esto, en galaxy, de click en `Upload` en la parte superior 
+izquierda de las  pantalla. Alli luego mantenga la pestaña `regular` y en 
+la parte inferior del lado derecho de click en `Paste/Fecth data`. Luego 
+copie los link de abajo (seleccione solo uno para esta practica) y click 
+en `start`. Una vez inicie el proceso, se observará un fondo verde. Cierre 
+la ventana y luego en la parte derecha podrá ver que se están cargando los
+archivos, espere a que este en verde. Esto indica que ya esta listo. Naranja 
+indica que esta en proceso y rojo que no se pudo realizar y debe repetir el 
+cargue.
 
 Para importar los archivos de *Staphylococcus aureus* desde Zenodo, copie y
 pegue los siguientes enlaces en la ventana de carga:
+
 ```         
 https://zenodo.org/records/17156735/files/DRR187559_1.fastq.gz
 https://zenodo.org/records/17156735/files/DRR187559_2.fastq.gz
@@ -165,8 +167,7 @@ wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR148/071/ERR14828471/ERR14828471_1.fas
 wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR148/071/ERR14828471/ERR14828471_2.fastq.gz
 ``` 
 
-
-2. Inspeccione el contenido de un conjunto de datos
+3. Inspeccione el contenido de un conjunto de datos
 
     **Pregunta**
 
@@ -227,13 +228,13 @@ Acá te presento una tabla con los valores de calidad y su significado:
 
 Ahora vamos a evaluar la calidad de las lecturas utilizando Falco:
 
-1. **Falco** (Galaxy version 1.2.4+galaxy0) con los siguientes
+4. **Falco** (Galaxy version 1.2.4+galaxy0) con los siguientes
     parametros:
 
     -   “Raw read data from your current history”: both `*_1.fastq`
         and `*_2.fastq`
 
-2. Revisa el archivo html de los resultados de Falco.
+5. Revisa el archivo html de los resultados de Falco.
 
 ```
 Falco combina estadísticas de calidad de todas las lecturas separadas y las 
@@ -269,32 +270,13 @@ En este caso, vamos a recortar los datos utilizando fastp [(Chen et al. 2018)](h
 
 - Filtrar las lecturas para conservar solo aquellas con al menos 30 bases: cualquier lectura más corta complicará el ensamblaje.
 
-1. **fastp** ( Galaxy version 0.23.2+galaxy0) con los siguientes
+6. **Trimmomatic** (Galaxy Version 0.39+galaxy2) con los siguientes
     parametros:
-   - “Single-end or paired reads”: `Paired`
-     - “Input 1”: `DRR187559_1`
-     - “Input 2”: `DRR187559_2`
-   
-   - In “Filter Options”:
-     - In “Length filtering Options”:
-        - Length required: `30`
-   
-   - In “Read Modification Options”:
-     - In “Per read cuitting by quality options”:
-	     - Cut by quality in front (5’): `Yes`
-	     - Cut by quality in front (3’): `Yes`
-	     - Cutting window size: `4`
-	     - Cutting mean quality: `20`
-   
-   - In “Output Options”:
-     - “Output JSON report”: `Yes` 
+   - “Single-end or paired reads”: `Paired-end (two separate input files)`
+     - “Input FASTQ file (R1/first of pair)”: `DRR187559_1`
+     - “Input FASTQ file (R2/second of pair)”: `DRR187559_2`
 
-2. Edit the tags of the fastp FASTQ outputs to
-   - Remove the `#unfiltered` tag
-   - Add a new tag `#filtered`
-
-fastp también genera un informe, similar al de Falco, útil para comparar el 
-impacto del recorte y el filtrado.
+*Nota*: Una vez que se ejecuta Trimmomatic, se generan cuatro archivos de salida:
 
 ### Ensamblar lecturas con Shovill
 
@@ -313,7 +295,7 @@ longitud k. El ensamblador requiere que el usuario introduzca un valor de k
 (tamaño k-mer) para el proceso de ensamblaje. Los k-mers pequeños darán
 mayor conectividad, pero los k-mers grandes darán mayor especificidad.
 
-1. **Shovill** (Galaxy version 1.1.0+galaxy1) con los
+7. **Shovill** (Galaxy version 1.1.0+galaxy1) con los
     siguientes parametros:
 
    - “Input reads type, collection or single library”: `Paired End`
@@ -339,7 +321,7 @@ aproximación.
 Esta tabla es limitada, pero ahora recopilaremos estadísticas más
 básicas sobre nuestro ensamblaje.
 
-1. **Quast** (Galaxy version 5.2.0+galaxy1) con los siquientes
+8. **Quast** (Galaxy version 5.2.0+galaxy1) con los siquientes
     parametros:
 
     -   “Assembly mode”: `Co-assembly`
