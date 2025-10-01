@@ -239,9 +239,9 @@ el formulario de parámetros.
         and `*_2.fastq`. Para seleccionar ambos archivos: de click en 
         seleccionar multiples datasets (el icono con dos archivos ubicado en 
         la parte izquierda del recuadro de selección de archivos)
-    - Luego Run Tool
+    - Luego `Run Tool`
 
-5. Revisa el archivo html de los resultados de Falco.
+5. Revisa el archivo html de los resultados de Falco. 2 para cada uno.
 
 ```
 Falco combina estadísticas de calidad de todas las lecturas separadas y las 
@@ -282,8 +282,24 @@ En este caso, vamos a recortar los datos utilizando fastp [(Chen et al. 2018)](h
    - “Single-end or paired reads”: `Paired-end (two separate input files)`
      - “Input FASTQ file (R1/first of pair)”: `DRR187559_1`
      - “Input FASTQ file (R2/second of pair)”: `DRR187559_2`
+   - Luego `Run Tool`
 
 *Nota*: Una vez que se ejecuta Trimmomatic, se generan cuatro archivos de salida:
+
+Para los datos emparejados, una ventaja particular de Trimmomatic es que conserva 
+el emparejamiento de las lecturas (de R1 y R2) en los archivos de salida filtrados:
+
+- Dos archivos FASTQ (R1-emparejado y R2-emparejado) contienen una lectura de 
+  cada par en la que ambos han superado el filtrado.
+- Además, dos archivos FASTQ (R1-sin emparejar y R2-sin emparejar) contienen 
+  lecturas en las que uno de los pares no superó los pasos de filtrado.
+
+Si la entrada consiste en una colección de conjuntos de datos con el par R1/R2 FASTQ,
+las salidas también incluirán dos colecciones de conjuntos de datos: una para las 
+salidas «emparejadas» y otra para las «no emparejadas» (como se ha descrito anteriormente).
+
+Mantener el mismo orden y número de lecturas en los archivos fastq de salida filtrados 
+es esencial para muchas herramientas de análisis posteriores.
 
 ### Ensamblar lecturas con Shovill
 
