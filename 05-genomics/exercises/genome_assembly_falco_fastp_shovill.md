@@ -356,6 +356,7 @@ básicas sobre nuestro ensamblaje.
     -   “Type of assembly”: `Genome`
     -   “Use a reference genome?”: `Yes`
     -   “Reference genome”: `GCF*.fna`
+    -   “Generage Circos plot”: `Yes`
     -   “Type of organism”: `Prokaryotes`
     -   “Lower Threshold”: `500`
     -   “Advanced options: Comma-separated list of contig length
