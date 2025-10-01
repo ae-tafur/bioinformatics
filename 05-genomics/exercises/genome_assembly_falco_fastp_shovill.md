@@ -119,12 +119,12 @@ que finalizan en `_1` y `_2`
 archivos. Para esto, en galaxy, de click en `Upload` en la parte superior 
 izquierda de las  pantalla. Alli luego mantenga la pestaña `regular` y en 
 la parte inferior del lado derecho de click en `Paste/Fecth data`. Luego 
-copie los link de abajo (seleccione solo uno para esta practica) y click 
-en `start`. Una vez inicie el proceso, se observará un fondo verde. Cierre 
-la ventana y luego en la parte derecha podrá ver que se están cargando los
-archivos, espere a que este en verde. Esto indica que ya esta listo. Naranja 
-indica que esta en proceso y rojo que no se pudo realizar y debe repetir el 
-cargue.
+copie los link de abajo (seleccione solo los datos de un microorganismo para 
+esta practica) y click en `start`. Una vez inicie el proceso, se observará 
+un fondo verde. Cierre la ventana y luego en la parte derecha podrá ver que 
+se están cargando los archivos, espere a que este en verde. Esto indica que 
+ya esta listo. Naranja indica que esta en proceso y rojo que no se pudo 
+realizar y debe repetir el cargue.
 
 Para importar los archivos de *Staphylococcus aureus* desde Zenodo, copie y
 pegue los siguientes enlaces en la ventana de carga:
