@@ -18,27 +18,68 @@ genoma (anotación estructural) y determina qué hacen esos genes
 (anotación funcional).
 
 Para ilustrar el proceso de anotación de un genoma bacteriano, tomamos
-un ensamblaje de un genoma bacteriano (muestra KUN1163) generado
-siguiendo un tutorial de ensamblaje de genomas bacterianos a partir de
-los datos producidos en «Complete Genome Sequences of Eight
-Methicillin-Resistant Staphylococcus aureus Strains Isolated from
-Patients in Japan» (Hikichi et al. 2019).
+un ensamblaje de dos genomas bacterianos para realizar esta practica. 
+Usaremos un ensamblaje de un genoma a partir de los datos producidos en:
 
-*Staphylococcus aureus* resistente a la meticilina (MRSA) es un patógeno
-importante que causa infecciones nosocomiales, y las manifestaciones
-clínicas de MRSA van desde la colonización asintomática de la mucosa
-nasal hasta la infección de tejidos blandos y la enfermedad invasiva
-fulminante. Aquí presentamos las secuencias genómicas completas de ocho
-cepas de SARM aisladas de pacientes en Japón.
+1. «Complete Genome Sequences of Eight Methicillin-Resistant _Staphylococcus 
+aureus_ Strains Isolated from Patients in Japan». [Hikichi et al. 2019](https://journals.asm.org/doi/10.1128/mra.01212-19):
+
+`
+Methicillin-resistant _Staphylococcus aureus_ (MRSA) is a major pathogen 
+causing nosocomial infections, and the clinical manifestations of MRSA 
+range from asymptomatic colonization of the nasal mucosa to soft tissue 
+infection to fulminant invasive disease. Here, we report the complete 
+genome sequences of eight MRSA strains isolated from patients in Japan.
+` 
+en esta practica utilizaremos los datos de la muestra KUN1163.
+
+2. «Epidemiological Genomics of _Klebsiella pneumoniae_ isolates from 
+hospitals across Colombia». [Medina et al. 2025](https://www.nature.com/articles/s44259-025-00127-x):
+
+`
+_Klebsiella pneumoniae_ is one of the most important nosocomial pathogens 
+worldwide. In Colombia, _K. pneumoniae_ has been identified as the second 
+most frequent microbial etiologic agent of healthcare-associated 
+infections. We conducted a prospective local study of 335  _K. 
+pneumoniae_ isolates in 26 nationwide hospitals from 2020 to 2021. 
+We found that the spread of carbapenem resistance was mediated by 
+successful clones belonging to sequence types (ST) such as ST11, ST1082, 
+and ST307, related to intra-hospital infections.
+`
+en esta practica utilizaremos los datos de la muestra G20000754.
 
 ## Procedimiento
 
+1.  Cree y nombre un nuevo historial para este tutorial. En la parte
+    superior derecha de sus pantallas encontraran un simbolo (+) donde
+    podrán crear una nueva historia y dando click en el simbolo de lapiz
+    podrá editar el nombre
+
 ### Cargue los datos
 
-Importe el archivo contig desde Zenodo o desde las bibliotecas de datos
-compartidos Galaxy:
+2. Vamos a importar desde Zenodo o desde la biblioteca de datos los 
+archivos. Para esto, en galaxy, de click en `Upload` en la parte superior 
+izquierda de las  pantalla. Alli luego mantenga la pestaña `regular` y en 
+la parte inferior del lado derecho de click en `Paste/Fecth data`. Luego 
+copie los link de abajo (seleccione solo los datos de un microorganismo para 
+esta practica) y click en `start`. Una vez inicie el proceso, se observará 
+un fondo verde. Cierre la ventana y luego en la parte derecha podrá ver que 
+se están cargando los archivos, espere a que este en verde. Esto indica que 
+ya esta listo. Naranja indica que esta en proceso y rojo que no se pudo 
+realizar y debe repetir el cargue.
 
-`https://zenodo.org/record/10572227/files/DRR187559_contigs.fasta`
+Para importar los archivos de *Staphylococcus aureus* desde Zenodo, copie y
+pegue los siguientes enlaces en la ventana de carga:
+
+```         
+https://zenodo.org/records/17252812/files/DRR187559_contigs.fasta
+```
+
+Para importar los archivos de *Klebsiella pneumoniae* desde Zenodo, copie y
+pegue los siguientes enlaces en la ventana de carga:
+```  
+https://zenodo.org/records/17252812/files/ERR14828471_contigs.fasta
+```
 
 ### Anotación de contigs
 
@@ -53,15 +94,20 @@ ensamblados de metagenomas (MAGs). Implementa un flujo de trabajo de
 anotación exhaustivo para genes codificantes y no codificantes (es
 decir, ARNt, ARNr).
 
-1.  En el panel de herramientas busque `Bakta` y ajuste los siguientes
+Para usar las herramientas en Galaxy, simplemente haga clic en `tools` en la 
+parte izquierda superior de la pantalla y busque la herramienta por su nombre 
+en la barra de búsqueda. Luego, haga clic en el nombre de la herramienta para 
+abrir el formulario de parámetros.
+
+3.  **Bakta** (Galaxy Version 1.9.4+galaxy1) con los siguientes
     parametros:
 
     -   En “Input/Output options”:
-        -   “Select genome in fasta format”: DRR187559_contigs.fasta
-        -   “Bakta database”: V5.1_2024-01-19
-        -   “AMRFinderPlus database”: V3.12-2024-05-02.2
+        -   “Select genome in fasta format”: `*_contigs.fasta`
+        -   “Bakta database”: `V5.1_2024-01-19`
+        -   “AMRFinderPlus database”: `V3.12-2024-05-02.2`
     -   En “Optional annotation”:
-        -   “Keep original contig header”: Yes
+        -   “Keep original contig header”: `Yes`
     -   En “Selection of the output files”:
         -   “Output files selection”:
             1.  Annotation file in TSV
@@ -80,11 +126,11 @@ tipificación de secuencias de plásmidos en la secuenciación del genoma
 completo. Utiliza la base de datos plasmidfinder con cientos de
 secuencias para predecir el plásmido en los datos.
 
-1.  En el panel de herramientas busque `PlasmidFinder` y ajuste los
+4.  **PlasmidFinder** (Galaxy Version 2.1.6+galaxy1) con los
     siguientes parametros:
     -   En “Input parameters”:
-        -   “Choose a fasta or fastq file”: `DRR187559_contigs.fasta`
-        -   “PlasmidFinder database”: utilice la más actualizada
+        -   “Choose a fasta or fastq file”: `*_contigs.fasta`
+        -   “PlasmidFinder database”: `utilice la más actualizada`
 
 `PlasmidFinder` genera varios resultados:
 
@@ -148,18 +194,17 @@ al. 2022). Esta herramienta
         attC cercano
     -   Elemento CALIN: Grupo de sitios attC Sin integrasa cercana
 
-En el panel de herramientas busque `IntegronFinder` y ajuste los
-siguientes parametros: - “Replicon file”: `DRR187559_contigs.fasta` -
-“Thorough local detection”: `Yes` - “Search also for promoter and attI
-sites?”: `Yes` - “Remove log file”: `Yes`
+5. **IntegronFinder** con los
+siguientes parametros: 
+   - “Replicon file”: `*_contigs.fasta` 
+   - “Thorough local detection”: `Yes` 
+   - “Search also for promoter and attI sites?”: `Yes` 
+   - “Remove log file”: `Yes`
 
 `IntegronFinder` genera 2 salidas:
 
-1.  Un resumen con para cada secuencia en la entrada el número de
-    elementos CALIN identificados, elementos In0, e integrones
-    completos.
-
-2.  Un archivo de anotación de integrones en forma de tabla.
+- Un resumen con para cada secuencia en la entrada el número de elementos CALIN identificados, elementos In0, e integrones completos. 
+- Un archivo de anotación de integrones en forma de tabla.
 
 #### Elementos IS (secuencia de inserción)
 
@@ -174,9 +219,9 @@ Para detectar elementos IS, utilizaremos `ISEScan` (Xie y Tang 2017).
 ISEScan es un software altamente sensible basado en modelos de Markov
 ocultos construidos a partir de elementos IS curados manualmente.
 
-1.  En el panel de herramientas busque `ISEScan` y ajuste los siguientes
+6. **ISEScan** con los siguientes
     parametros:
-    -   “Genome fasta input”: `DRR187559_contigs.fasta`
+    -   “Genome fasta input”: `*_contigs.fasta`
 
 
 ## ❓ Preguntas para reflexionar
