@@ -118,6 +118,31 @@ abrir el formulario de parámetros.
 
 ### Anotación adicional
 
+#### Genes de resistencia a antibióticos y factores de virulencia
+
+Para identificar genes de resistencia a antibióticos (ARG) y factores de
+virulencia (VF) en nuestros contigs, utilizamos `AMRFinderPlus` (Feldgarden
+et al. 2019), una herramienta desarrollada por el NCBI para identificar
+genes de resistencia a antibióticos, genes de virulencia y genes de
+proteínas de fusión en secuencias de ADN o proteínas.
+
+AMRFinderPlus utiliza una base de datos curada que contiene secuencias
+de genes de resistencia a antibióticos y factores de virulencia, junto
+con perfiles de HMM (Hidden Markov Models) para identificar genes
+relacionados. La herramienta compara las secuencias de entrada con la
+base de datos utilizando BLAST y HMMER para encontrar coincidencias y
+anotar los genes identificados.
+
+4.  **AMRFinderPlus** (Galaxy Version 3.12.8+galaxy0) con los
+    siguientes parametros:
+    -   En “Input parameters”:
+        -   “Choose input type”: `nucleotide`
+        -   “Input nucleotide sequence file”: `*_contigs.fasta`
+    
+    -   En “Organism options”:
+           -   “Add organism specifications”: `Add organism specifications`
+           -   “Taxonomy group point mutation”: `Klebsiella_pneumoniae`
+
 #### Plasmidos
 
 Para identificar plásmidos en nuestros contigs, utilizamos PlasmidFinder
@@ -126,7 +151,7 @@ tipificación de secuencias de plásmidos en la secuenciación del genoma
 completo. Utiliza la base de datos plasmidfinder con cientos de
 secuencias para predecir el plásmido en los datos.
 
-4.  **PlasmidFinder** (Galaxy Version 2.1.6+galaxy1) con los
+5. **PlasmidFinder** (Galaxy Version 2.1.6+galaxy1) con los
     siguientes parametros:
     -   En “Input parameters”:
         -   “Choose a fasta or fastq file”: `*_contigs.fasta`
@@ -194,7 +219,7 @@ al. 2022). Esta herramienta
         attC cercano
     -   Elemento CALIN: Grupo de sitios attC Sin integrasa cercana
 
-5. **IntegronFinder** con los
+6. **IntegronFinder** con los
 siguientes parametros: 
    - “Replicon file”: `*_contigs.fasta` 
    - “Thorough local detection”: `Yes` 
@@ -219,7 +244,7 @@ Para detectar elementos IS, utilizaremos `ISEScan` (Xie y Tang 2017).
 ISEScan es un software altamente sensible basado en modelos de Markov
 ocultos construidos a partir de elementos IS curados manualmente.
 
-6. **ISEScan** con los siguientes
+7. **ISEScan** con los siguientes
     parametros:
     -   “Genome fasta input”: `*_contigs.fasta`
 
