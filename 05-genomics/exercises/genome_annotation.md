@@ -263,14 +263,18 @@ ocultos construidos a partir de elementos IS curados manualmente.
 10. En el archivo `Annotation_and_sequences` ¿Que hay almacenado ahi?
 11. En el archivo `SVG` ¿Que significan los dos anillos en el centro?
 12. ¿Que significan los dos anillos de color gris?
-13. ¿Cuántas secuencias de plásmidos se encontraron?
-14. ¿Dónde se encuentran?
-15. ¿Están todas estas secuencias asociadas a *Staphylococcus aureus*?
-16. ¿Qué podemos concluir sobre contig00019?
-17. ¿Cuántos elementos de integrón se han encontrado?
-18. ¿Cuántos elementos IS se han detectado?
-19. ¿Dónde se encuentran?
-20. ¿Cuáles son las distintas familias de especies invasoras?
+13. ¿Que genes de resistencia a antibioticos se encontraron?
+14. ¿A que familia de antibioticos pertenecen?
+15. ¿Dónde se encuentran esos genes?
+16. ¿Cuántas secuencias de plásmidos se encontraron? 
+17. ¿A que están asociados esos plasmidos?
+18. ¿Dónde se encuentran los plasmidos?
+19. ¿Están todas estas secuencias asociadas a *Staphylococcus aureus* o *Klebsiella pneumoniae*?
+20. ¿Qué podemos concluir sobre contig00004?
+21. ¿Cuántos elementos de integrón se han encontrado?
+22. ¿Cuántos elementos IS se han detectado?
+23. ¿Dónde se encuentran?
+24. ¿Cuáles son las distintas familias de especies invasoras?
 
 ## Bibliografia
 
