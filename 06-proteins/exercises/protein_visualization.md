@@ -1,5 +1,5 @@
 
-# Visualización de estructuras proteicas con Chimera
+# Visualización de estructuras proteicas con Chimera v1.9
 
 Para poder visualizar estructuras macromoleculares tales como proteínas globulares y ácidos nucleicos, se usará el software UCSF Chimera. Existen otros softwares similares pero Chimera tiene la ventaja de ser mantenido actualmente por sus desarrolladores.
 Chimera es un programa disponible de manera gratuita, y está disponible para descargar e instalar en tu propia computadora en [https://www.cgl.ucsf.edu/chimera/download.html](https://www.cgl.ucsf.edu/chimera/download.html).
