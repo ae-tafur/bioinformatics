@@ -1,5 +1,9 @@
 initCobraToolbox();
 
+% Define a dir where to save all the results
+outputDir = '~/Documents/Training/04_bioinformatics/09-metabolic-models/exercises/results';
+
+
 % Load the E. coli core model
 fileName = 'ecoli_core_model.mat';
 if ~exist('modelOri','var')
@@ -21,7 +25,7 @@ printConstraints(model,-1000,1000)
 
 % change uptake rate of glucose
 model = changeRxnBounds(model,'EX_glc(e)',-18.5,'l');
-
+ 
 % change oxygen uptake (unbounded)
 model = changeRxnBounds(model,'EX_o2(e)',-1000,'l');
 
@@ -46,6 +50,11 @@ options.zeroFluxWidth = 0.1;
 options.rxnDirMultiplier = 10;
 drawFlux(map, model, FBAsolution.v, options);
 
+set(gcf, 'PaperUnits', 'centimeters');
+set(gcf, 'PaperOrientation', 'landscape');
+set(gcf, 'PaperPosition', [1 1 28 19]);
+saveas(f,'flux_distribtuion_glucose_aerobic.pdf')
+
 %% Let's change the aerobic conditions to anaerobic
 model = changeRxnBounds(model,'EX_o2(e)',0,'l');
 
@@ -59,6 +68,11 @@ excFlag = 1;
 printFluxVector(model, fluxData, nonZeroFlag, excFlag)
 
 drawFlux(map, model, FBAsolution2.v, options);
+
+set(gcf, 'PaperUnits', 'centimeters');
+set(gcf, 'PaperOrientation', 'landscape');
+set(gcf, 'PaperPosition', [1 1 28 19]);
+saveas(f,'flux_distribtuion_glucose_anaerobic.pdf')
 
 %% Changing the carbon source
 
@@ -81,6 +95,11 @@ excFlag = 1;
 printFluxVector(model, fluxData, nonZeroFlag, excFlag)
 
 drawFlux(map, model, FBAsolution3.v, options);
+
+set(gcf, 'PaperUnits', 'centimeters');
+set(gcf, 'PaperOrientation', 'landscape');
+set(gcf, 'PaperPosition', [1 1 28 19]);
+saveas(f,'flux_distribtuion_acetate_aerobic.pdf')
 
 %% FLux variability analysis
 
@@ -110,9 +129,13 @@ for i = 0:20
 end
 
 figure; 
-plot(-glucoseUptakeRates,growthRates,'-')
-xlabel('Glucose Uptake Rate (mmol gDW-1 hr-1)')
-ylabel('Growth Rate (mmol gDW-1 hr-1)')
+plot(-glucoseUptakeRates,growthRates,'-', 'LineWidth', 2)
+xlabel('Glucose Uptake Rate (mmol/gDW h)')
+ylabel('Growth Rate (1/h)')
+set(gcf, 'PaperUnits', 'centimeters');
+set(gcf, 'PaperOrientation', 'landscape');
+set(gcf, 'PaperPosition', [1 1 28 19]);
+saveas(f,'robutsness_analysis_glucose.pdf')
 
 %% Robutsness analysis for oxigen
 
@@ -127,11 +150,13 @@ for i = 0:25
 end
 
 figure; 
-plot(-oxygenUptakeRates,growthRates,'-')
-xlabel('Oxygen Uptake Rate (mmol gDW-1 hr-1)')
-ylabel('Growth Rate (mmol gDW-1 hr-1)')
-
-
+plot(-oxygenUptakeRates,growthRates,'-', 'LineWidth', 2)
+xlabel('Oxygen Uptake Rate (mmol/gDW h)')
+ylabel('Growth Rate (1/h)')
+set(gcf, 'PaperUnits', 'centimeters');
+set(gcf, 'PaperOrientation', 'landscape');
+set(gcf, 'PaperPosition', [1 1 28 19]);
+saveas(f,'robutsness_analysis_oxigen.pdf')
 
 %% Plots three phenotype phase planes
 
@@ -171,6 +196,7 @@ model = modelOri;
 [grRatio,grRateKO,grRateWT] = doubleGeneDeletion(model);
 
 %% OptKnock targets prediction
+outputDir = '~/Documents/Training/04_bioinformatics/09-metabolic-models/exercises/results';
 
 model = modelOri;
 
@@ -224,10 +250,10 @@ options = struct('targetRxn', 'EX_succ(e)', 'numDel', 5);
 % We will impose that biomass be at least 50% of the biomass of wild-type
 constrOpt = struct('rxnList', {{biomass}},'values', 0.5*fbaWT.f, 'sense', 'G');
 % We will try to find 10 optKnock sets of a maximun length of 2
-previousSolutions_succ = cell(10, 1);
+previousSolutions_succ = cell(5, 1);
 contPreviousSolutions = 1;
 nIter = 1;
-while nIter < threshold
+while nIter <= threshold
     fprintf('...Performing optKnock analysis...\n')
     if isempty(previousSolutions_succ{1})
         optKnockSol = OptKnock(model, selectedRxnList, options, constrOpt);
@@ -269,10 +295,9 @@ while nIter < threshold
         fprintf('The maximun growth rate given the optKnock set is %.2f\n', maxGrowth);
         fprintf(['The maximun and minimun production of succinate given the optKnock set is ' ...
                  '%.2f and %.2f, respectively \n\n'], minProd, maxProd);
-        if strcmp(type, 'growth coupled')
-            singleProductionEnvelope(model, setM1, 'EX_succ(e)', biomass, 'savePlot', 1, 'showPlot', 1, ...
-                                     'fileName', ['succ_ex1_' num2str(nIter)], 'outputFolder', 'OptKnockResults');
-        end,
+
+        singleProductionEnvelope(model, setM1, 'EX_succ(e)', biomass, 'savePlot', 1, 'showPlot', 1, ...
+            'fileName', ['succ_mutant_' num2str(nIter)], 'outputFolder', 'OptKnockResults');
     else
         if nIter == 1
             fprintf('optKnock was not able to found an optKnock set\n');
@@ -284,14 +309,22 @@ while nIter < threshold
     nIter = nIter + 1;
 end
 
-% run a dynamicFBA for the first mutant found
-toDelete_succ = previousSolutions_succ{1,1};
 
-% block the reactions flux, so you can simulate a deletion
-model_mut_succ = changeRxnBounds(model, toDelete_succ, 0, 'b');
-
-[dFBAsol] = dynamicFBA(model_mut_succ, substrateRxns, initConcentrations, ...
-    0.033, 0.1, 500, plotRxns);
+% run a dynamicFBA for the mutants found
+for i = 1:size(previousSolutions_succ, 1)
+    
+    % select the rxns to delete
+    toDelete_succ = previousSolutions_succ{i,1};
+    
+    % block the reactions flux, so you can simulate a deletion
+    model_mut_succ = changeRxnBounds(model, toDelete_succ, 0, 'b');
+    
+    % perform dynamicFBA for this mutant
+    dFBAsol = dynamicFBA(model_mut_succ, substrateRxns, initConcentrations, ...
+                         plotRxns, 'savePlot', 1, 'showPlot', 1, ...
+            'fileName', ['succ_mutant_' num2str(nIter) '_dFBA'], 'outputFolder', outputDir);
+    
+end
 
 
 %% Predicting targets for acetate
@@ -304,10 +337,10 @@ options = struct('targetRxn', 'EX_ac(e)', 'numDel', 5);
 % We will impose that biomass be at least 50% of the biomass of wild-type
 constrOpt = struct('rxnList', {{biomass}},'values', 0.5*fbaWT.f, 'sense', 'G');
 % We will try to find 10 optKnock sets of a maximun length of 2
-previousSolutions_ac = cell(10, 1);
+previousSolutions_ac = cell(5, 1);
 contPreviousSolutions = 1;
 nIter = 1;
-while nIter < threshold
+while nIter <= threshold
     fprintf('...Performing optKnock analysis...\n')
     if isempty(previousSolutions_ac{1})
         optKnockSol = OptKnock(model, selectedRxnList, options, constrOpt);
@@ -341,7 +374,7 @@ while nIter < threshold
         fprintf('\n');
         fprintf('The production of acetate after optimization is %.2f \n', acetFluxM1);
         fprintf('The growth rate after optimization is %.2f \n', growthRateM1);
-        fprintf(['The production of other products such as ethanol, formate, lactate and succinate are' ...
+        fprintf(['The production of other products such as ethanol, formate, lactate and succinate are ' ...
                  '%.1f, %.1f, %.1f and %.1f, respectively. \n'], etohFluxM1, formFluxM1, lactFluxM1, succFluxM1);
         fprintf('...Performing coupling analysis...\n');
         [type, maxGrowth, maxProd, minProd] = analyzeOptKnock(model, setM1, 'EX_ac(e)');
@@ -349,10 +382,8 @@ while nIter < threshold
         fprintf('The maximun growth rate given the optKnock set is %.2f\n', maxGrowth);
         fprintf(['The maximun and minimun production of acetate given the optKnock set is ' ...
                  '%.2f and %.2f, respectively \n\n'], minProd, maxProd);
-        if strcmp(type, 'growth coupled')
-            singleProductionEnvelope(model, setM1, 'EX_ac(e)', biomass, 'savePlot', 1, 'showPlot', 1, ...
-                                     'fileName', ['ac_ex1_' num2str(nIter)], 'outputFolder', 'OptKnockResults');
-        end,
+        singleProductionEnvelope(model, setM1, 'EX_ac(e)', biomass, 'savePlot', 1, 'showPlot', 1, ...
+            'fileName', ['ac_mutant_' num2str(nIter)], 'outputFolder', outputDir);
     else
         if nIter == 1
             fprintf('optKnock was not able to found an optKnock set\n');
@@ -365,11 +396,18 @@ while nIter < threshold
 end
 
 
-% run a dynamicFBA for the first mutant found
-toDelete_ac = previousSolutions_ac{1,1};
-
-% block the reactions flux, so you can simulate a deletion
-model_mut_ac = changeRxnBounds(model, toDelete_ac, 0, 'b');
-
-[dFBAsol] = dynamicFBA(model_mut_ac, substrateRxns, initConcentrations, ...
-    0.033, 0.1, 500, plotRxns);
+% run a dynamicFBA for the mutants found
+for i = 1:size(previousSolutions_ac, 1)
+    
+    % select the rxns to delete
+    toDelete_ac = previousSolutions_ac{i,1};
+    
+    % block the reactions flux, so you can simulate a deletion
+    model_mut_ac = changeRxnBounds(model, toDelete_ac, 0, 'b');
+    
+    % perform dynamicFBA for this mutant
+    dFBAsol = dynamicFBA(model_mut_ac, substrateRxns, initConcentrations, ...
+                         plotRxns, 'savePlot', 1, 'showPlot', 1, ...
+            'fileName', ['ac_mutant_' num2str(nIter) '_dFBA'], 'outputFolder', outputDir);
+    
+end
