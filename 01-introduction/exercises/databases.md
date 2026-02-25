@@ -1,4 +1,4 @@
-# 🧬 Práctica: Bases de datos biológicas y elementos básicos de archivos y secuencias
+# 💻 Práctica: Bases de datos biológicas y elementos básicos de archivos y secuencias
 
 ## Introducción
 
@@ -62,17 +62,17 @@ Estos están además interconectados o individualizados por bases de datos, algu
 Objetivo: Obtener y diferenciar la información genética de la Beta-lactamasa (resistencia a penicilina).
 
 1. **Búsqueda**: En NCBI Nucleotide, busca: `Escherichia coli blaTEM-1`.
-2. **Filtro:** En la barra lateral izquierda, selecciona "Source databases: GenBank" para evitar secuencias sintéticas.
+2. **Filtro:** En la barra lateral izquierda, selecciona "Source databases: Nucleotide" para evitar secuencias sintéticas.
 3. **Análisis de Formato GenBank:**
    * Busca la sección FEATURES.
-   * Identifica la palabra clave /`gene="blaTEM-1"`.
+   * Identifica la palabra clave /`gene="blaTEM-1"` o `gene="blaTEM"` o alguna coincidencia con `gene="xxxxxx"`.
    * Identifica el número de acceso (ej. MZ123456.1).
    * Anota las coordenadas (ej. 1..861). Esto indica dónde empieza y termina el gen en esa secuencia.
 4. **Descarga Comparativa** (Click `Send to` → `File` → `Format: FASTA`):
    * Descarga la secuencia en FASTA (para ver la secuencia limpia).
    * Descarga la secuencia en GenBank (Full) (para ver la "biografía" del gen).
    * Descarga la secuencia en GFF3 (para ver la anotación estructural).
-5. Abrir con editor de texto
+5. Abrir con editor de texto. Puedes dar en click derecho `Abrir con` → `Notepad++` o `VSCode` o `Block de notas` para una mejor visualización.
 6. Reto 1: Localiza el nombre de la cepa bacteriana (Strain) de la cual proviene esa secuencia específica en el archivo GenBank.
 6. Reto 2: Compara la longitud de la secuencia en ambos formatos. ¿Son iguales? ¿Por qué?
 7. Reto 3: En el archivo GFF3, identifica la anotación de la región codificante (CDS) y compárala con las coordenadas encontradas en el formato GenBank.
