@@ -254,21 +254,64 @@ Aquí es donde la terminal comienza a mostrar su verdadero poder. Estos comandos
 
 ---
 
-### Parte 5: Organización final del proyecto
+### Parte 5: Descarga de datos desde la terminal
 
-27. **Mueva los archivos generados** a los directorios correctos:
+En bioinformática, rara vez los datos viven en su computador desde el principio. Lo más habitual es descargarlos directamente desde bases de datos públicas como **NCBI**, **UniProt** o **Ensembl** sin salir de la terminal. El comando `wget` es la herramienta estándar para hacerlo.
+
+> 💡 `wget` ("World Wide Web get") descarga archivos desde una URL, exactamente como lo haría un navegador, pero sin interfaz gráfica. Esto lo hace ideal para scripts automatizados y servidores remotos.
+
+#### Descargando un archivo FASTA desde NCBI con `wget`
+
+El NCBI ofrece acceso programático a sus bases de datos a través de su API **Entrez**. Con una URL bien construida puede descargar cualquier secuencia directamente.
+
+27. **Descargue la secuencia del gen 16S rRNA de *Escherichia coli* K-12** directamente desde NCBI:
+    ```bash
+    wget -O data/ecoli_16S.fasta "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NR_102804&rettype=fasta&retmode=text"
+    ```
+    - `-O data/ecoli_16S.fasta` indica el nombre y ubicación del archivo de salida.
+    - El parámetro `id=NR_102804` es el número de acceso al gen 16S rRNA de *E. coli* K-12 en NCBI.
+
+28. **Verifique que el archivo se descargó correctamente:**
+    ```bash
+    head data/ecoli_16S.fasta
+    grep -c ">" data/ecoli_16S.fasta
+    ```
+    ¿Reconoce el formato? ¿Cuántas secuencias contiene?
+
+29. **Descargue una segunda secuencia para comparar** — 16S rRNA de *Bacillus subtilis*:
+    ```bash
+    wget -O data/bsubtilis_16S.fasta "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NR_112116&rettype=fasta&retmode=text"
+    ```
+
+30. **Combine las dos secuencias descargadas en un solo archivo FASTA** (como lo haría antes de un análisis filogenético):
+    ```bash
+    cat data/ecoli_16S.fasta data/bsubtilis_16S.fasta > results/sequences/16S_comparison.fasta
+    grep ">" results/sequences/16S_comparison.fasta
+    ```
+
+> 💡 **Sobre FTP:** Algunas bases de datos grandes como **NCBI FTP** o **Ensembl** distribuyen sus archivos a través del protocolo **FTP** (File Transfer Protocol). `wget` también soporta FTP con URLs que comienzan por `ftp://`. Por ejemplo, para descargar el genoma completo de *E. coli* K-12 desde NCBI FTP usaría:
+> ```bash
+> wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/005/845/GCF_000005845.2_ASM584v2/GCF_000005845.2_ASM584v2_genomic.fna.gz
+> ```
+> Los archivos de genomas suelen estar comprimidos (`.gz`). Para descomprimirlos use `gunzip archivo.fna.gz`. **No ejecute este comando en la práctica** ya que el archivo es grande (~4.6 MB), pero tenga esto en mente para sus proyectos reales.
+
+---
+
+### Parte 6: Organización final del proyecto
+
+31. **Mueva los archivos generados** a los directorios correctos:
     ```bash
     mv results/reports/cepas_resistentes.txt results/reports/
     mv results/reports/sequence_ids.txt results/reports/
     mv results/reports/resumen_fasta.txt results/reports/
     ```
 
-28. **Verifique la estructura final** de su área de trabajo:
+32. **Verifique la estructura final** de su área de trabajo:
     ```bash
     tree results/
     ```
 
-29. **Genere un archivo README para sus resultados:**
+33. **Genere un archivo README para sus resultados:**
     ```bash
     echo "# Resultados - Práctica Unix Terminal" > results/README.txt
     echo "Fecha: $(date)" >> results/README.txt
