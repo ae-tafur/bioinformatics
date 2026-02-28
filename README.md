@@ -1,13 +1,13 @@
 # Bioinformatics: Leaving the science of coat and pipette
 
-### An course by Albert Tafur Rangel[<img src="https://raw.githubusercontent.com/rstudio-conf-2022/ggplot2-graphic-design/main/images/logo.png" align="right" width="150">](https://rstudio-conf-2022.github.io/ggplot2-graphic-design/)
+### An course by Albert Tafur Rangel, Ph.D.
 
 ------------------------------------------------------------------------
 
 :spiral_calendar: ----, 20--  
-:alarm_clock: 09:00 - 17:00  
+:alarm_clock:  
 :hotel: --------  
-:writing_hand: [rstd.io/conf](http://rstd.io/conf)
+:writing_hand: )
 
 ------------------------------------------------------------------------
 
