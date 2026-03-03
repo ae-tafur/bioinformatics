@@ -13,14 +13,24 @@
 
 # Course Overview
 
-The course covers 
+This course introduces the foundations of **bioinformatics and computational biology** from a practical perspective: you’ll learn where biological data come from, how they’re stored and shared, and how to analyze them using a Unix-like environment and scripting.
+
+Throughout the modules, we’ll connect core concepts (sequence data, alignments, assemblies, annotation, phylogenetics, and multiple “omics”) to real-world workflows used in research and industry.
+
+**By the end of the course, you should be able to:**
+
+- Navigate biological databases and download sequence data in standard formats
+- Work comfortably in a **Unix/Linux** terminal (also applicable to macOS)
+- Automate repetitive tasks with small scripts (Bash and Python)
+- Understand the principles behind sequencing, alignment, assembly and genome annotation
+- Interpret results in context: quality, limitations, and biological meaning
 
 ## Learning objectives
 
--   Understanding the general concepts
--   Learning
--   Gaining 
--   Being able to generate complex
+- Understanding the general concepts
+- Learning
+- Gaining 
+- Being able to generate complex
 
 ## Is this course for me?
 
@@ -39,36 +49,103 @@ This course will be appropriate for you if you answer yes to these questions:
 
 # Content
 
+> Tip: each module title links to its `README.md`.
+
 ## 01 - Introduction
 
-| Time          | Day            | Topic     |
-|:--------------|:---------------|:----------|
-| 09:00 - 10:30 | Session 1      | Session 1 |
-| 10:30 - 11:00 | *Coffee break* | Session 1 |
-| 11:00 - 12:30 | Session 2      | Session 1 |
+**[Module 1 — Introduction to Bioinformatics](01-introduction/README.md)**
+
+Core ideas: what bioinformatics is, why it matters, and the ecosystem of biological data.
+
+Topics include:
+- The bioinformatics mindset: multidisciplinary science and computational thinking
+- The central dogma, “omics” and how they generate data
+- Biological databases (NCBI/ENA/UniProt), identifiers and metadata
+- File formats used across the course (FASTA/FASTQ/GFF/GenBank, etc.)
 
 ## 02 - Coding basics
 
-## 03 - Genomics
+**[Module 2 — Coding Basics: Unix + Scripting](02-coding-basics/README.md)**
 
-## 04 - Phylogenenomics
+You’ll learn the “everyday tools” of bioinformatics: the command line and automation.
 
-## 05 - Transcriptomcis
+Topics include:
+- Unix/Linux foundations (also relevant for macOS): navigation, permissions, pipes and redirection
+- Text processing for biological files (grep/sed/awk basics)
+- Bash scripting to automate analysis steps
+- Python scripting fundamentals applied to FASTA/sequence manipulation
 
-## 06 - Proteomics
+## 03 - Alignments and Sequencing
 
-## 07 - Metabolic models
+**[Module 3 — DNA/RNA Sequencing, Alignments, Assembly and Annotation](03-sequencing/README.md)**
 
-## 08 - Data visualization
+You’ll learn how sequencing data are produced and the key computational steps that turn raw reads into biological insight.
 
+Topics include:
+- Timeline of sequencing technologies (Sanger → NGS → long reads)
+- Quality scores (Phred) and the FASTQ format
+- Global vs local alignment; identity vs similarity
+- Genome assembly (OLC, De Bruijn graphs; k-mers)
+- Genome annotation basics (what is a gene; prokaryotes vs eukaryotes)
 
+## 04 - Phylogenetics
+
+**[Module 4 — Phylogenetics and Evolutionary Inference](04-phylogenetics/README.md)**
+
+Topics include:
+- Multiple sequence alignment and model choice
+- Distance-based vs character-based trees (NJ, ML)
+- Bootstrapping and support values
+- Interpreting phylogenies in biological context
+
+## 05 - Genomics
+
+**[Module 5 — Genomics: From Reads to Genomes](05-genomics/README.md)**
+
+Topics include:
+- Read QC and trimming; mapping vs assembly strategies
+- Bacterial genome assembly and evaluation metrics (N50, contigs)
+- Structural and functional annotation, basic comparative genomics
+- Introduction to variant calling concepts (SNPs/indels) and interpretation
+
+## 06 - Proteins
+
+**[Module 6 — Protein Bioinformatics](06-proteins/README.md)**
+
+Topics include:
+- Protein sequences, domains, motifs and families
+- Searching and annotating proteins (BLASTp, Pfam/InterPro)
+- Structure basics and functional inference
+
+## 07 - Transcriptomics
+
+**[Module 7 — Transcriptomics (RNA-Seq)](07-transcriptomics/README.md)**
+
+Topics include:
+- What RNA-Seq measures, experimental design and key biases
+- Quantification concepts (counts, TPM/FPKM) and normalization
+- Differential expression and functional interpretation
+
+## 08 - Proteomics
+
+**[Module 8 — Proteomics](08-proteomics/README.md)**
+
+Topics include:
+- Mass spectrometry basics and peptide identification
+- Protein quantification and common analysis steps
+- Linking proteomics to pathways and biological interpretation
+
+## 09 - Metabolic models
+
+**[Module 9 — Metabolic Models](09-metabolic-models/README.md)**
+
+Topics include:
+- Metabolic networks and genome-scale metabolic models (GEMs)
+- Flux Balance Analysis (FBA): intuition, constraints and objective functions
+- Interpreting predictions and connecting models to experiments
 
 ## Pre-work
 
-The course will also cover the basic logic of visualization in R.
-
-*For Mac OS users:*  
-Please make sure that [XQuartz is installed](https://www.xquartz.org/) which is needed to use the cairo pdf device.
 
 ## Required software and toolbox
 
