@@ -280,7 +280,7 @@ Cree su primer script Python:
 touch mi_primer_script.py
 ```
 
-Ábralo en el editor (panel izquierdo de Codespaces) y escriba:
+Ábralo el archivo en el editor (panel izquierdo de Codespaces) y copie y pegue todo el siguiente código dentro:
 
 ```python
 #!/usr/bin/env python3
