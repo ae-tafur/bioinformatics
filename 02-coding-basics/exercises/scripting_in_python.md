@@ -370,8 +370,8 @@ for cepa, antibiotico, resultado in resultados:
         interpretacion = "⚠️  Intermedio — usar con precaución"
     else:
         interpretacion = "✅ Sensible — tratamiento viable"
-
     print(f"{cepa} | {antibiotico}: {interpretacion}")
+
 ```
 
 #### Paso 6: Bucles sobre secuencias FASTA
@@ -390,15 +390,15 @@ print("=== Detección de mutaciones ===")
 for nombre, seq in secuencias.items():
     if nombre == "Ref":
         continue   # saltar la referencia
-
+	    
     mutaciones = 0
     posiciones = []
     for i in range(len(referencia)):
         if referencia[i] != seq[i]:
             mutaciones += 1
             posiciones.append(i + 1)   # posición en base 1
-
     print(f"{nombre}: {mutaciones} mutación(es) en posición(es) {posiciones}")
+
 ```
 
 ---
@@ -406,6 +406,8 @@ for nombre, seq in secuencias.items():
 ### Parte 3: Lectura de archivos y scripts completos
 
 A partir de aquí trabajará con los archivos reales de la carpeta `data/`. Cree un nuevo script para cada ejercicio.
+
+> 💡 **Tip para leer archivos:** asegurese de usar la ruta correcta al archivo, relativa a la ubicación de su script. Por ejemplo, si su script está en `scripts/` y el archivo en `data/`, la ruta sería `../data/archivo.ext`.
 
 #### Paso 7: Leer un archivo FASTA
 
@@ -417,7 +419,7 @@ Cree el archivo `leer_fasta.py`:
 Lee un archivo FASTA y muestra información básica de cada secuencia.
 """
 
-archivo = "data/01_sequences.fasta"
+archivo = "data/01_sequences.fasta" # Cambia esta ruta al archivo FASTA según tu estructura de carpetas
 secuencias = {}
 id_actual = None
 
@@ -436,6 +438,7 @@ print("-" * 40)
 for nombre, seq in secuencias.items():
     gc = (seq.count("G") + seq.count("C")) / len(seq) * 100
     print(f"{nombre}: {len(seq)} bp | %GC: {gc:.1f}%")
+
 ```
 
 Ejecute:
@@ -453,7 +456,7 @@ Cree el archivo `leer_csv.py`:
 Lee el archivo de antibiograma y clasifica los resultados.
 """
 
-archivo = "data/08_antibiogram.csv"
+archivo = "data/08_antibiogram.csv" # Cambia esta ruta al archivo FASTA según tu estructura de carpetas
 conteo = {"R": 0, "I": 0, "S": 0}
 
 with open(archivo, "r") as f:
@@ -487,7 +490,7 @@ Cree el archivo `crecimiento_bacteriano.py`:
 Calcula el promedio de OD600 de cada cepa bacteriana.
 """
 
-archivo = "data/06_bacterial_growth.tsv"
+archivo = "data/06_bacterial_growth.tsv" # Cambia esta ruta al archivo FASTA según tu estructura de carpetas
 
 with open(archivo, "r") as f:
     encabezado = f.readline()
@@ -510,7 +513,7 @@ python3 crecimiento_bacteriano.py
 
 ### ToDo: Ejercicios — aplique lo aprendido con los archivos de datos
 
-Estos ejercicios deben resolverse escribiendo un script Python independiente (`.py`) para cada uno. Use los archivos de la carpeta `data/` como entrada. Guarde todos sus scripts en una carpeta `scripts/` que creará dentro del directorio de ejercicios.
+Estos ejercicios deben resolverse escribiendo un script Python independiente (`.py`) para cada uno. Use los archivos de la carpeta `data/` como entrada. Guarde todos sus scripts en una carpeta `scripts/` que creará dentro del directorio de `exercises` del modulo `02_coding_basics`.
 
 ```bash
 mkdir -p scripts/
