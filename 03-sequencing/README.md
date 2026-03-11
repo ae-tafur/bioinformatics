@@ -1,205 +1,290 @@
-# Módulo 3: Secuenciación de ADN y ARN
+# Módulo 3: Secuenciación y comparación de secuencias de ADN y ARN
 
 ## Introducción
 
 La capacidad de leer el código genético ha revolucionado la biología moderna. Desde los primeros esfuerzos laboriosos hasta las tecnologías de alto rendimiento actuales, la secuenciación de ácidos nucleicos nos permite descifrar genomas completos, entender la diversidad microbiana, diagnosticar enfermedades genéticas y rastrear brotes epidemiológicos en tiempo real.
 
-En este módulo, exploraremos la evolución de las tecnologías de secuenciación, desde el método de Sanger hasta la secuenciación de tercera generación de lectura larga. Entenderemos no solo cómo funcionan estas máquinas, sino también qué tipo de datos producen, sus perfiles de error y sus aplicaciones específicas. Además, nos adentraremos en los desafíos bioinformáticos que surgen tras la secuenciación: ¿Cómo reconstruimos un genoma original a partir de millones de fragmentos pequeños? ¿Cómo encontramos y anotamos los genes dentro de esa secuencia?
+En este módulo exploraremos la evolución de las tecnologías de secuenciación, desde el método de Sanger hasta las plataformas de lectura larga de tercera generación. Entenderemos no solo cómo funcionan estas tecnologías, sino también qué tipo de datos producen, cuáles son sus perfiles de error y en qué contextos conviene utilizarlas. Además, nos adentraremos en los desafíos bioinformáticos que aparecen después de secuenciar: ¿cómo evaluamos la calidad de las lecturas?, ¿cómo alineamos secuencias?, ¿cómo reconstruimos un genoma a partir de millones de fragmentos?, ¿y cómo reconocemos genes dentro de esa secuencia?
 
-Al finalizar este módulo, tendrá una comprensión sólida de los fundamentos de la secuenciación, el alineamiento de secuencias, el ensamblaje de genomas y la predicción de genes.
+Aunque muchas veces se habla principalmente de secuenciación de ADN, varios de estos principios también aplican al ARN. En RNA-seq, por ejemplo, el material biológico original es ARN, pero frecuentemente se convierte a ADN complementario (cDNA) antes de secuenciarse. En tecnologías como Oxford Nanopore, incluso es posible secuenciar ARN de forma más directa en ciertos flujos de trabajo.
 
-> **Reflexión:** Un buen bioinformático no es quien sabe correr el programa, sino quien entiende por qué el programa falló mirando los parámetros de calidad.
+Al finalizar este módulo, tendrá una comprensión sólida de los fundamentos de la secuenciación, la calidad de lecturas, el alineamiento de secuencias, el ensamblaje de genomas y la lógica general de la anotación genómica.
 
-## 1. Historia y Línea de Tiempo de la Secuenciación
+> **Reflexión:** Un buen bioinformático no es quien solo sabe correr un programa, sino quien entiende qué significan sus resultados y por qué el análisis puede fallar.
+
+## Ruta conceptual del módulo
+
+Este módulo sigue una lógica parecida a la de un análisis real:
+
+1. **Generación de lecturas** mediante una plataforma de secuenciación.
+2. **Evaluación de calidad** de los archivos FASTQ.
+3. **Limpieza y filtrado** de lecturas cuando sea necesario.
+4. **Alineamiento o mapeo** contra una referencia, o **ensamblaje *de novo***.
+5. **Interpretación biológica** del resultado: comparación, anotación y análisis posterior.
+
+En otras palabras, secuenciar no es el final del trabajo experimental; es el inicio del análisis bioinformático.
+
+## 1. Historia y línea de tiempo de la secuenciación
 
 La historia de la secuenciación es una carrera constante hacia mayor velocidad, menor costo y mayor longitud de lectura.
 
-*   **1977 - Secuenciación Sanger:** Frederick Sanger desarrolla el método de terminación de cadena, permitiendo secuenciar fragmentos de ADN de 500-1000 pb. Fue el estándar de oro durante 30 años y se usó para el Proyecto Genoma Humano.
-*   **1987:** Aparece el primer secuenciador automático (ABI 370A).
-*   **1990:** Inicio del Proyecto Genoma Humano.
-*   **2005 - 454 Life Sciences (Pirosecuenciación):** Primera tecnología de "Nueva Generación" (NGS). Alta capacidad pero lecturas más cortas y problemas con homopolímeros.
-*   **2006 - Solexa (Adquirida por Illumina):** Introduce la secuenciación por síntesis con terminadores reversibles. Domina el mercado actual por su bajo costo y alta precisión.
-*   **2010 - Ion Torrent:** Secuenciación basada en detección de cambios de pH (semiconductores).
-*   **2011 - Pacific Biosciences (PacBio):** Secuenciación de molécula única en tiempo real (SMRT). Tercera generación. Lecturas muy largas (>10kb) pero con mayor tasa de error inicial.
-*   **2014 - Oxford Nanopore Technologies (MinION):** Secuenciación portátil basada en cambios de corriente eléctrica al pasar ADN por un nanoporo. Lecturas ultra largas y análisis en tiempo real.
+*   **1977 - Secuenciación Sanger:** Frederick Sanger desarrolla el método de terminación de cadena, permitiendo secuenciar fragmentos de ADN de 500-1000 pb. Fue el estándar de oro durante décadas y se utilizó en el Proyecto Genoma Humano.
+*   **1987:** aparece el primer secuenciador automático (ABI 370A).
+*   **1990:** inicio del Proyecto Genoma Humano.
+*   **2005 - 454 Life Sciences (pirosecuenciación):** primera tecnología de “Nueva Generación” (NGS). Aumentó enormemente la capacidad de secuenciación, aunque tenía problemas con homopolímeros.
+*   **2006 - Solexa / Illumina:** introduce la secuenciación por síntesis con terminadores reversibles. Se convierte en la plataforma dominante por su alta precisión y bajo costo por base.
+*   **2010 - Ion Torrent:** secuenciación basada en detección de cambios de pH.
+*   **2011 - Pacific Biosciences (PacBio):** secuenciación de molécula única en tiempo real (SMRT), con lecturas largas.
+*   **2014 - Oxford Nanopore Technologies (ONT):** secuenciación portátil basada en cambios de corriente eléctrica al pasar ADN o ARN por un nanoporo.
 
-En resumen, la secuenciación se divide tradicionalmente en tres "generaciones":
+En resumen, la secuenciación suele dividirse en tres generaciones:
 
-| Generación           | Tecnología Líder   | Longitud de Lectura   | Precisión       | Aplicación Principal                           |
-|:---------------------|:-------------------|:----------------------|:----------------|:-----------------------------------------------|
-| **1ra (Sanger)**     | ABI 3730xl         | 800 - 1000 bp         | 99.99%          | Validación de clones, plásmidos.               |
-| **2da (NGS)**        | Illumina           | 50 - 300 bp           | 99.9%           | Re-secuenciación, RNA-Seq, Exomas.             |
-| **3ra (Long Reads)** | PacBio / ONT       | 10 kb - 2 Mb          | Variable (Q20+) | Ensamblaje *de novo*, variantes estructurales. |
+| Generación                | Tecnología líder | Longitud de lectura | Precisión       | Aplicación principal                                               |
+|:--------------------------|:-----------------|:--------------------|:----------------|:-------------------------------------------------------------------|
+| **1ra (Sanger)**          | ABI 3730xl       | 800 - 1000 pb       | 99.99%          | Validación de genes, plásmidos y fragmentos individuales           |
+| **2da (NGS)**             | Illumina         | 50 - 300 pb         | 99.9%           | Re-secuenciación, RNA-seq, genomas bacterianos, metagenómica       |
+| **3ra (lecturas largas)** | PacBio / ONT     | 10 kb - 2 Mb        | Variable (Q20+) | Ensamblaje *de novo*, variantes estructurales, isoformas completas |
 
-## 2. Tecnologías de Secuenciación
+## 2. Tecnologías de secuenciación
 
-### 2.1 Primera Generación: Sanger
-*   **Principio:** Uso de didesoxinucleótidos (ddNTPs) marcados con fluorescencia que detienen la polimerización del ADN en posiciones específicas. Los fragmentos se separan por electroforesis capilar.
-*   **Características:** Lecturas de ~800-1000 pb.
-*   **Calidad:** Calidad muy alta (Q > 40), es el estándar para validación.
-*   **Aplicaciones:** Secuenciación de genes individuales, validación de variantes, plásmidos pequeños.
+### 2.1 Primera generación: Sanger
 
-### 2.2 Segunda Generación (NGS - Next Generation Sequencing)
+*   **Principio:** uso de didesoxinucleótidos (ddNTPs) marcados con fluorescencia que detienen la polimerización del ADN en posiciones específicas. Los fragmentos resultantes se separan por electroforesis capilar.
+*   **Características:** lecturas de ~800-1000 pb.
+*   **Calidad:** muy alta (Q > 40), por lo que sigue siendo una referencia para validación.
+*   **Aplicaciones:** secuenciación de genes individuales, validación de variantes, confirmación de clones y plásmidos.
 
-#### 454 (Pirosecuenciación) - *Histórico*
-*   **Principio:** Detecta la liberación de pirofosfato (luz) cuando se incorpora un nucleótido.
-*   **Características:** Lecturas de ~400-700 pb.
-*   **Problemas:** Alta tasa de error en regiones de homopolímeros (ej. AAAAA). Ya no se usa ampliamente.
+### 2.2 Segunda generación (NGS)
 
-#### Illumina (Secuenciación por Síntesis)
-*   **Principio:** Amplificación clonal en puente (bridge amplification) sobre una celda de flujo. Uso de nucleótidos con terminadores reversibles fluorescentes. Se toma una foto en cada ciclo.
-*   **Características:** Lecturas cortas (paired-end 2x150bp o 2x300bp). Millones de lecturas por corrida (alto throughput).
-*   **Calidad:** Muy alta, aunque decae al final de la lectura. El error principal es la sustitución.
-*   **Aplicaciones:** Genomas completos, exomas, transcriptomas (RNA-Seq), metagenómica, ChIP-Seq.
+#### 454 (pirosecuenciación) - *histórica*
 
-### 2.3 Tercera Generación (Lecturas Largas)
+*   **Principio:** detecta la liberación de pirofosfato cuando se incorpora un nucleótido.
+*   **Características:** lecturas de ~400-700 pb.
+*   **Limitaciones:** alta tasa de error en regiones con homopolímeros (por ejemplo, `AAAAAA`). Actualmente se usa poco.
+
+#### Illumina (secuenciación por síntesis)
+
+*   **Principio:** amplificación clonal en puente sobre una celda de flujo y uso de nucleótidos con terminadores reversibles fluorescentes. En cada ciclo, el sistema “fotografía” la base incorporada.
+*   **Características:** lecturas cortas, usualmente `paired-end` (por ejemplo, 2x150 pb).
+*   **Calidad:** muy alta, aunque suele disminuir hacia el final de la lectura. El error más frecuente es la sustitución.
+*   **Aplicaciones:** genomas completos, exomas, transcriptomas (RNA-seq), metagenómica, estudios de diversidad y vigilancia genómica.
+
+### 2.3 Tercera generación (lecturas largas)
 
 #### Pacific Biosciences (PacBio SMRT)
-*   **Principio:** Una polimerasa fija en el fondo de un pozo (ZMW) incorpora nucleótidos fosfolinked fluorescentes. Se detecta la luz en tiempo real.
-*   **Características:** Lecturas largas (10kb - 20kb+). HiFi reads (lecturas consensuadas de alta precisión).
-*   **Calidad:** Inicialmente ruidosa (10-15% error), pero con el modo CCS (Circular Consensus Sequencing) se obtiene alta precisión (Q30+).
-*   **Aplicaciones:** Ensamblaje *de novo* de genomas complejos, detección de variantes estructurales, isoformas completas de ARN.
 
-#### Oxford Nanopore (ONT)
-*   **Principio:** Una molécula de ADN/ARN pasa a través de un poro proteico en una membrana. El paso de las bases altera la corriente iónica característica.
-*   **Características:** Lecturas ultra largas (hasta Mb). Portátil (dispositivo USB).
-*   **Calidad:** Históricamente menor que Illumina, pero ha mejorado drásticamente (Q20+ con kits recientes). Error principal: Indels.
-*   **Aplicaciones:** Secuenciación en campo, genomas completos rápidos, detección directa de metilación, metagenómica en tiempo real.
+*   **Principio:** una polimerasa inmovilizada incorpora nucleótidos fluorescentes en tiempo real dentro de un pozo nanoscópico (ZMW).
+*   **Características:** lecturas largas (10 kb - 20 kb o más).
+*   **Calidad:** inicialmente presentaba errores relativamente altos por lectura individual, pero con HiFi/CCS se logran lecturas de alta precisión (Q30+).
+*   **Aplicaciones:** ensamblaje *de novo* de genomas complejos, detección de variantes estructurales y secuenciación de transcritos completos.
 
-> Si bien los años han marcado aspectos evolutivos claves en las tecnologías de secuenciación, es importante destacar que cada avance ha sido impulsado por la necesidad de superar limitaciones anteriores: desde la longitud de lectura hasta la precisión y el costo. Hoy en día, la elección de la tecnología de secuenciación depende del proyecto específico, el presupuesto y los objetivos científicos.
+#### Oxford Nanopore Technologies (ONT)
 
-## 3. Principios Fundamentales
+*   **Principio:** una molécula de ADN o ARN atraviesa un nanoporo, y cada base altera la corriente eléctrica de forma característica.
+*   **Características:** lecturas ultra largas, posibilidad de análisis en tiempo real y dispositivos portátiles.
+*   **Calidad:** históricamente inferior a Illumina, aunque ha mejorado mucho. Los errores suelen incluir inserciones y deleciones.
+*   **Aplicaciones:** secuenciación rápida en campo, ensamblaje de genomas completos, metagenómica en tiempo real, detección de metilación y, en algunos protocolos, secuenciación directa de ARN.
 
-*   **Calidad Phred (Q-score):** Medida logarítmica de la probabilidad de error en una base. Q30 significa 1 error en 1000 bases (99.9% precisión).
-*   **Paired-End Reads:** Lectura de ambos extremos de un fragmento de ADN. Ayuda a resolver regiones repetitivas y mejorar el ensamblaje.
-*   **Librería:** Colección de fragmentos de ADN preparados con adaptadores listos para ser secuenciados.
-*   **Archivos FASTQ:** Es el formato estándar de facto para almacenar secuencias biológicas junto con sus correspondientes puntuaciones de calidad. Cada lectura ocupa 4 líneas (ver **[Módulo 1 → Formato `.fastq`](../01-introduction/README.md#fastq)**):
-    1.  Encabezado (comienza con `@`).
-    2.  Secuencia de nucleótidos.
-    3.  Separador (comienza con `+`).
-    4.  Calidad codificada en caracteres ASCII (Phred Score).
-*   **Cobertura (Coverage):** Número promedio de veces que cada base del genoma ha sido leída. (Ej. 30X para genomas humanos).
-*   **Profundidad (Depth):** Similar a la cobertura, refiere a cuántas lecturas cubren una posición específica.
+### 2.4 ¿Cuándo usar cada tecnología?
 
-Como se mencionó anteriormente, la calidad de las lecturas es un aspecto crucial a considerar. Las tecnologías de secuenciación modernas producen datos masivos, pero no todos los datos son igualmente confiables. Es por eso que el control de calidad (QC) y la limpieza de datos son pasos esenciales antes de cualquier análisis posterior. 
-La calidad de las lecturas se representa mediante la puntuación Phred, que es una medida logarítmica de la probabilidad de que una base se haya llamado
-incorrectamente. La puntuación Phred (Q) se calcula utilizando la siguiente fórmula: 
+| Tecnología   | Fortalezas                                        | Limitaciones                  | Ejemplos de uso                                       |
+|:-------------|:--------------------------------------------------|:------------------------------|:------------------------------------------------------|
+| **Sanger**   | Muy alta precisión, fácil de interpretar          | Bajo rendimiento              | Validar una mutación o un clon                        |
+| **Illumina** | Alta precisión, gran volumen, costo por base bajo | Lecturas cortas               | Genomas bacterianos, RNA-seq, metagenómica            |
+| **PacBio**   | Lecturas largas y alta calidad en modo HiFi       | Mayor costo por muestra       | Ensamblajes complejos, isoformas completas            |
+| **Nanopore** | Lecturas ultra largas, portátil, tiempo real      | Mayor variabilidad en calidad | Vigilancia rápida, metagenómica, ensamblajes híbridos |
+
+> La mejor tecnología no es necesariamente la más nueva, sino la que responde mejor a la pregunta biológica, al presupuesto disponible y al tipo de muestra.
+
+## 3. Principios fundamentales
+
+### 3.1 ¿Qué produce realmente un secuenciador?
+
+El producto directo de un secuenciador moderno no es un genoma completo, sino una colección de **lecturas** (*reads*): fragmentos de secuencia que luego deben analizarse computacionalmente.
+
+Conceptos clave:
+
+*   **Lectura (*read*):** fragmento de ADN o ARN secuenciado.
+*   **Librería:** colección de fragmentos preparados con adaptadores para entrar al secuenciador.
+*   **Adaptadores:** secuencias artificiales añadidas durante la preparación de librería; si no se eliminan cuando aparecen en los datos, pueden interferir con el análisis.
+*   **Paired-end reads:** lecturas obtenidas desde ambos extremos de un mismo fragmento. Ayudan a resolver regiones repetitivas, mejorar alineamientos y apoyar ensamblajes.
+
+### 3.2 Formatos de salida: FASTQ
+
+El archivo **FASTQ** es el formato estándar para almacenar secuencias junto con sus puntuaciones de calidad. Cada lectura ocupa 4 líneas:
+
+1. **Encabezado**, que comienza con `@`.
+2. **Secuencia** de nucleótidos.
+3. **Separador**, que comienza con `+`.
+4. **Calidad**, codificada en caracteres ASCII.
+
+Ver también **[Módulo 1 → Formato `.fastq`](../01-introduction/README.md#fastq)**.
+
+La diferencia principal entre FASTA y FASTQ es que:
+
+*   **FASTA** almacena solo la secuencia;
+*   **FASTQ** almacena la secuencia **y** la calidad de cada base.
+
+### 3.3 Calidad Phred (Q-score)
+
+La calidad de las lecturas es un aspecto crucial antes de cualquier análisis posterior. Las plataformas modernas producen grandes volúmenes de datos, pero no todas las bases tienen el mismo nivel de confianza.
+
+La puntuación Phred representa, en escala logarítmica, la probabilidad de error de una base:
 
 $Q = -10 \log_{10}(P)$
 
-donde P es la probabilidad de que la base se haya llamado incorrectamente. 
-Por ejemplo, una puntuación Phred de 20 indica que hay un 1% de probabilidad 
-de que la base se haya llamado incorrectamente, mientras que una puntuación 
-de 30 indica una probabilidad del 0,1%.
+Donde `P` es la probabilidad de que la base se haya llamado incorrectamente.
 
-Acá te presento una tabla con los valores de calidad y su significado:
+Por ejemplo:
+
+*   **Q20** = 1 error por cada 100 bases (99% precisión)
+*   **Q30** = 1 error por cada 1000 bases (99.9% precisión)
+*   **Q40** = 1 error por cada 10,000 bases (99.99% precisión)
 
 #### Tabla 1. Calidad Phred
-| Nivel de calidad Phred (Q) | Probabilidad de error de base (Pe) | Precisión de la base |
-|----------------------------|------------------------------------|----------------------|
-| 10                         | 1 en 10                            | 90%                  |
-| 20                         | 1 en 100                           | 99%                  |
-| 30                         | 1 en 1000                          | 99.9%                |
-| 40                         | 1 en 10.000                        | 99.99%               |
-| 50                         | 1 en 100.000                       | 99.999%              |
 
-> Usualmente, se considera que una lectura de alta calidad tiene una puntuación Phred de al menos 30 (Q30), lo que significa que la probabilidad de error es de 1 en 1000 bases. Sin embargo, la calidad puede variar a lo largo de la lectura, y es común observar una disminución de la calidad hacia el final de las lecturas, especialmente en tecnologías como Illumina. Por eso, es fundamental realizar un control de calidad exhaustivo y aplicar filtros adecuados para garantizar que los datos utilizados en los análisis posteriores sean confiables.
+| Nivel de calidad Phred (Q) | Probabilidad de error | Precisión de la base |
+|:---------------------------|:----------------------|:---------------------|
+| 10                         | 1 en 10               | 90%                  |
+| 20                         | 1 en 100              | 99%                  |
+| 30                         | 1 en 1000             | 99.9%                |
+| 40                         | 1 en 10,000           | 99.99%               |
+| 50                         | 1 en 100,000          | 99.999%              |
 
-## 4. Programas de Análisis de Secuenciación
+Usualmente, se considera que una lectura de alta calidad tiene una puntuación Phred de al menos **Q30**. Sin embargo, la calidad puede variar a lo largo de la lectura, y es frecuente que disminuya hacia el final, especialmente en lecturas Illumina.
 
-El ecosistema de herramientas es vasto, pero algunos nombres son omnipresentes y se explorarán en ejercicios prácticos:
+### 3.4 Cobertura y profundidad
 
-*   **Control de Calidad (QC):**
-    *   **FastQC:** La herramienta estándar para visualizar métricas de calidad (bases por posición, contenido GC, niveles de duplicación).
-    *   **Falco:** Una implementación alternativa en C++ de FastQC, diseñada para ser más rápida en grandes volúmenes de datos.
-*   **Limpieza y Procesamiento (Trimming):**
-    *   **Trimmomatic / Cutadapt:** Herramientas clásicas para eliminar adaptadores y bases de baja calidad.
-    *   **Fastp:** Herramienta "todo en uno" ultra rápida que realiza control de calidad, filtrado y recorte en un solo paso.
-*   **Alineamiento:**
-    *   **BWA / Bowtie2:** Estándares para alinear lecturas cortas (Illumina) a un genoma de referencia.
-    *   **Minimap2:** Versátil, utilizado principalmente para lecturas largas (PacBio/Nanopore).
-*   **Ensamblaje *De Novo*:**
-    *   **Velvet:** Uno de los primeros ensambladores basados en grafos de De Bruijn. Aunque antiguo, es excelente para entender el impacto del tamaño del *k-mer*.
-    *   **SPAdes / Shovill:** SPAdes es el ensamblador más popular actualmente para bacterias y genomas pequeños. Shovill es un "wrapper" que optimiza SPAdes para hacerlo más rápido y eficiente.
-    *   **Canu / Flye:** Diseñados específicamente para manejar los errores y la longitud de lecturas de tercera generación.
-*   **Visualización:** IGV (Integrative Genomics Viewer), Tablet.
-*   **Anotación:**
-    *   **Prokka:** Herramienta rápida para la anotación de genomas procariotas. Integra múltiples bases de datos para predecir CDS, tRNA, rRNA y CRISPRs en minutos.
+Estos términos a veces se usan como sinónimos, pero conviene diferenciarlos:
 
-## 5. Alineamiento de Secuencias
+*   **Cobertura (coverage):** número promedio de veces que cada base del genoma fue leída a escala global. Por ejemplo, una cobertura de 30X sugiere que, en promedio, cada posición fue observada 30 veces.
+*   **Profundidad (depth):** número de lecturas que cubren una posición específica del genoma.
 
-El alineamiento es el proceso de organizar secuencias para identificar regiones de similitud que pueden ser consecuencia de relaciones funcionales, estructurales o evolutivas.
+Una cobertura suficiente aumenta la confianza en el ensamblaje y en la detección de variantes. Sin embargo, una cobertura alta no corrige por sí sola problemas como contaminación, sesgos de secuenciación o errores sistemáticos.
 
-### 5.1 Conceptos Básicos
-*   **Identidad:** Porcentaje de caracteres exactos que coinciden en la misma posición.
-*   **Similitud:** Porcentaje de caracteres que son "parecidos" fisicoquímicamente (relevante en proteínas, ej. Leucina e Isoleucina).
-*   **Homología:** Conclusión evolutiva basada en la similitud. Dos secuencias son homólogas si comparten un ancestro común. (No se dice "homología del 80%", o son homólogas o no lo son).
+### 3.5 Adaptadores, trimming y filtrado
 
-### 5.2 Tipos de Alineamiento
-*   **Alineamiento Global:** Intenta alinear toda la longitud de ambas secuencias. Útil cuando las secuencias son de tamaño y composición similar. (Algoritmo: Needleman-Wunsch).
-*   **Alineamiento Local:** Busca las regiones de mayor similitud dentro de secuencias que pueden ser muy divergentes en el resto. Es el fundamento de BLAST. (Algoritmo: Smith-Waterman).
+Antes de ensamblar o alinear lecturas, suele ser necesario revisar si contienen:
 
-## 6. Algoritmos de Ensamblaje de Genomas
+*   **adaptadores residuales**;
+*   **bases de baja calidad** al inicio o al final;
+*   **lecturas demasiado cortas** después del recorte;
+*   **duplicación excesiva** o sesgos de contenido GC.
 
-El ensamblaje se parece a reconstruir un libro sin tener el original: primero lo “trituramos” en millones de copias y leemos pedacitos sueltos \(lecturas\); luego, usando sus solapamientos, armamos de nuevo el texto para inferir qué decía.
+A este proceso se le suele llamar **trimming** o limpieza de lecturas. No siempre se hace de forma agresiva: el objetivo no es “recortar por recortar”, sino mejorar la calidad de los datos sin eliminar información útil.
 
-### 6.1 Enfoques Principales
+## 4. Alineamiento y comparación de secuencias
 
-#### Overlap-Layout-Consensus (OLC)
-*   **Principio:** Busca solapamientos (overlaps) entre todas las lecturas para construir un grafo. Luego determina el camino (layout) y calcula la secuencia final (consensus).
-*   **Uso:** Común en ensambladores de lecturas largas (Canu). Es computacionalmente costoso para millones de lecturas cortas.
+Una vez se tienen lecturas o secuencias de buena calidad, una de las tareas centrales es compararlas entre sí o frente a una referencia.
 
-#### Grafos de De Bruijn
-*   **Principio:** En lugar de solapar lecturas enteras, divide las lecturas en fragmentos pequeños de tamaño fijo llamados **k-mers**. El grafo conecta k-mers que se superponen por k-1 bases.
-*   **Importancia del K-mer:** La elección del tamaño de *k* es crítica (como veremos en prácticas con **Velvet**).
-    *   *k* pequeño: Alta conectividad, pero confunde regiones repetitivas (el grafo se enmaraña).
-    *   *k* grande: Resuelve repeticiones, pero requiere mayor cobertura y es sensible a errores de secuenciación (el grafo se rompe).
-*   **Ventaja:** Maneja eficientemente la redundancia masiva de los datos de Illumina. No compara "todos contra todos".
-*   **Uso:** Estándar para lecturas cortas (**SPAdes**, Velvet).
-*   **Explicación Sencilla:** Imagina que en lugar de armar oraciones completas, rompes todo en sílabas de 3 letras y tratas de encadenarlas basándote en que el final de una sílaba coincide con el principio de la siguiente.
+### 4.1 ¿Qué es un alineamiento?
 
-## 7. Anotación del Genoma
+Un **alineamiento de secuencias** organiza dos o más secuencias para identificar regiones equivalentes, coincidencias, sustituciones, inserciones o deleciones.
 
-Una vez tenemos la secuencia ensamblada (FASTA), es solo una larga cadena de letras. La anotación es el proceso de identificar dónde están los "elementos funcionales" y qué hacen.
+Desde el punto de vista biológico, alinear secuencias permite:
 
-### 7.1 ¿Qué es un Gen?
-Biológicamente, es una secuencia de ADN que se transcribe a ARN funcional (mRNA, tRNA, rRNA). Computacionalmente, buscamos patrones específicos que señalan su presencia.
+*   identificar genes homólogos;
+*   comparar variantes;
+*   inferir relaciones evolutivas;
+*   ubicar lecturas dentro de un genoma de referencia.
 
-### 7.2 Estructura del Gen y Predicción
+### 4.2 Alineamiento global y local
 
-#### Procariotas (Bacterias/Arqueas)
-*   **Estructura:** Genes continuos, sin intrones. Densidad génica alta.
-*   **Señales:** Promotor (-35, -10), Sitio de unión al ribosoma (RBS/Shine-Dalgarno), Codón de inicio (ATG), Marco de lectura abierto (ORF), Codón de parada.
-*   **Algoritmos:** Buscan ORFs largos y modelos de Markov (HMM) entrenados para reconocer la "gramática" del ADN codificante. (Software: Prokka, Prodigal).
+#### Alineamiento global
 
-#### Eucariotas
-*   **Estructura:** Genes discontinuos (exones e intrones). Promotores complejos, regiones UTR, splicing alternativo.
-*   **Desafío:** Mucho más difícil de predecir solo con el ADN. A menudo se requiere evidencia de ARN (transcriptoma) para saber exactamente dónde están los exones.
-*   **Algoritmos:** Usan modelos HMM complejos, homología con proteínas conocidas y pistas extrínsecas (RNA-Seq). (Software: Augustus, MAKER).
+Intenta alinear las secuencias a lo largo de toda su longitud. Es útil cuando las secuencias son similares y comparables de extremo a extremo.
 
-### 7.3 Anotación Funcional
-Una vez predicho *dónde* está el gen, ¿qué hace?
-*   **Búsqueda de Homología:** BLAST contra bases de datos (UniProt, NCBI nr).
-*   **Dominios y Motivos:** Búsqueda de patrones conservados (InterProScan, Pfam).
-*   **Ontología Génica (GO):** Asignación de vocabularios controlados para describir función molecular, proceso biológico y componente celular.
+**Ejemplo de uso:** comparar dos genes completos muy relacionados.
 
-## 8. Flujos de Trabajo Típicos (Pipelines)
+#### Alineamiento local
 
-En la práctica bioinformática real, estos pasos no ocurren de forma aislada, sino que se integran en un flujo de trabajo. A continuación, se presenta un esquema del proceso que se explorará con herramientas específicas como **Fastp**, **Velvet**, **Shovill** y **Prokka**:
+Busca las regiones de mayor similitud dentro de secuencias más largas. Es útil cuando solo una parte de la secuencia coincide.
 
-1.  **Obtención de datos crudos (`.fastq`):** Secuenciación de una muestra bacteriana.
-2.  **Control de Calidad (QC):**
-    *   Revisión de métricas con **FastQC** o **Falco**.
-    *   ¿Hay adaptadores? ¿La calidad baja al final de la lectura?
-3.  **Limpieza (Trimming):**
-    *   Uso de **Fastp** para filtrar lecturas de mala calidad y recortar adaptadores.
-    *   *Resultado:* Archivos FASTQ limpios.
-4.  **Ensamblaje *De Novo*:**
-    *   Construcción de contigs a partir de lecturas limpias.
-    *   Uso de **Shovill** (wrapper de SPAdes) para un ensamblaje robusto o **Velvet** para comprender los fundamentos de los grafos.
-    *   *Resultado:* Archivo FASTA con el genoma ensamblado.
-5.  **Evaluación del Ensamblaje:**
-    *   ¿Cuántos contigs obtuvimos? ¿Cuál es el N50? (Uso de herramientas como **QUAST**).
-6.  **Anotación:**
-    *   Identificación de genes en el ensamblaje.
-    *   Uso de **Prokka** para generar tablas de características (`.gff`) y secuencias de proteínas (`.faa`).
+**Ejemplo de uso:** buscar un dominio conservado o una región homóloga dentro de secuencias más grandes.
+
+En términos sencillos:
+
+*   **global** = “comparemos todo con todo”
+*   **local** = “encontremos el mejor fragmento compartido”
+
+### 4.3 Mapping vs. alineamiento
+
+Estos términos están relacionados, pero no son exactamente lo mismo.
+
+*   **Alineamiento** es el concepto general de comparar secuencias para ver cómo se corresponden.
+*   **Mapping** suele referirse al proceso de ubicar muchas lecturas cortas dentro de una secuencia de referencia conocida.
+
+Por ejemplo:
+
+*   si compara dos secuencias para estudiar similitud, está haciendo un **alineamiento**;
+*   si toma millones de lecturas Illumina y las ubica sobre un genoma bacteriano de referencia, está haciendo **mapping**.
+
+### 4.4 Identidad y similitud
+
+Estos conceptos también deben distinguirse:
+
+*   **Identidad:** porcentaje de posiciones exactamente iguales entre dos secuencias alineadas.
+*   **Similitud:** grado de semejanza considerando no solo coincidencias exactas, sino también sustituciones conservadoras o relaciones funcionales, especialmente en proteínas.
+
+En ADN, con frecuencia se habla más de **identidad**. En proteínas, la **similitud** puede ser muy informativa porque diferentes aminoácidos pueden compartir propiedades químicas parecidas.
+
+### 4.5 ¿Por qué esto importa para el ensamblaje y la anotación?
+
+Porque gran parte del análisis bioinformático depende de comparar secuencias:
+
+*   las lecturas se alinean contra referencias;
+*   los contigs se comparan entre sí o contra genomas conocidos;
+*   los genes predichos se comparan con bases de datos para inferir función.
+
+Por eso, entender alineamiento es un paso previo natural antes de estudiar ensamblaje y anotación con más profundidad.
+
+## 5. Programas de análisis de secuenciación
+
+El ecosistema de herramientas es muy amplio, pero algunos nombres aparecen con frecuencia en flujos de trabajo reales y en las prácticas del curso.
+
+### 5.1 Control de calidad (QC)
+
+*   **FastQC:** herramienta clásica para visualizar métricas de calidad como calidad por base, contenido GC, duplicación y presencia de adaptadores.
+*   **Falco:** implementación alternativa y más rápida para datos de lectura corta, especialmente útil cuando se manejan múltiples archivos.
+*   **MultiQC:** integra múltiples reportes en una sola vista resumida.
+
+### 5.2 Limpieza y procesamiento de lecturas
+
+*   **Trimmomatic / Cutadapt:** herramientas clásicas para remover adaptadores y bases de baja calidad.
+*   **Fastp:** herramienta todo-en-uno para control de calidad, filtrado y trimming.
+
+### 5.3 Alineamiento
+
+*   **BWA / Bowtie2:** estándares para alinear lecturas cortas contra una referencia.
+*   **Minimap2:** especialmente útil para lecturas largas, aunque también puede utilizarse en otros contextos.
+
+### 5.4 Ensamblaje *de novo*
+
+*   **Velvet:** uno de los ensambladores clásicos basados en grafos de De Bruijn. Es muy útil para entender el efecto del tamaño del *k-mer*.
+*   **SPAdes / Shovill:** ampliamente utilizados en genómica bacteriana con lecturas Illumina.
+*   **Canu / Flye:** diseñados para lecturas largas de tercera generación.
+
+### 5.5 Visualización y anotación
+
+*   **IGV (Integrative Genomics Viewer):** visualización de alineamientos, cobertura y variantes.
+*   **Tablet:** exploración visual de ensamblajes y lecturas alineadas.
+*   **Prokka / Bakta:** anotación rápida de genomas procariotas.
+
+## 6. Conexión con las prácticas del curso
+
+Este módulo teórico prepara directamente el trabajo práctico que se desarrolla en genómica y análisis posterior. En particular:
+
+| Tema teórico en este módulo           | Aplicación práctica en el curso                                                                                                                                                                               |
+|:--------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Calidad de lecturas y FASTQ           | [`genome_assembly_fastqc_velvet.md`](../04-genomics/exercises/genome_assembly_fastqc_velvet.md)                                                                                                               |
+| QC, trimming y preparación de datos   | [`genome_assembly_falco_fastp_shovill.md`](../04-genomics/exercises/genome_assembly_falco_fastp_shovill.md)                                                                                                   |
+| Ensamblaje y evaluación del resultado | [`genome_assembly_fastqc_velvet.md`](../04-genomics/exercises/genome_assembly_fastqc_velvet.md) y [`genome_assembly_falco_fastp_shovill.md`](../04-genomics/exercises/genome_assembly_falco_fastp_shovill.md) |
+| Anotación genómica básica             | [`genome_annotation.md`](../04-genomics/exercises/genome_annotation.md)                                                                                                                                       |
+
+De esta forma, el módulo 3 funciona como un puente entre los conceptos fundamentales de secuenciación y las prácticas más aplicadas de ensamblaje, anotación y análisis genómico del módulo 4.
+
+## 7. Cierre conceptual
+
+La secuenciación moderna no consiste solo en generar datos, sino en comprender qué representan esos datos y qué limitaciones arrastran desde el laboratorio hasta el análisis computacional. La elección de la tecnología, la evaluación de la calidad, el tipo de alineamiento y la estrategia de ensamblaje dependen siempre de la pregunta biológica.
+
+En los siguientes módulos, estos principios se aplicarán a problemas más concretos: reconstrucción de genomas, anotación de genes, comparación entre cepas, búsqueda de variantes y análisis funcional. Comprender bien esta base le permitirá interpretar mejor los resultados y tomar decisiones bioinformáticas más informadas.

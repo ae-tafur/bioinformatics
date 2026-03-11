@@ -90,7 +90,7 @@ Topics include:
 
 ## 04 - Phylogenetics
 
-**[Module 4 — Phylogenetics and Evolutionary Inference](04-phylogenetics/README.md)**
+**[Module 4 — Phylogenetics and Evolutionary Inference](05-phylogenetics/README.md)**
 
 Topics include:
 - Multiple sequence alignment and model choice
@@ -100,7 +100,7 @@ Topics include:
 
 ## 05 - Genomics
 
-**[Module 5 — Genomics: From Reads to Genomes](05-genomics/README.md)**
+**[Module 5 — Genomics: From Reads to Genomes](04-genomics/README.md)**
 
 Topics include:
 - Read QC and trimming; mapping vs assembly strategies
