@@ -225,9 +225,15 @@ En el esquema completo:
 
 ```text
 Hebra sentido                 5' - A T G C G G T T A C C A - 3'
+                                                   | | | | | |   ← el reverse se une aquí
+Primer reverse (reportado)                  5' - T G G T A A - 3'
+
+Primer forward (reportado)         5' - A T G C G G - 3'
+                                        | | | | | |   ← el forward se une aquí
 Hebra antisentido             3' - T A C G C C A A T G G T - 5'
-Primer reverse                                    5' - T G G T A A - 3'
 ```
+
+> 💡 **Nota:** en el esquema, cada primer se muestra junto a la hebra a la que se une (hibrida). El forward se hibrida con la hebra antisentido; el reverse se hibrida con la hebra sentido. Pero ambos se reportan siempre en orientación **5' → 3'**.
 
 La polimerasa extenderá también desde el extremo **3'** de este primer, pero ahora avanzando hacia la **izquierda** en el dibujo, es decir, hacia el interior de la región a amplificar.
 
@@ -345,13 +351,13 @@ Abra la herramienta:
 
 ##### Parámetros orientadores para esta práctica
 
-| Parámetro | Valor sugerido |
-|:--|:--|
-| Product size | 150–400 bp |
-| Primer length | 18–25 nt |
-| Optimum Tm | ~60 °C |
-| GC content | 40–60% |
-| Número de pares a devolver | 5 o menos |
+| Parámetro                  | Valor sugerido |
+|:---------------------------|:---------------|
+| Product size               | 150–400 bp     |
+| Primer length              | 18–25 nt       |
+| Optimum Tm                 | ~60 °C         |
+| GC content                 | 40–60%         |
+| Número de pares a devolver | 5 o menos      |
 
 ##### Qué debe revisar en los resultados
 
@@ -370,6 +376,8 @@ Para cada par de primers candidato, observe:
 - ¿Cuál es el tamaño esperado del amplicón?
 - ¿La diferencia de Tm entre ambos primers es pequeña?
 - ¿La herramienta predice productos inespecíficos adicionales?
+
+---
 
 ### Parte 6: Ruta B — diseño sobre una región conservada
 
@@ -410,7 +418,9 @@ Una vez identificada la zona conservada:
 **Preguntas**
 - ¿Qué parte del alineamiento eligió para diseñar los primers?
 - ¿La región escogida es completamente conservada o tiene algunas posiciones variables?
-- ¿Serían estos primers potencialmente más “universales” que los de la opción A?
+- ¿Serían estos primers potencialmente más "universales" que los de la opción A?
+
+---
 
 ### Parte 7: Validación *in silico* del amplicón
 
@@ -438,6 +448,8 @@ Tanto en la **Opción A** como en la **Opción B**, el siguiente paso es comprob
 - ¿Cuál es el tamaño esperado del amplicón principal?
 - ¿Se predicen otros productos adicionales?
 - Si hubiera dos productos posibles, ¿cómo afectaría eso la interpretación del experimento?
+
+---
 
 ### Parte 8: Electroforesis *in silico*
 
@@ -470,6 +482,8 @@ Si dispone de una herramienta externa que permita simular PCR o visualizar produ
 - ¿Cómo distinguiría un producto específico de uno inespecífico?
 - ¿Qué patrón de bandas le haría sospechar que el diseño de primers no fue adecuado?
 
+---
+
 ### Parte 9: Puente hacia el módulo 4
 
 Imagine que en el módulo de genómica usted ensambló un genoma bacteriano y el software de anotación predijo un gen de resistencia. Un uso muy natural de esta práctica sería diseñar primers para:
@@ -480,27 +494,29 @@ Imagine que en el módulo de genómica usted ensambló un genoma bacteriano y el
 
 Es decir, el diseño de primers traduce una predicción bioinformática en una estrategia experimental concreta.
 
+---
+
 ### Parte 10: Entregable sugerido
 
 Prepare una tabla corta con la siguiente información:
 
-| Elemento | Respuesta |
-|:--|:--|
-| Ruta elegida (A o B) | |
-| Organismo | |
-| Gen o región blanco | |
-| Accession / GenBank ID | |
-| Longitud de la secuencia descargada | |
-| Primer forward (5'→3') | |
-| Primer reverse (5'→3') | |
-| Tm forward | |
-| Tm reverse | |
-| %GC forward | |
-| %GC reverse | |
-| Tamaño esperado del amplicón | |
-| ¿Hubo productos inespecíficos? | |
-| Interpretación de la electroforesis *in silico* | |
-| Observaciones finales | |
+| Elemento                                        | Respuesta |
+|:------------------------------------------------|:----------|
+| Ruta elegida (A o B)                            |           |
+| Organismo                                       |           |
+| Gen o región blanco                             |           |
+| Accession / GenBank ID                          |           |
+| Longitud de la secuencia descargada             |           |
+| Primer forward (5'→3')                          |           |
+| Primer reverse (5'→3')                          |           |
+| Tm forward                                      |           |
+| Tm reverse                                      |           |
+| %GC forward                                     |           |
+| %GC reverse                                     |           |
+| Tamaño esperado del amplicón                    |           |
+| ¿Hubo productos inespecíficos?                  |           |
+| Interpretación de la electroforesis *in silico* |           |
+| Observaciones finales                           |           |
 
 ---
 

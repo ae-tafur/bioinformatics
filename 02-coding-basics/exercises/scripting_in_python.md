@@ -34,22 +34,22 @@ Esta práctica corresponde a la **Parte 2 del Módulo 2**. Todos los conceptos t
 
 Todos los archivos se encuentran en la carpeta `data/`. Los usará progresivamente a lo largo de la práctica:
 
-| Archivo | Formato | Descripción |
-|---|---|---|
-| `01_sequences.fasta` | FASTA | 10 secuencias de ADN |
-| `02_results_pcr_96.csv` | CSV | Resultados de PCR en placa de 96 pocillos |
-| `03_nucleotides.fa` | FASTA | Secuencia única de ADN |
-| `05_genome.gff3.txt` | GFF3 | Anotación de genes en dos cromosomas |
-| `06_bacterial_growth.tsv` | TSV | Absorbancias OD600 de tres cepas bacterianas |
-| `07_mutations.fasta` | FASTA | Secuencia de referencia y dos mutantes |
-| `08_antibiogram.csv` | CSV | Resultados de antibiograma (R/S/I) |
-| `09_short_sequences.fasta` | FASTA | Secuencias de distinta longitud |
-| `10_temperature.csv` | CSV | Temperaturas de incubación en tres experimentos |
-| `11_pcr_ct.csv` | CSV | Valores Ct de PCR cuantitativa |
-| `12_gene_annotations.tsv` | TSV | Anotación funcional de genes (KO IDs) |
-| `13_glucose_comsumption.tsv` | TSV | Consumo de glucosa de 10 cultivos en 3 réplicas |
-| `14_bacterias_muestreo.csv` | CSV | Identificación de bacterias en muestreo ambiental |
-| `15_aa_sequences.fa` | FASTA | Secuencias de proteínas (aminoácidos) |
+| Archivo                      | Formato | Descripción                                       |
+|------------------------------|---------|---------------------------------------------------|
+| `01_sequences.fasta`         | FASTA   | 10 secuencias de ADN                              |
+| `02_results_pcr_96.csv`      | CSV     | Resultados de PCR en placa de 96 pocillos         |
+| `03_nucleotides.fa`          | FASTA   | Secuencia única de ADN                            |
+| `05_genome.gff3`             | GFF3    | Anotación de genes en dos cromosomas              |
+| `06_bacterial_growth.tsv`    | TSV     | Absorbancias OD600 de tres cepas bacterianas      |
+| `07_mutations.fasta`         | FASTA   | Secuencia de referencia y dos mutantes            |
+| `08_antibiogram.csv`         | CSV     | Resultados de antibiograma (R/S/I)                |
+| `09_short_sequences.fasta`   | FASTA   | Secuencias de distinta longitud                   |
+| `10_temperature.csv`         | CSV     | Temperaturas de incubación en tres experimentos   |
+| `11_pcr_ct.csv`              | CSV     | Valores Ct de PCR cuantitativa                    |
+| `12_gene_annotations.tsv`    | TSV     | Anotación funcional de genes (KO IDs)             |
+| `13_glucose_comsumption.tsv` | TSV     | Consumo de glucosa de 10 cultivos en 3 réplicas   |
+| `14_bacterias_muestreo.csv`  | CSV     | Identificación de bacterias en muestreo ambiental |
+| `15_aa_sequences.fa`         | FASTA   | Secuencias de proteínas (aminoácidos)             |
 
 ---
 
@@ -390,7 +390,7 @@ print("=== Detección de mutaciones ===")
 for nombre, seq in secuencias.items():
     if nombre == "Ref":
         continue   # saltar la referencia
-	    
+
     mutaciones = 0
     posiciones = []
     for i in range(len(referencia)):
@@ -456,7 +456,7 @@ Cree el archivo `leer_csv.py`:
 Lee el archivo de antibiograma y clasifica los resultados.
 """
 
-archivo = "data/08_antibiogram.csv" # Cambia esta ruta al archivo FASTA según tu estructura de carpetas
+archivo = "data/08_antibiogram.csv" # Cambia esta ruta según tu estructura de carpetas
 conteo = {"R": 0, "I": 0, "S": 0}
 
 with open(archivo, "r") as f:
@@ -490,14 +490,14 @@ Cree el archivo `crecimiento_bacteriano.py`:
 Calcula el promedio de OD600 de cada cepa bacteriana.
 """
 
-archivo = "data/06_bacterial_growth.tsv" # Cambia esta ruta al archivo FASTA según tu estructura de carpetas
+archivo = "data/06_bacterial_growth.tsv" # Cambia esta ruta según tu estructura de carpetas
 
 with open(archivo, "r") as f:
     encabezado = f.readline()
     for linea in f:
         linea = linea.strip()
         if linea:
-            partes = linea.split(",")
+            partes = linea.split("\t")
             cepa = partes[0]
             replicas = [float(partes[1]), float(partes[2]), float(partes[3])]
             promedio = sum(replicas) / len(replicas)
@@ -547,7 +547,7 @@ Usando la misma secuencia del ejercicio anterior, calcule e imprima el **%GC**.
 ---
 
 **Ejercicio 5 — Contar genes en un archivo GFF**
-Archivo: `data/05_genome.gff3.txt`
+Archivo: `data/05_genome.gff3`
 Lea el archivo línea por línea y cuente cuántas líneas contienen la palabra `gene` en la tercera columna (tipo de elemento).
 > 💡 Use `.split()` para dividir la línea en columnas y verifique `columnas[2] == "gene"`.
 
