@@ -279,13 +279,13 @@ El ecosistema de herramientas es muy amplio, pero algunos nombres aparecen con f
 
 Este módulo teórico prepara directamente el trabajo práctico que se desarrolla en genómica y análisis posterior. En particular:
 
-| Tema teórico en este módulo | Aplicación práctica en el curso |
-|:--|:--|
-| Calidad de lecturas y FASTQ | [`genome_assembly_fastqc_velvet.md`](../04-genomics/exercises/genome_assembly_fastqc_velvet.md) |
-| QC, trimming y preparación de datos | [`genome_assembly_falco_fastp_shovill.md`](../04-genomics/exercises/genome_assembly_falco_fastp_shovill.md) |
-| Alineamiento, complementariedad y especificidad de secuencias | [`primer_design.md`](./exercises/primer_design.md) |
-| Ensamblaje y evaluación del resultado | [`genome_assembly_fastqc_velvet.md`](../04-genomics/exercises/genome_assembly_fastqc_velvet.md) y [`genome_assembly_falco_fastp_shovill.md`](../04-genomics/exercises/genome_assembly_falco_fastp_shovill.md) |
-| Anotación genómica básica | [`genome_annotation.md`](../04-genomics/exercises/genome_annotation.md) |
+| Tema teórico en este módulo                                   | Aplicación práctica en el curso                                                                                                                                                                               |
+|:--------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Calidad de lecturas y FASTQ                                   | [`genome_assembly_fastqc_velvet.md`](../04-genomics/exercises/genome_assembly_fastqc_velvet.md)                                                                                                               |
+| QC, trimming y preparación de datos                           | [`genome_assembly_falco_fastp_shovill.md`](../04-genomics/exercises/genome_assembly_falco_fastp_shovill.md)                                                                                                   |
+| Alineamiento, complementariedad y especificidad de secuencias | [`primer_design.md`](./exercises/primer_design.md)                                                                                                                                                            |
+| Ensamblaje y evaluación del resultado                         | [`genome_assembly_fastqc_velvet.md`](../04-genomics/exercises/genome_assembly_fastqc_velvet.md) y [`genome_assembly_falco_fastp_shovill.md`](../04-genomics/exercises/genome_assembly_falco_fastp_shovill.md) |
+| Anotación genómica básica                                     | [`genome_annotation.md`](../04-genomics/exercises/genome_annotation.md)                                                                                                                                       |
 
 De esta forma, el módulo 3 funciona como un puente entre los conceptos fundamentales de secuenciación y las prácticas más aplicadas de ensamblaje, anotación y análisis genómico del módulo 4.
 
