@@ -223,5 +223,5 @@ Este módulo teórico prepara directamente el trabajo práctico que se desarroll
 |:----------------------------------------------------------------------------------------------------------|:---------------------------------------------------------------------|
 | [Ensamblaje con FastQC + Velvet](../06-genomics/exercises/genome_assembly_fastqc_velvet.md)               | Calidad de lecturas (FASTQ) y ensamblaje *de novo* con Velvet        |
 | [Ensamblaje con Falco + fastp + Shovill](../06-genomics/exercises/genome_assembly_falco_fastp_shovill.md) | QC, trimming y ensamblaje con pipeline moderno                       |
-| [Diseño de primers](../03-sequence_analysis/exercises/primer_design.md)                                   | Alineamiento, complementariedad y especificidad de secuencias        |
+| [Diseño de primers](../03-sequence_analysis/exercises/01_primer_design.md)                                   | Alineamiento, complementariedad y especificidad de secuencias        |
 | [Anotación genómica](../06-genomics/exercises/genome_annotation.md)                                       | Predicción de genes y asignación de funciones en genomas bacterianos |

@@ -106,7 +106,7 @@ This is where you start doing what bioinformaticians do most: **comparing sequen
 
 **Practices:**
 - [Alignment with dynamic programming](03-sequence_analysis/exercises/code/alignment_dp.py) — Python implementation of Needleman-Wunsch and Smith-Waterman from scratch
-- [Primer design](03-sequence_analysis/exercises/primer_design.md) — design primers with Primer-BLAST, validate amplicon size and simulate gel electrophoresis
+- [Primer design](03-sequence_analysis/exercises/01_primer_design.md) — design primers with Primer-BLAST, validate amplicon size and simulate gel electrophoresis
 
 ---
 
@@ -123,7 +123,7 @@ You'll build and interpret evolutionary trees from molecular data.
 - Interpreting phylogenies in biological and clinical context
 
 **Practices:**
-- [Phylogenetic analysis with 16S rRNA](04-phylogenetics/exercises/phylogenetics.md) — align 16S sequences, build NJ/ML trees in MEGA and identify an unknown bacterium
+- [Phylogenetic analysis with 16S rRNA](04-phylogenetics/exercises/02_phylogenetics.md) — align 16S sequences, build NJ/ML trees in MEGA and identify an unknown bacterium
 
 ---
 

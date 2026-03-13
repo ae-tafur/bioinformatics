@@ -528,7 +528,7 @@ La **PCR *in silico*** consiste en verificar computacionalmente si un par de pri
 
 La práctica completa con procedimiento guiado, opciones A y B, y actividades de electroforesis *in silico* está disponible en:
 
-📄 **[Práctica: Diseño de primers](./exercises/primer_design.md)**
+📄 **[Práctica: Diseño de primers](exercises/01_primer_design.md)**
 
 ---
 
@@ -556,5 +556,5 @@ En el **Módulo 4** (Filogenética) usará estos conceptos de alineamiento para 
 |:-------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------------|
 | [Bases de datos biológicas (Módulo 1)](../01-introduction/exercises/01_databases.md) | Búsqueda por similitud en NCBI y descarga de secuencias — base para los análisis de este módulo |
 | [Alineamiento con programación dinámica](./exercises/code/alignment_dp.py)           | Script Python que implementa Needleman-Wunsch y Smith-Waterman desde cero                       |
-| [Diseño de primers y PCR *in silico*](./exercises/primer_design.md)                  | Diseño de primers con Primer-BLAST, validación del amplicón y electroforesis *in silico*        |
+| [Diseño de primers y PCR *in silico*](exercises/01_primer_design.md)                  | Diseño de primers con Primer-BLAST, validación del amplicón y electroforesis *in silico*        |
 
