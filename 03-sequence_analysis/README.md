@@ -323,7 +323,8 @@ En la práctica, BLAST es suficiente para la mayoría de las búsquedas. Smith-W
 
 El objetivo es que usted entienda el algoritmo de alineamiento "por dentro", no como una caja negra. Para eso, en la carpeta de ejercicios del módulo encontrará un script Python que implementa tanto **Needleman-Wunsch** (global) como **Smith-Waterman** (local) desde cero usando programación dinámica.
 
-El script se encuentra en: [`exercises/code/alignment_dp.py`](./exercises/code/alignment_dp.py)
+> [!NOTE]
+> El script se encuentra en: [`exercises/code/alignment_dp.py`](./exercises/code/alignment_dp.py)
 
 ### 3.2 ¿Qué hace el script?
 
