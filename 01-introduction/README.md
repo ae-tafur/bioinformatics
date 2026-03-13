@@ -119,6 +119,7 @@ Las ómicas estudian moléculas biológicas de forma global:
 
 > [!IMPORTANT]
 > `ADN → ARN → Proteína`
+> 
 > `(Replicación) → (Transcripción) → (Traducción)`
 
 * **ADN:** Almacena información genética
