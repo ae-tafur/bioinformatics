@@ -74,7 +74,7 @@ Estos genes se conocen como **genes marcadores** o **marcadores filogenéticos**
 > ```text
 > Ribosoma 70S (bacterias y arqueas)
 > ├── Subunidad pequeña (30S)
-> │   └── rRNA 16S  ← ⭐ El marcador más usado en microbiología
+> │   └── rRNA 16S  ← El marcador más usado en microbiología
 > │
 > └── Subunidad grande (50S)
 >     ├── rRNA 23S  ← Marcador complementario (más largo, más info)
