@@ -1,377 +1,424 @@
-# Módulo 4: Genómica: Ensamblaje y Anotación
+# Módulo 6: Genómica — Del Genoma Ensamblado al Conocimiento Biológico
 
 ## Introducción
 
-La genómica busca reconstruir, interpretar y comparar el contenido completo de ADN de un organismo. En términos prácticos, “hacer genómica” significa transformar millones de lecturas cortas o largas producidas por un secuenciador en información biológica útil: un genoma ensamblado, genes anotados, funciones predichas y, en muchos casos, variantes que explican diferencias entre cepas, fenotipos o linajes evolutivos.
+En el Módulo 5 aprendió cómo se generan las lecturas de secuenciación, cómo se evalúa su calidad y cómo se reconstruye un genoma mediante ensamblaje. El resultado de ese proceso es un archivo FASTA con contigs o scaffolds: una secuencia larga, pero todavía "muda" — no sabemos dónde están los genes, qué funciones cumplen ni qué diferencias tiene respecto a otros organismos.
 
-En el laboratorio, el resultado inicial de una secuenciación no es un cromosoma listo para analizar, sino un gran conjunto de fragmentos. Por ello, uno de los retos centrales de la bioinformática moderna es responder preguntas como: ¿cómo reconstruimos un genoma a partir de fragmentos incompletos?, ¿cómo evaluamos si ese ensamblaje es confiable?, ¿cómo identificamos genes y otras regiones funcionales?, y ¿cómo detectamos cambios puntuales respecto a una referencia?
+Este módulo se enfoca en darle **significado biológico** a un genoma ensamblado. Trabajaremos con tres grandes bloques:
 
-En este módulo trabajaremos especialmente con genómica bacteriana, donde los genomas suelen ser más compactos y permiten entender con mayor claridad los principios computacionales detrás del ensamblaje y la anotación. Sin embargo, también haremos contraste con genomas eucariotas, ya que presentan desafíos adicionales como intrones, regiones repetitivas extensas y estructuras génicas más complejas.
+1. **Anotación genómica** — identificar genes, asignar funciones y generar archivos interpretables (GFF, GBK).
+2. **Variantes genómicas** — detectar SNPs e indels comparando contra una referencia.
+3. **Genómica comparada** — comparar genomas completos: ANI, pan-genoma, sintenia e islas genómicas.
 
-Al finalizar este módulo, deberá comprender la lógica general de un flujo de análisis genómico: control de calidad, ensamblaje o mapeo contra referencia, evaluación del ensamblaje, anotación estructural y funcional, e identificación de variantes genómicas.
+> [!NOTE]
+> En genómica, no basta con obtener una secuencia larga; también hay que demostrar que es suficientemente completa, consistente y biológicamente interpretable. Este módulo le enseña a pasar de la secuencia al conocimiento.
 
-> **Idea clave:** en genómica, no basta con obtener una secuencia larga; también hay que demostrar que es suficientemente completa, consistente y biológicamente interpretable.
+---
 
-## 1. ¿Qué significa “hacer genómica”?
+## Prerrequisitos y conexión con módulos previos
 
-En sentido amplio, la genómica estudia el conjunto completo del ADN de un organismo. A diferencia del análisis de un solo gen, aquí el objetivo es trabajar con miles de genes, regiones intergénicas, elementos repetitivos, plásmidos y otras características del genoma como un sistema integrado.
+### Del Módulo 5
 
-En un proyecto genómico típico, el flujo de trabajo incluye:
+Ya sabe:
+- cómo funcionan las **tecnologías de secuenciación** y qué tipo de datos producen;
+- cómo evaluar la **calidad de las lecturas** (Phred, FASTQ);
+- la diferencia entre **mapping** y **ensamblaje *de novo***;
+- cómo evaluar un ensamblaje (**N50**, **BUSCO**, contaminación).
 
-1. **Obtención de datos crudos (`.fastq`)** a partir de una plataforma de secuenciación.
-2. **Control de calidad (QC)** para revisar calidad por base, adaptadores, duplicación y contenido GC.
-3. **Limpieza o trimming** para remover adaptadores y lecturas de baja calidad.
-4. **Reconstrucción del genoma**, ya sea mediante:
-   * **Mapping contra una referencia**, si existe un genoma cercano bien caracterizado.
-   * **Ensamblaje *de novo***, si se desea reconstruir el genoma sin depender de una referencia.
-5. **Evaluación del resultado**, usando métricas de continuidad, tamaño, cobertura y completitud.
-6. **Anotación genómica**, para identificar genes y asignar posibles funciones.
-7. **Análisis comparativo o detección de variantes**, según la pregunta biológica.
+> [!NOTE]
+> Si necesita repasar → [README del Módulo 5](../05_sequencing/README.md).
 
-Este flujo es especialmente importante en microbiología, donde puede aplicarse para:
+### Del Módulo 3
 
-* identificar bacterias y comparar cepas;
-* estudiar genes de resistencia a antibióticos;
-* analizar factores de virulencia;
-* describir la capacidad metabólica de un microorganismo;
-* vigilar brotes infecciosos y rutas de transmisión.
+Ya conoce:
+- cómo funciona **BLAST** y cómo interpretar identidad, E-value y coverage;
+- la diferencia entre alineamiento **global** y **local**.
 
-## 2. Estrategias de análisis genómico: *mapping* vs. *de novo*
+> [!NOTE]
+> Si necesita repasar → [README del Módulo 3](../03-sequence_analysis/README.md).
 
-Uno de los primeros pasos conceptuales en genómica es decidir cómo reconstruir la información a partir de las lecturas.
+### Del Módulo 4
 
-### 2.1 *Mapping* contra un genoma de referencia
+Ya entiende:
+- por qué un **BLAST del 16S no basta** para identificar especie;
+- el concepto de **ANI** como alternativa genómica.
 
-En esta estrategia, las lecturas se alinean contra un genoma ya conocido y se analiza cómo encajan sobre esa referencia.
+> [!NOTE]
+> Si necesita repasar → [README del Módulo 4](../04-phylogenetics/README.md).
 
-*   **Ventaja principal:** es rápido y muy útil cuando el organismo estudiado es muy parecido a uno ya secuenciado.
-*   **Aplicaciones comunes:** detección de SNPs e indels, análisis de cobertura, identificación de regiones ausentes o presentes, vigilancia epidemiológica.
-*   **Limitación:** si el genoma del organismo tiene reordenamientos, inserciones nuevas o regiones muy divergentes, estas pueden pasarse por alto o alinearse incorrectamente.
+En este módulo, todo converge: tomará un genoma ensamblado (Módulo 5), le encontrará genes usando conceptos de alineamiento y búsqueda por similitud (Módulo 3), y podrá compararlo con otros genomas usando las ideas de distancia evolutiva y marcadores (Módulo 4).
 
-Un ejemplo clásico sería secuenciar una nueva cepa de *Escherichia coli* y alinear sus lecturas contra un genoma de referencia de *E. coli* ya publicado.
+---
 
-### 2.2 Ensamblaje *de novo*
+## 1. Anotación del genoma
 
-En el ensamblaje *de novo*, no se parte de una referencia previa. El genoma se reconstruye a partir de los solapamientos o relaciones entre las propias lecturas.
+Una vez que tiene un ensamblaje en formato FASTA, el siguiente paso es transformar esa secuencia "cruda" en un **mapa biológico interpretable**: ¿dónde están los genes? ¿Qué hacen?
 
-*   **Ventaja principal:** permite descubrir secuencias nuevas, plásmidos, islas genómicas o regiones ausentes en genomas de referencia.
-*   **Aplicaciones comunes:** secuenciación de nuevos aislados, genomas poco estudiados, análisis exploratorios y comparación de estructuras genómicas.
-*   **Limitación:** depende fuertemente de la calidad de las lecturas, la cobertura, la longitud de lectura y la complejidad del genoma.
+### 1.1 ¿Qué es un gen?
 
-### 2.3 Comparación general
+Desde el punto de vista biológico, un gen es una región del ADN que produce un producto funcional (ARN o proteína). Desde el punto de vista computacional, la anotación busca reconocer **patrones de secuencia** que indiquen dónde comienza y termina esa unidad funcional.
 
-| Estrategia  | ¿Cuándo usarla?                                                   | Ventajas                                                                      | Limitaciones                                                            |
-|:------------|:------------------------------------------------------------------|:------------------------------------------------------------------------------|:------------------------------------------------------------------------|
-| **Mapping** | Cuando existe una buena referencia cercana                        | Rápido, sensible para variantes, fácil de interpretar                         | Puede perder secuencias nuevas o reordenamientos                        |
-| **De novo** | Cuando no hay referencia o se quiere reconstrucción independiente | Descubre contenido nuevo y organiza el genoma sin sesgo directo de referencia | Más exigente computacionalmente y más sensible a errores y repeticiones |
-
-En la práctica, ambos enfoques suelen complementarse: primero puede ensamblarse el genoma *de novo*, y luego alinear contigs o lecturas contra una referencia para comparar estructuras y detectar variantes.
-
-## 3. Algoritmos de ensamblaje de genomas
-
-El ensamblaje puede entenderse como la reconstrucción de un texto original a partir de millones de fragmentos pequeños. El problema central consiste en decidir qué fragmentos pertenecen juntos y en qué orden.
-
-### 3.1 Conceptos básicos
-
-Antes de revisar algoritmos concretos, conviene tener claros algunos términos:
-
-*   **Lectura (*read*):** fragmento de ADN secuenciado.
-*   **Contig:** secuencia continua ensamblada a partir de múltiples lecturas.
-*   **Scaffold:** conjunto de contigs ordenados y orientados entre sí, normalmente usando información adicional como lecturas paired-end.
-*   **Cobertura:** número promedio de veces que una posición del genoma fue leída.
-*   **Regiones repetitivas:** secuencias similares que dificultan decidir dónde encaja cada lectura.
-
-### 3.2 Overlap-Layout-Consensus (OLC)
-
-#### Principio
-Este enfoque compara lecturas entre sí para encontrar solapamientos directos.
-
-1. **Overlap:** identificar qué lecturas comparten extremos similares.
-2. **Layout:** organizar esas relaciones en un mapa o grafo.
-3. **Consensus:** derivar la secuencia final más probable.
-
-#### ¿Cuándo se usa?
-*   Fue muy importante en secuenciación Sanger.
-*   Sigue siendo útil para lecturas largas, donde el número total de fragmentos es menor y cada lectura cubre regiones más extensas.
-
-#### Ventajas y limitaciones
-*   **Ventaja:** funciona bien cuando las lecturas son largas.
-*   **Limitación:** comparar todas las lecturas entre sí puede ser muy costoso si hay millones de lecturas cortas.
-
-### 3.3 Grafos de De Bruijn
-
-Los grafos de De Bruijn son la estrategia dominante para ensamblar lecturas cortas, especialmente datos Illumina.
-
-#### Principio
-En lugar de comparar lecturas completas entre sí, el algoritmo divide las lecturas en fragmentos pequeños de longitud fija llamados **k-mers**.
-
-Por ejemplo, si la secuencia es `ATGCG` y usamos `k = 3`, los k-mers serían:
-
-* `ATG`
-* `TGC`
-* `GCG`
-
-El grafo conecta k-mers que comparten una superposición de `k-1` nucleótidos. Esto permite reconstruir trayectorias compatibles con la secuencia original.
-
-#### ¿Por qué funciona bien con lecturas cortas?
-Porque evita el problema de comparar “todas contra todas”. En su lugar, resume la información redundante de millones de lecturas en una estructura de grafo más eficiente.
-
-#### Importancia del tamaño de *k*
-La elección del valor de *k* es crítica:
-
-*   **k pequeño:** conecta más fácilmente las lecturas, pero mezcla regiones repetitivas y puede generar ensamblajes ambiguos.
-*   **k grande:** ayuda a resolver repeticiones, pero exige mayor cobertura y es más sensible a errores de secuenciación.
-
-#### Explicación sencilla
-Imagine que quiere reconstruir una frase no usando palabras completas, sino fragmentos cortos de letras. Si los fragmentos son demasiado pequeños, muchas combinaciones distintas parecerán posibles. Si son demasiado grandes, cualquier error ortográfico romperá la conexión. El ensamblaje debe encontrar un equilibrio.
-
-### 3.4 Problemas frecuentes en ensamblaje
-
-Los ensamblajes pueden fragmentarse o contener errores por varias razones:
-
-*   **baja cobertura**, que deja huecos sin suficiente evidencia;
-*   **errores de secuenciación**, que introducen k-mers falsos;
-*   **regiones repetitivas**, que generan caminos ambiguos en el grafo;
-*   **contaminación**, que añade secuencias ajenas a la muestra;
-*   **plásmidos o múltiples replicones**, que complican la reconstrucción del conjunto completo.
-
-Por ello, un ensamblaje no debe interpretarse solo por haber producido contigs; siempre debe evaluarse críticamente.
-
-## 4. Evaluación del ensamblaje
-
-Una vez ensamblado un genoma, la siguiente pregunta es: **¿qué tan bueno es el ensamblaje?** No existe una única métrica suficiente; deben considerarse varias dimensiones de calidad.
-
-### 4.1 Métricas básicas
-
-*   **Número de contigs:** cuantos menos contigs haya, en general, más continuo es el ensamblaje.
-*   **Longitud total ensamblada:** debe ser razonable respecto al tamaño esperado del genoma.
-*   **Contig más largo:** da una idea de continuidad local.
-*   **Cobertura promedio:** ayuda a valorar si hubo suficiente información para ensamblar bien.
-
-### 4.2 N50 y L50
-
-Estas son dos métricas clásicas de continuidad.
-
-#### N50
-Es la longitud del contig a partir de la cual se alcanza al menos el 50% del tamaño total del ensamblaje, ordenando los contigs de mayor a menor.
-
-*   Un **N50 alto** suele indicar que una parte importante del genoma está representada en contigs largos.
-*   Sin embargo, **N50 no garantiza exactitud**: un ensamblaje puede tener contigs largos y aun así estar mal construido.
-
-#### L50
-Es el número mínimo de contigs necesarios para alcanzar el 50% del tamaño total ensamblado.
-
-*   Un **L50 bajo** suele ser mejor, porque implica que pocos contigs concentran gran parte del ensamblaje.
-
-### 4.3 Completitud del ensamblaje
-
-La continuidad no es lo mismo que la completitud. Un ensamblaje puede tener un N50 alto y aun así faltar genes importantes.
-
-#### BUSCO
-**BUSCO** (*Benchmarking Universal Single-Copy Orthologs*) evalúa cuántos genes conservados universalmente están presentes en el ensamblaje.
-
-Sus resultados suelen clasificarse como:
-
-*   **Complete:** el gen esperado está presente de forma completa.
-*   **Duplicated:** aparece más de una copia, lo que puede sugerir duplicación real o artefactos.
-*   **Fragmented:** el gen está incompleto.
-*   **Missing:** el gen no fue encontrado.
-
-BUSCO es muy útil porque aporta una medida biológicamente informativa de completitud, más allá de la simple longitud de los contigs.
-
-### 4.4 Interpretación crítica
-
-Un buen ensamblaje no es necesariamente el que tiene el mayor N50, sino el que combina de manera razonable:
-
-*   continuidad;
-*   completitud;
-*   baja contaminación;
-*   tamaño esperado coherente;
-*   utilidad para la pregunta biológica.
-
-Por ejemplo, para detectar genes de resistencia en bacterias, puede ser suficiente un ensamblaje fragmentado pero bien anotado. En cambio, para estudiar reordenamientos cromosómicos, se requiere una estructura mucho más continua.
-
-## 5. Anotación del genoma
-
-Una vez se obtiene un ensamblaje en formato FASTA, todavía no sabemos automáticamente dónde están los genes ni qué función cumplen. La anotación transforma una secuencia “cruda” en un mapa biológico interpretable.
-
-### 5.1 ¿Qué es un gen?
-
-Desde el punto de vista biológico, un gen es una región del ADN que produce un producto funcional, ya sea un ARN o una proteína. Desde el punto de vista computacional, la anotación intenta reconocer patrones de secuencia que sugieren dónde comienza y termina esa unidad funcional.
-
-### 5.2 Anotación estructural vs. funcional
+### 1.2 Anotación estructural vs. funcional
 
 #### Anotación estructural
-Busca identificar **qué elementos hay y dónde están**. Por ejemplo:
 
-*   genes codificantes (CDS);
-*   tRNA;
-*   rRNA;
-*   regiones reguladoras;
-*   exones e intrones en eucariotas.
+Busca identificar **qué elementos hay y dónde están**:
+
+- genes codificantes (CDS);
+- tRNA y rRNA;
+- regiones reguladoras (promotores, terminadores);
+- exones e intrones en eucariotas.
 
 #### Anotación funcional
-Busca inferir **qué hace** cada gen o producto génico. Para ello se compara la secuencia con bases de datos y modelos conocidos.
 
-### 5.3 ¿Cómo se reconoce un gen?
+Busca inferir **qué hace** cada gen o producto génico, comparando la secuencia con bases de datos y modelos conocidos.
 
-Los algoritmos de predicción no “entienden” biología como un humano, sino que buscan señales estadísticas y biológicas como:
+### 1.3 ¿Cómo se reconoce un gen?
 
-*   codones de inicio y parada;
-*   marcos de lectura abiertos (ORFs);
-*   sesgo de uso de codones;
-*   señales promotoras;
-*   sitios de splicing en eucariotas;
-*   similitud con genes ya conocidos.
+Los algoritmos de predicción buscan señales estadísticas y biológicas:
 
-### 5.4 Procariotas vs. eucariotas
+```text
+Gen procariota típico:
+
+  Promotor   RBS  Codón   ──── Marco de lectura abierto (ORF) ────   Codón
+    ─┤        ┤   inicio                                             parada
+                   ATG ───────────────────────────────────────────── TAA/TAG/TGA
+                    ↑                                                    ↑
+                La anotación busca ORFs largos con sesgo de codones
+                  y señales reguladoras upstream
+```
+
+Señales que buscan los programas:
+
+- **codones de inicio y parada** (ATG → TAA/TAG/TGA);
+- **marcos de lectura abiertos** (ORFs) suficientemente largos;
+- **sesgo de uso de codones** (cada organismo prefiere ciertos codones sinónimos);
+- **señales promotoras** y sitios de unión al ribosoma (RBS);
+- **sitios de splicing** en eucariotas;
+- **similitud con genes ya conocidos** (BLAST, modelos de Pfam).
+
+### 1.4 Procariotas vs. eucariotas
 
 | Característica           | Procariotas                    | Eucariotas                                      |
 |:-------------------------|:-------------------------------|:------------------------------------------------|
-| Organización génica      | Compacta                       | Más dispersa                                    |
+| Organización génica      | Compacta, genes continuos      | Dispersa, genes interrumpidos                   |
 | Intrones                 | Generalmente ausentes          | Frecuentes                                      |
-| Densidad génica          | Alta                           | Menor                                           |
-| Predicción computacional | Relativamente más sencilla     | Más compleja                                    |
-| Evidencia adicional útil | Homología, motivos conservados | RNA-Seq, proteínas conocidas, modelos complejos |
+| Densidad génica          | Alta (~85% codificante)        | Baja (~1.5% en humanos)                         |
+| Predicción computacional | Relativamente sencilla         | Mucho más compleja                              |
+| Evidencia adicional útil | Homología, motivos conservados | RNA-Seq, proteínas homólogas, modelos complejos |
 
-#### Procariotas
-En bacterias y arqueas, los genes suelen ser continuos, sin intrones, y están muy próximos entre sí. Esto hace que la predicción basada en ORFs y modelos estadísticos sea bastante efectiva.
+```text
+Gen procariota:                    Gen eucariota:
+                                           Exón  Exón  Exón  Exón
+                                            ↑      ↑     ↑     ↑
+ATG═══════════════TGA                    ATG══╗  ╔══╗  ╔══╗  ╔═══TGA
+    ↑ ORF continuo ↑                          └──┘  └──┘  └──┘
+                                                ↑     ↑     ↑
+                                             Intrón Intrón Intrón
+                                       
+                                      El mRNA maduro solo contiene exones
+```
 
-Herramientas comunes:
-*   **Prodigal**
-*   **Prokka**
+#### Herramientas para procariotas
 
-#### Eucariotas
-En eucariotas, los genes pueden estar interrumpidos por intrones, presentar splicing alternativo y depender de señales reguladoras complejas. Por eso, la anotación suele requerir evidencia adicional como transcriptomas o proteínas homólogas.
+| Herramienta  | Función                                             | Nota                                 |
+|:-------------|:----------------------------------------------------|:-------------------------------------|
+| **Prodigal** | Predicción de genes (CDS)                           | Rápido, muy preciso para procariotas |
+| **Prokka**   | Pipeline completo: predicción + anotación funcional | Estándar en genómica bacteriana      |
+| **Bakta**    | Alternativa moderna a Prokka                        | Bases de datos más actualizadas      |
 
-Herramientas comunes:
-*   **Augustus**
-*   **MAKER**
+#### Herramientas para eucariotas
 
-### 5.5 Anotación funcional
+| Herramienta  | Función                                                | Nota                                        |
+|:-------------|:-------------------------------------------------------|:--------------------------------------------|
+| **Augustus** | Predicción *ab initio* con modelos entrenados          | Necesita datos de entrenamiento por especie |
+| **MAKER**    | Pipeline completo con evidencia de RNA-Seq y proteínas | Más complejo pero más preciso               |
 
-Una vez predicho un gen, el siguiente paso es inferir su función.
+### 1.5 Anotación funcional
 
-Las estrategias más comunes incluyen:
+Una vez predichos los genes, se infiere su función:
 
-*   **búsqueda de homología** con BLAST contra bases de datos como NCBI o UniProt;
-*   **detección de dominios conservados** con Pfam o InterProScan;
-*   **asignación de categorías funcionales** como GO (*Gene Ontology*) o rutas metabólicas.
+```text
+Gen predicho (secuencia de aa)
+         │
+         ▼
+  ┌─────────────┐     ┌───────────────┐     ┌─────────────────┐
+  │  BLAST vs   │     │  Búsqueda de  │     │  Asignación de  │
+  │  UniProt/nr │     │  dominios     │     │  categorías     │
+  │             │     │  Pfam/InterPro│     │  GO, KEGG, COG  │
+  └──────┬──────┘     └──────┬────────┘     └────────┬────────┘
+         │                   │                       │
+         ▼                   ▼                       ▼
+   "Proteasa"        "Dominio serina-     "Categoría: Metabolismo"
+                        proteasa"            
+```
 
-Es importante recordar que la anotación funcional suele ser una **predicción** basada en semejanza, no una demostración experimental directa.
+Estrategias comunes:
 
-### 5.6 Formatos comunes: GFF y GBK
+- **Búsqueda de homología** con BLAST contra bases de datos como NCBI nr o UniProt;
+- **Detección de dominios** con Pfam, InterProScan o CDD;
+- **Asignación funcional** con GO (*Gene Ontology*), KEGG (rutas metabólicas) o COG.
 
-#### GFF
-El formato **GFF** (*General Feature Format*) describe coordenadas y características anotadas sobre una secuencia.
+> [!WARNING]
+> La anotación funcional suele ser una **predicción** basada en semejanza, no una demostración experimental directa. Un gen con 40% de identidad con una proteasa *podría* ser una proteasa, pero también podría haber divergido funcionalmente.
 
-Suele incluir información como:
-*   tipo de característica (`gene`, `CDS`, `tRNA`);
-*   coordenadas de inicio y fin;
-*   hebra (`+` o `-`);
-*   atributos como identificadores o productos.
+### 1.6 Formatos de salida: GFF y GBK
 
-#### GBK / GenBank
-El formato **GBK** contiene tanto la secuencia como la anotación integrada en una estructura más rica y legible, muy usada para compartir genomas anotados.
+Los formatos **GFF** y **GBK** (GenBank) se utilizan para representar las anotaciones sobre una secuencia genómica. En resumen:
 
-En términos prácticos:
-*   **FASTA** responde a “¿cuál es la secuencia?”
-*   **GFF** responde a “¿dónde están las características?”
-*   **GBK** integra secuencia y anotación en un mismo archivo
+- **FASTA** → "¿Cuál es la secuencia?"
+- **GFF** → "¿Dónde están las características?" (coordenadas, tipo, hebra, atributos)
+- **GBK** → Secuencia + anotación integradas en un solo archivo
 
-## 6. Variantes genómicas: SNPs e indels
+> [!TIP]
+> Si necesita repasar la estructura y campos de estos formatos → [Módulo 1 → Formatos de archivo](../01-introduction/README.md).
 
-Además de ensamblar y anotar genomas, muchas veces interesa comparar una muestra contra una referencia para identificar cambios puntuales.
+---
 
-### 6.1 ¿Qué es una variante?
+## 2. Variantes genómicas: SNPs e indels
 
-Una **variante genómica** es una diferencia en la secuencia respecto a otra secuencia de referencia.
+Además de anotar genomas, muchas veces interesa comparar una muestra contra una referencia para identificar cambios puntuales.
 
-Las variantes más comunes son:
+### 2.1 ¿Qué es una variante?
 
-*   **SNPs** (*Single Nucleotide Polymorphisms*): cambio de una sola base.
-*   **Indels**: inserciones o deleciones cortas.
+Una **variante genómica** es una diferencia en la secuencia respecto a otra secuencia de referencia:
 
-Ejemplo:
+```text
+Referencia:  A T G C C G T A
+Muestra:     A T G T C G T A
+                 ↑
+                SNP (C → T)
 
-* Referencia: `ATGCCGTA`
-* Muestra:     `ATGTCGTA`
+Referencia:  A T G C C G T A
+Muestra:     A T G C - G T A
+                   ↑
+               Deleción (C eliminada)
 
-Aquí existe un SNP en la cuarta posición (`C → T`).
+Referencia:  A T G C C G T A
+Muestra:     A T G C A C G T A
+                   ↑
+              Inserción (A agregada)
+```
 
-### 6.2 ¿Cómo se detectan?
+| Tipo                                       | Definición                 |
+|:-------------------------------------------|:---------------------------|
+| **SNP** (*Single Nucleotide Polymorphism*) | Cambio de una sola base    |
+| **Indel**                                  | Inserción o deleción corta |
 
-El flujo más habitual consiste en:
+### 2.2 ¿Cómo se detectan?
 
-1. alinear las lecturas contra un genoma de referencia;
-2. revisar en cada posición qué bases apoyan las lecturas;
-3. usar algoritmos de llamada de variantes para decidir si la diferencia es real o si podría ser error de secuenciación.
+```text
+Flujo de detección de variantes:
 
-### 6.3 ¿Por qué son importantes?
+      Lecturas (FASTQ)
+             │
+             ▼
+   Alinear contra referencia     ← BWA, Bowtie2, Minimap2
+             │
+             ▼
+  Archivo de alineamiento (BAM)
+             │
+             ▼
+     Llamada de variantes         ← bcftools, GATK, Snippy
+             │
+             ▼
+  Archivo de variantes (VCF)
+             │
+             ▼
+    Filtrado y anotación           ← SnpEff, SnpSift
+```
 
-Las variantes pueden ayudar a:
+#### Formato VCF (*Variant Call Format*)
 
-*   diferenciar cepas muy cercanas;
-*   estudiar evolución y filogenia fina;
-*   identificar mutaciones asociadas a resistencia antimicrobiana;
-*   analizar adaptación, virulencia o cambios metabólicos.
+Es el formato estándar para reportar variantes:
 
-### 6.4 Precauciones al interpretar variantes
+```text
+#CHROM  POS   ID  REF  ALT  QUAL  FILTER  INFO
+contig1 1045  .   C    T    200   PASS    DP=45;MQ=60
+contig1 2300  .   AT   A    150   PASS    DP=38;MQ=55
+```
 
-No toda diferencia observada representa una mutación biológicamente real. También pueden influir:
+| Campo | Significado                            |
+|:------|:---------------------------------------|
+| CHROM | Cromosoma o contig                     |
+| POS   | Posición de la variante                |
+| REF   | Base(s) en la referencia               |
+| ALT   | Base(s) en la muestra                  |
+| QUAL  | Calidad de la llamada                  |
+| DP    | Profundidad de lectura en esa posición |
 
-*   calidad baja de lectura;
-*   cobertura insuficiente;
-*   alineamientos ambiguos;
-*   regiones repetitivas;
-*   sesgos introducidos por la referencia.
+### 2.3 Herramientas para llamada de variantes
 
-Por ello, la detección de variantes requiere filtros y criterios de calidad específicos.
+| Herramienta   | Contexto                  | Nota                                         |
+|:--------------|:--------------------------|:---------------------------------------------|
+| **Snippy**    | Genómica bacteriana       | Pipeline completo: mapping + variant calling |
+| **bcftools**  | General                   | Flexible, parte de samtools                  |
+| **GATK**      | Genómica humana/eucariota | Muy robusto, estándar en clínica             |
+| **FreeBayes** | General                   | Bayesiano, bueno para haplotipos             |
 
-## 7. Flujos de trabajo típicos en este módulo
+### 2.4 ¿Por qué son importantes las variantes?
 
-En las prácticas de este módulo, varios de estos conceptos se aplicarán con herramientas concretas para genómica bacteriana.
+| Aplicación                 | Ejemplo                                               |
+|:---------------------------|:------------------------------------------------------|
+| Diferenciar cepas cercanas | Rastreo de brotes hospitalarios por SNPs              |
+| Resistencia antimicrobiana | Mutación en *gyrA* → resistencia a fluoroquinolonas   |
+| Evolución y filogenia fina | Reconstruir transmisión de SARS-CoV-2 entre pacientes |
+| Virulencia                 | Identificar mutaciones en factores de virulencia      |
 
-### Flujo general
+### 2.5 Precauciones al interpretar variantes
 
-1. **Obtención de datos crudos (`.fastq`)**.
-2. **Control de calidad** con herramientas como **FastQC** o **Falco**.
-3. **Limpieza de lecturas** con **Fastp**.
-4. **Ensamblaje *de novo*** con herramientas como **Velvet**, **SPAdes** o **Shovill**.
-5. **Evaluación del ensamblaje**, integrando varias preguntas complementarias:
-   * **Continuidad:** número de contigs, longitud máxima, **N50/L50** y métricas relacionadas, con apoyo de herramientas como **QUAST**.
-   * **Completitud:** presencia de genes esperados y tamaño global coherente, usando por ejemplo **BUSCO**.
-   * **Exactitud y consistencia:** evaluación del ensamblaje frente a los datos originales mediante mapeo de lecturas y, cuando sea pertinente, análisis de **QV** y espectro de **k-mers** con herramientas como **Merqury**.
-   * **Pureza:** revisión del contenido GC y otras señales que puedan sugerir contaminación o mezcla de secuencias.
-6. **Anotación del genoma** con herramientas como **Prokka**.
-7. **Comparación contra referencia o análisis de variantes**, según la pregunta de investigación.
+No toda diferencia observada es biológicamente real. Fuentes de falsos positivos:
 
-### Herramientas que se explorarán o se mencionan en las prácticas
+- calidad baja de lectura en esa posición;
+- cobertura insuficiente (<10×);
+- alineamientos ambiguos (regiones repetitivas);
+- sesgos introducidos por la referencia elegida.
 
-*   **Falco / FastQC:** control de calidad de lecturas antes del ensamblaje.
-*   **Fastp:** limpieza, filtrado y trimming de lecturas.
-*   **Velvet:** comprensión conceptual del ensamblaje con grafos de De Bruijn.
-*   **Shovill / SPAdes:** ensamblaje bacteriano práctico y eficiente.
-*   **QUAST:** evaluación de continuidad del ensamblaje y comparación de métricas como número de contigs, longitud total y N50.
-*   **BUSCO:** estimación de completitud biológica mediante genes conservados esperados para un linaje.
-*   **Merqury:** evaluación complementaria de calidad a nivel de base (QV) y consistencia mediante espectro de k-mers.
-*   **Prokka:** anotación rápida de genomas procariotas.
+> [!TIP]
+> Siempre filtre variantes por calidad (QUAL), profundidad (DP) y calidad de mapeo (MQ). Una variante con 3 lecturas de soporte en una zona de cobertura 5× no es confiable.
 
-En un análisis real, estas herramientas no se usan de manera aislada. Se combinan para responder una pregunta más amplia: si el ensamblaje obtenido no solo es largo, sino también suficientemente completo, preciso y libre de contaminación como para sostener una interpretación biológica confiable.
+---
 
-## 8. Cierre conceptual
+## 3. Genómica comparada
 
-La genómica moderna integra biología molecular, estadística y ciencias computacionales para transformar datos crudos en conocimiento interpretable. Un ensamblaje no es el final del proceso, sino el punto de partida para entender la organización del genoma, el repertorio génico de un organismo y las diferencias que lo distinguen de otros.
+La genómica comparada busca entender las diferencias y similitudes entre genomas completos. Va más allá de comparar un solo gen: aquí se comparan **miles de genes simultáneamente**.
 
-En módulos y prácticas posteriores, estos principios se conectarán con preguntas biológicas concretas: desde la identificación de genes y funciones hasta la comparación entre cepas, la búsqueda de variantes y la interpretación de resultados en contextos clínicos, ambientales y biotecnológicos.
+### 3.1 ANI (*Average Nucleotide Identity*)
 
+Ya lo mencionamos en el [Módulo 4](../04-phylogenetics/README.md) como alternativa al 16S para delimitar especies. El ANI calcula el porcentaje promedio de identidad de nucleótidos entre regiones ortólogas de dos genomas:
+
+| ANI     | Interpretación                    |
+|:--------|:----------------------------------|
+| ≥95–96% | Misma especie                     |
+| 90–95%  | Mismo género, diferentes especies |
+| <90%    | Géneros diferentes                |
+
+Herramientas: **fastANI**, **pyani**, **JSpeciesWS**, **EzBioCloud ANI Calculator**.
+
+### 3.2 Pan-genoma
+
+Cuando se comparan múltiples genomas de una misma especie, se observa que no todos los genes están presentes en todos los aislados. El **pan-genoma** describe el repertorio genético total de una especie:
+
+```text
+Pan-genoma de una especie bacteriana:
+
+┌─────────────────────────────────────────────────────────┐
+│                                                         │
+│    ┌───────────────────┐                                │
+│    │   CORE GENOME     │  ← Genes presentes en TODOS    │
+│    │   (esenciales)    │    los aislados                │
+│    └───────────────────┘                                │
+│                                                         │
+│    ┌──────────┐ ┌──────────┐ ┌──────────┐               │
+│    │ Accesorio│ │ Accesorio│ │ Accesorio│               │
+│    │ Cepa A   │ │ Cepa B   │ │ Cepa C   │  ← Genes      │
+│    │          │ │          │ │          │    variables  │
+│    └──────────┘ └──────────┘ └──────────┘               │
+│                                                         │
+│    ┌─────┐  ← Genes únicos (singletons):                │
+│    │Único│    presentes en una sola cepa                │
+│    └─────┘                                              │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+```
+
+| Componente           | Definición                              | Ejemplo biológico                     |
+|:---------------------|:----------------------------------------|:--------------------------------------|
+| **Core genome**      | Genes presentes en ≥95% de los aislados | Genes housekeeping, ribosomales       |
+| **Accessory genome** | Genes presentes en algunos aislados     | Islas de patogenicidad, plásmidos     |
+| **Singletons**       | Genes presentes en un solo aislado      | Profagos, elementos móviles recientes |
+
+Herramientas: **Roary**, **Panaroo**, **PIRATE**.
+
+### 3.3 Detección de genes de resistencia y virulencia
+
+Una aplicación directa de la genómica es buscar genes de interés clínico en genomas ensamblados:
+
+| Tipo de búsqueda                     | Base de datos                  | Herramienta                  |
+|:-------------------------------------|:-------------------------------|:-----------------------------|
+| **Resistencia antimicrobiana (AMR)** | CARD, ResFinder, AMRFinderPlus | ABRicate, AMRFinderPlus, RGI |
+| **Factores de virulencia**           | VFDB                           | ABRicate, VFanalyzer         |
+| **Plásmidos**                        | PlasmidFinder                  | MOB-suite, PlasmidFinder     |
+| **Tipificación (MLST)**              | PubMLST                        | mlst (Seemann), MLST 2.0     |
+
+> [!NOTE]
+> Estas búsquedas se hacen contra bases de datos curadas y generalmente usan BLAST o comparaciones de k-mers internamente. Los resultados dependen de la calidad de la base de datos y del ensamblaje.
+
+### 3.4 Sintenia y reordenamientos
+
+La **sintenia** se refiere a la conservación del orden y orientación de los genes entre genomas:
+
+```text
+Genoma A:  ═══ gen1 → gen2 → gen3 → gen4 → gen5 ═══
+
+Genoma B:  ═══ gen1 → gen2 → gen3 → gen4 → gen5 ═══   (Colineal: sintenia conservada)
+
+Genoma C:  ═══ gen1 → gen2 → gen5 ← gen4 ← gen3 ═══   (Inversión detectada)
+
+Genoma D:  ═══ gen1 → gen2 → genX → gen3 → gen4 ═══   (Inserción de genX: isla genómica?)
+```
+
+Los reordenamientos (inversiones, translocaciones, inserciones de islas genómicas) se detectan mediante **dot plots** genómicos (ver [Módulo 3, sección 2.2](../03-sequence_analysis/README.md)) o herramientas como **Mauve**, **MUMmer** o **D-Genies**.
+
+---
+
+## 4. Flujo de trabajo genómico completo
+
+Integrando los módulos 5 y 6, el flujo de trabajo genómico típico es:
+
+```text
+     Lecturas crudas (FASTQ)         ← Módulo 5
+                │
+                ▼
+         QC + Trimming               ← Módulo 5
+                │
+                ▼
+Ensamblaje (de novo o mapping)       ← Módulo 5
+                │
+                ▼
+Evaluación (N50, BUSCO, pureza)      ← Módulo 5
+                │
+                ▼
+═══════════════════════════════════════════
+                │
+                ▼
+   Anotación (Prokka/Bakta)          ← Módulo 6 (este módulo)
+                │
+                ▼
+Detección de variantes (Snippy)      ← Módulo 6
+                │
+                ▼
+Genómica comparada (ANI, pan-genoma) ← Módulo 6
+                │
+                ▼
+  Interpretación biológica
+```
+
+---
+
+## 5. Cierre conceptual
+
+La genómica moderna no termina con el ensamblaje. El verdadero valor de un genoma está en lo que podemos extraer de él:
+
+- la **anotación** transforma una secuencia en un catálogo de genes y funciones;
+- la **detección de variantes** permite comparar genomas a resolución de una sola base;
+- la **genómica comparada** revela la diversidad, adaptación y evolución a escala de genoma completo.
+
+En este módulo ha aprendido:
+
+- cómo los programas **predicen genes** en procariotas y eucariotas, y por qué es más difícil en eucariotas;
+- que la anotación funcional es una **predicción basada en similitud**, no una certeza experimental;
+- cómo se **detectan variantes** (SNPs/indels) y cómo interpretarlas con cautela;
+- qué es el **pan-genoma** y cómo compara el repertorio genético de múltiples aislados;
+- cómo buscar **genes de resistencia, virulencia y plásmidos** en un genoma ensamblado.
+
+> [!IMPORTANT]
+> Un genoma anotado no es un producto final; es una hipótesis que debe validarse experimentalmente y actualizarse a medida que las bases de datos mejoran.
 
 ---
 
 ## Prácticas del módulo
 
-| Práctica | Descripción |
-|:--|:--|
-| [Ensamblaje con FastQC + Velvet](./exercises/genome_assembly_fastqc_velvet.md) | Control de calidad con FastQC y ensamblaje *de novo* con Velvet |
-| [Ensamblaje con Falco + fastp + Shovill](./exercises/genome_assembly_falco_fastp_shovill.md) | Pipeline moderno: QC con Falco, trimming con fastp y ensamblaje con Shovill |
-| [Anotación genómica](./exercises/genome_annotation.md) | Predicción de genes y asignación de funciones en genomas bacterianos |
+| Práctica                                               | Descripción                                                          |
+|:-------------------------------------------------------|:---------------------------------------------------------------------|
+| [Anotación genómica](exercises/01_genome_annotation.md) | Predicción de genes y asignación de funciones en genomas bacterianos |

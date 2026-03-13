@@ -127,38 +127,39 @@ You'll build and interpret evolutionary trees from molecular data.
 
 ---
 
-## Module 5 — DNA/RNA Sequencing
+## Module 5 — DNA/RNA Sequencing: From Molecule to Assembled Genome
 
 📂 **[05_sequencing/README.md](05_sequencing/README.md)**
 
-Now you learn where the data actually come from.
+Now you learn where the data actually come from — and how to reconstruct genomes from them.
 
 **Topics:**
+- Molecular foundations: nucleotide structure, 3'-OH, DNA replication and why Sanger/Illumina work
 - Timeline of sequencing technologies: Sanger → 454 → Illumina → PacBio → Nanopore
-- Principles, error profiles and applications of each platform
-- Quality scores (Phred) and the FASTQ format
-- Read QC, trimming, adapter removal and quality assessment
-- Coverage, depth, library preparation concepts
+- Quality scores (Phred), FASTQ format, coverage, depth, trimming
+- Single-end vs paired-end reads
+- Assembly strategies: mapping vs *de novo*; OLC and De Bruijn graphs; k-mers
+- Assembly evaluation: N50, L50, NG50, BUSCO, contamination checks
+
+**Practices:**
+- [Genome assembly with FastQC + Velvet](05_sequencing/exercises/01_2_genome_assembly_fastqc_velvet.md)
+- [Genome assembly with Falco + fastp + Shovill](05_sequencing/exercises/01_1_genome_assembly_falco_fastp_shovill.md)
 
 ---
 
-## Module 6 — Genomics: From Reads to Genomes
+ ## Module 6 — Genomics: From Assembled Genome to Biological Knowledge
 
 📂 **[06-genomics/README.md](06-genomics/README.md)**
 
-You turn raw sequencing reads into assembled and annotated genomes.
+You give biological meaning to assembled genomes: annotation, variants, and comparative genomics.
 
 **Topics:**
-- Assembly strategies: mapping vs *de novo*; OLC and De Bruijn graphs
-- k-mers and their role in assembly algorithms
-- Assembly evaluation: N50, L50, NG50, BUSCO, contamination checks
-- Genome annotation: gene prediction (prokaryotes vs eukaryotes), functional assignment (GFF/GBK)
-- Introduction to variant calling: SNPs, indels, mapping against a reference
+- Genome annotation: gene prediction (prokaryotes vs eukaryotes), functional assignment, GFF/GBK formats
+- Variant detection: SNPs, indels, VCF format, mapping against a reference
+- Comparative genomics: ANI, pan-genome (core/accessory), AMR/virulence gene detection, synteny
 
 **Practices:**
-- [Genome assembly with FastQC + Velvet](06-genomics/exercises/genome_assembly_fastqc_velvet.md)
-- [Genome assembly with Falco + fastp + Shovill](06-genomics/exercises/genome_assembly_falco_fastp_shovill.md)
-- [Genome annotation](06-genomics/exercises/genome_annotation.md)
+- [Genome annotation](06-genomics/exercises/01_genome_annotation.md)
 
 ---
 
