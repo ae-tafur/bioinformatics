@@ -371,8 +371,8 @@ Como el traceback va desde el final hacia el inicio, el alineamiento se construy
 
 ```text
 Paso 1: G ↔ G     →  leído al revés:    G C A T G
-Paso 2: T ↔ T                            G A T T G
-Paso 3: A ↔ T                            * · · * *
+Paso 2: T ↔ T                           G A T T G
+Paso 3: A ↔ T                           * · · * *
 Paso 4: C ↔ A
 Paso 5: G ↔ G
 ```
@@ -382,7 +382,7 @@ El alineamiento final (en este camino particular):
 ```text
 Seq 1 (GCATG):   G  C  A  T  G
 Seq 2 (GATTG):   G  A  T  T  G
-                  *  ·  ·  *  *
+                 *  ·  ·  *  *
 
 Puntuación: +1 -1 -1 +1 +1 = 1  ✓ (coincide con la celda inferior derecha)
 ```
@@ -396,7 +396,7 @@ Alineamiento alternativo (mismo score = 1):
 
 Seq 1 (GCATG):   G  C  A  T  -  G
 Seq 2 (GATTG):   G  -  A  T  T  G
-                  *     *  *     *
+                 *     *  *     *
 
 Puntuación: +1 -2 +1 +1 -2 +1 = 0... (este da 0, no 1)
 ```
