@@ -152,7 +152,7 @@ Nucleótido normal (dNTP):          Didesoxinucleótido (ddNTP):
 Cuando la polimerasa incorpora un ddNTP en lugar de un dNTP normal, la cadena **se termina** en esa posición porque no hay 3'-OH donde añadir el siguiente nucleótido. Como cada ddNTP (ddATP, ddTTP, ddGTP, ddCTP) está marcado con un fluorocromo diferente, se puede leer qué base terminó la cadena en cada posición.
 
 > [!TIP]
-> Resumen en una frase: Sanger funciona porque **la ausencia del 3'-OH detiene la replicación** y cada parada se marca con un color diferente.
+> Sanger funciona porque **la ausencia del 3'-OH detiene la replicación** y cada parada se marca con un color diferente.
 
 ---
 
