@@ -123,7 +123,90 @@ Desde el punto de vista biológico, alinear secuencias permite:
 - encontrar **regiones conservadas** que probablemente tienen función importante;
 - evaluar la **distancia evolutiva** entre organismos.
 
-### 2.2 Alineamiento global vs. local
+### 2.2 Matriz de puntos (*Dot Plot*)
+
+Antes de hablar de algoritmos sofisticados, existe una herramienta visual sorprendentemente simple y poderosa para comparar dos secuencias: la **matriz de puntos** o *dot plot*.
+
+#### ¿Cómo funciona?
+
+Se colocan las dos secuencias en los ejes de una tabla (una en el eje horizontal y otra en el vertical). En cada celda donde las bases coinciden, se marca un punto. Al terminar, los patrones que emergen revelan la relación entre ambas secuencias **sin necesidad de realizar un alineamiento formal**.
+
+#### Ejemplo básico
+
+Comparemos las secuencias `ATGCGA` (horizontal) y `ATGCGA` (vertical) — es decir, una secuencia contra sí misma:
+
+```text
+        A   T   G   C   G   A
+  A     •               •   •
+  T         •
+  G             •       •
+  C                 •
+  G             •       •
+  A     •               •   •
+```
+
+La **diagonal principal** (de esquina superior izquierda a inferior derecha) aparece completa: esto confirma que las secuencias son idénticas. Pero también aparecen puntos fuera de la diagonal — estos revelan **repeticiones internas** (por ejemplo, la `G` aparece en dos posiciones, y lo mismo con la `A`).
+
+#### ¿Qué patrones se pueden detectar?
+
+El poder real del dot plot está en la interpretación visual de los patrones:
+
+| Patrón en el dot plot | ¿Qué indica? |
+|:--|:--|
+| **Diagonal continua** | Región de alta similitud entre las dos secuencias |
+| **Diagonal desplazada (paralela a la principal)** | Secuencia repetida o duplicación |
+| **Diagonal perpendicular (anti-diagonal)** | Secuencia en complemento inverso (*palindrome* o repetición invertida) |
+| **Ruptura en la diagonal** | Inserción, deleción o región divergente |
+| **Múltiples diagonales cortas** | Repeticiones dispersas o baja complejidad |
+| **Sin patrón claro** | Las secuencias no comparten similitud significativa |
+
+#### Ejemplo con dos secuencias diferentes
+
+Comparemos `ATGCATGC` consigo misma:
+
+```text
+          A   T   G   C   A   T   G   C
+    A     •               •
+    T         •               •
+    G             •               •
+    C                 •               •
+    A     •               •
+    T         •               •
+    G             •               •
+    C                 •               •
+```
+
+Aquí aparecen **dos diagonales paralelas**: la diagonal principal y otra desplazada exactamente 4 posiciones. Esto revela inmediatamente que la secuencia contiene una **repetición en tándem** (`ATGC` repetido dos veces), algo que sería menos evidente mirando solo el texto de la secuencia.
+
+#### ¿Para qué se usa en la práctica?
+
+La matriz de puntos es especialmente útil para:
+
+- **Comparar un genoma o gen consigo mismo** → detectar repeticiones, duplicaciones y palíndromos.
+- **Comparar dos genomas relacionados** → ver regiones conservadas, reordenamientos cromosómicos o inversiones.
+- **Exploración inicial** antes de hacer un alineamiento formal → hacerse una idea rápida de cuánta similitud hay y dónde.
+- **Visualizar resultados complejos** → un dot plot de dos genomas bacterianos puede revelar de un vistazo si son colineales o si hubo rearreglos.
+
+#### Ventana y umbral (filtering)
+
+En la práctica, un dot plot base por base genera mucho ruido (puntos aleatorios que no representan similitud real). Para filtrar ese ruido se usa una **ventana deslizante** (*window*): en lugar de marcar cada coincidencia individual, se marca un punto solo si al menos `X` de las `W` bases en una ventana de tamaño `W` coinciden.
+
+Por ejemplo, con ventana `W=5` y umbral `X=4`:
+- se evalúan bloques de 5 bases;
+- solo se marca un punto si al menos 4 de las 5 coinciden.
+
+Esto elimina las coincidencias aleatorias y deja solo las diagonales que representan **similitud real**.
+
+#### Herramientas
+
+- **Dotlet** (web, para secuencias cortas): https://dotlet.vital-it.ch/
+- **Gepard** (Java, para genomas completos): https://cube.univie.ac.at/gepard
+- **D-Genies** (web, para comparación de genomas grandes): https://dgenies.toulouse.inra.fr/
+
+> [!TIP]
+> El dot plot no le dice *cuál* es el mejor alineamiento, pero sí le da una **visión global** de la relación entre dos secuencias que ningún alineamiento individual puede ofrecer. Es como mirar un mapa antes de entrar a recorrer las calles.
+
+### 2.3 Alineamiento global vs. local
 
 Esta es una distinción fundamental:
 
@@ -162,7 +245,7 @@ En términos sencillos:
 > [!NOTE]
 > BLAST usa alineamiento **local**. Por eso puede encontrar similitudes parciales entre secuencias muy diferentes.
 
-### 2.3 Conceptos de scoring
+### 2.4 Conceptos de scoring
 
 Para decidir si un alineamiento es "bueno" o "malo", necesitamos un sistema de puntuación (*scoring*).
 
@@ -186,7 +269,7 @@ En proteínas, no todas las sustituciones son iguales. Cambiar una leucina por u
 
 Para ADN en este módulo, usaremos el esquema simple de match/mismatch/gap.
 
-### 2.4 Algoritmo de Needleman-Wunsch (alineamiento global)
+### 2.5 Algoritmo de Needleman-Wunsch (alineamiento global)
 
 Este algoritmo, publicado en 1970, fue el primero en resolver el problema de alineamiento global de forma exacta usando **programación dinámica**.
 
@@ -267,7 +350,7 @@ G - A T T G
 > [!IMPORTANT]
 > Lo importante no es memorizar los números, sino entender la lógica: cada celda representa **la mejor forma de alinear esas dos subsecuencias hasta ese punto**.
 
-### 2.5 Algoritmo de Smith-Waterman (alineamiento local)
+### 2.6 Algoritmo de Smith-Waterman (alineamiento local)
 
 Publicado en 1981, es una modificación del Needleman-Wunsch con dos diferencias clave:
 
@@ -295,7 +378,7 @@ El valor más alto es **2** (aparece en dos celdas). El traceback desde la celda
 > [!NOTE]
 > La diferencia es sutil pero poderosa: Smith-Waterman ignora las regiones que no aportan similitud, mientras que Needleman-Wunsch fuerza a alinear todo.
 
-### 2.6 Identidad vs. similitud
+### 2.7 Identidad vs. similitud
 
 Estos conceptos son diferentes y no deben usarse como sinónimos:
 
@@ -306,7 +389,7 @@ En **ADN**, generalmente se habla de **identidad** porque las bases no tienen pr
 
 En **proteínas**, la **similitud** puede ser más informativa que la identidad, porque dos aminoácidos diferentes pueden cumplir funciones parecidas si comparten propiedades químicas.
 
-### 2.7 De la teoría a la práctica: relación con BLAST
+### 2.8 De la teoría a la práctica: relación con BLAST
 
 Ahora puede entender por qué BLAST es rápido pero no exacto:
 
