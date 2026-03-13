@@ -41,16 +41,17 @@ La bioinformática integra múltiples áreas:
 - **Química:** Estructura de moléculas
 - **Física:** Propiedades moleculares
 
-####  Ejemplos de proceso multidisciplinario:
-
-**Problema biológico:** Identificar genes asociados a cáncer por _Helicobacter pylori_
-
-1. **Biología:** Se obtienen muestras de ADN de pacientes y personas sanas. 
-2. **Biología Molecular:** Se secuencian los genomas.
-3. **Bioinformática/Matemática/Ingeniería de Sistemas:** Se utilizan herramientas como BLAST para alinear las secuencias contra un genoma de referencia y programas de ensamblaje para construir los genomas.
-4. **Estadística:** Se realizan pruebas de asociación (GWAS) para encontrar variantes genéticas (SNPs) que son significativamente más frecuentes en los pacientes.
-5. **Biología Computacional/Fisca/Quimica:** Se modela cómo una variante específica podría afectar la estructura 3D de una proteína y su función, prediciendo el impacto biológico.
-6. **Biología (Laboratorio):** Se valida experimentalmente la función del gen y el efecto de la mutación en células o modelos animales.
+> [!IMPORTANT]
+> ####  Ejemplos de proceso multidisciplinario:
+>
+> **Problema biológico:** Identificar genes asociados a cáncer por _Helicobacter pylori_
+> 
+> 1. **Biología:** Se obtienen muestras de ADN de pacientes y personas sanas. 
+> 2. **Biología Molecular:** Se secuencian los genomas.
+> 3. **Bioinformática/Matemática/Ingeniería de Sistemas:** Se utilizan herramientas como BLAST para alinear las secuencias contra un genoma de referencia y programas de ensamblaje para construir los genomas.
+> 4. **Estadística:** Se realizan pruebas de asociación (GWAS) para encontrar variantes genéticas (SNPs) que son significativamente más frecuentes en los pacientes.
+> 5. **Biología Computacional/Fisca/Quimica:** Se modela cómo una variante específica podría afectar la estructura 3D de una proteína y su función, prediciendo el impacto biológico.
+> 6. **Biología (Laboratorio):** Se valida experimentalmente la función del gen y el efecto de la mutación en células o modelos animales.
 
 ### 1.4 Capacidades Computacionales
 
