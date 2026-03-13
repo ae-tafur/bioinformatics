@@ -176,7 +176,7 @@ You give biological meaning to assembled genomes: annotation, variants, and comp
 
 ## Module 8 — Transcriptomics (RNA-Seq)
 
-📂 **[07-transcriptomics/README.md](08-transcriptomics/README.md)**
+📂 **[07-transcriptomics/README.md](09-transcriptomics/README.md)**
 
 **Topics:**
 - What RNA-Seq measures, experimental design and key biases
@@ -198,7 +198,7 @@ You give biological meaning to assembled genomes: annotation, variants, and comp
 
 ## Module 10 — Metabolic Models
 
-📂 **[09-metabolic-models/README.md](09-metabolic-models/README.md)**
+📂 **[09-metabolic-models/README.md](10-metabolic-models/README.md)**
 
 **Topics:**
 - Metabolic networks and genome-scale metabolic models (GEMs)
