@@ -123,7 +123,7 @@ You'll build and interpret evolutionary trees from molecular data.
 - Interpreting phylogenies in biological and clinical context
 
 **Practices:**
-- [Phylogenetic analysis with 16S rRNA](04-phylogenetics/exercises/02_phylogenetics.md) — align 16S sequences, build NJ/ML trees in MEGA and identify an unknown bacterium
+- [Phylogenetic analysis with 16S rRNA](04-phylogenetics/exercises/01_phylogenetics.md) — align 16S sequences, build NJ/ML trees in MEGA and identify an unknown bacterium
 
 ---
 

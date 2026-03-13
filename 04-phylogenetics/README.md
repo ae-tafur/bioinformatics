@@ -746,5 +746,5 @@ En el **Módulo 5** (Secuenciación) entenderá cómo se generan los datos con l
 
 | Práctica                                                              | Descripción                                                                                                           |
 |:----------------------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------|
-| [Análisis filogenético con 16S rRNA](./exercises/02_phylogenetics.md) | Alineamiento de secuencias 16S, construcción de árboles NJ y ML en MEGA, e identificación de una bacteria desconocida |
+| [Análisis filogenético con 16S rRNA](exercises/01_phylogenetics.md) | Alineamiento de secuencias 16S, construcción de árboles NJ y ML en MEGA, e identificación de una bacteria desconocida |
 
