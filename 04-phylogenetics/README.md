@@ -69,7 +69,7 @@ Estos genes se conocen como **genes marcadores** o **marcadores filogenéticos**
 > 
 > La "**S**" en 16S, 23S, etc. se refiere a **Svedberg**, una unidad que mide la velocidad de sedimentación de una partícula en una ultracentrífuga. No es una medida de tamaño directa, sino de cómo "cae" la molécula en un campo centrífugo — depende del tamaño, la forma y la densidad. Por eso los valores no son aditivos: una subunidad 30S + una 50S no dan 80S sino ~70S.
 > 
-> * > **Ribosoma procariota (70S)**
+> * **Ribosoma procariota (70S)**
 > 
 > ```text
 > Ribosoma 70S (bacterias y arqueas)
@@ -93,7 +93,7 @@ Estos genes se conocen como **genes marcadores** o **marcadores filogenéticos**
 > 
 > Las regiones **ITS** (*Internal Transcribed Spacer*) en procariotas son los espacios entre los genes ribosomales. Se transcriben pero luego se eliminan durante la maduración del rRNA. En bacterias, el ITS entre 16S y 23S a veces contiene genes de tRNA y es variable entre especies, pero no se usa tanto como marcador en procariotas (se prefiere el 16S directamente).
 > 
-> * > **Ribosoma eucariota (80S)**
+> * **Ribosoma eucariota (80S)**
 > 
 > ```text
 > Ribosoma 80S (eucariotas: hongos, animales, plantas, protistas)
@@ -124,12 +124,12 @@ Estos genes se conocen como **genes marcadores** o **marcadores filogenéticos**
 > 
 > **Resumen comparativo**
 > 
-> | Componente             | Procariotas   | Eucariotas          | Tamaño aprox.      | Uso como marcador                                |
-> |:-----------------------|:--------------|:--------------------|:-------------------|:-------------------------------------------------|
-> | Subunidad pequeña rRNA | **16S**       | **18S**             | ~1,500 / ~1,800 pb | ⭐ Principal en bacterias / útil en eucariotas    |
-> | Subunidad grande rRNA  | **23S**       | **28S**             | ~2,900 / ~5,000 pb | Complementario, más info filogenética            |
-> | rRNA corto             | 5S            | 5S + **5.8S**       | ~120 / ~160 pb     | Poco usado (muy corto)                           |
-> | Espaciadores (ITS)     | ITS (16S–23S) | **ITS1** + **ITS2** | Variable           | ⭐ Principal en hongos; poco usado en procariotas |
+> | Componente             | Procariotas   | Eucariotas          | Tamaño aprox.      | Uso como marcador                              |
+> |:-----------------------|:--------------|:--------------------|:-------------------|:-----------------------------------------------|
+> | Subunidad pequeña rRNA | **16S**       | **18S**             | ~1,500 / ~1,800 pb | Principal en bacterias / útil en eucariotas    |
+> | Subunidad grande rRNA  | **23S**       | **28S**             | ~2,900 / ~5,000 pb | Complementario, más info filogenética          |
+> | rRNA corto             | 5S            | 5S + **5.8S**       | ~120 / ~160 pb     | Poco usado (muy corto)                         |
+> | Espaciadores (ITS)     | ITS (16S–23S) | **ITS1** + **ITS2** | Variable           | Principal en hongos; poco usado en procariotas |
 
 > [!TIP]
 > Cuando lea un artículo que menciona "análisis del gen 16S", recuerde que se refiere al gen que codifica el rRNA de la subunidad pequeña del ribosoma **procariota**. Si el organismo es un hongo, busque ITS; si es un animal, COI; si es una planta, matK/rbcL.
