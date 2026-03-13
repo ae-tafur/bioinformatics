@@ -137,12 +137,12 @@ Comparemos las secuencias `ATGCGA` (horizontal) y `ATGCGA` (vertical) — es dec
 
 ```text
         A   T   G   C   G   A
-  A     •               •   •
+  A     •                   •
   T         •
   G             •       •
   C                 •
   G             •       •
-  A     •               •   •
+  A     •                   •
 ```
 
 La **diagonal principal** (de esquina superior izquierda a inferior derecha) aparece completa: esto confirma que las secuencias son idénticas. Pero también aparecen puntos fuera de la diagonal — estos revelan **repeticiones internas** (por ejemplo, la `G` aparece en dos posiciones, y lo mismo con la `A`).
@@ -364,6 +364,42 @@ Matriz con el camino del traceback marcado (★):
 | 4 | [A, C] (fila 2, col 2) | 0     | **↖ Diagonal** desde [G, G]=1  | 1 + (-1) (mismatch A≠C) = 0 ✓  | `C` alineado con `A` (mismatch) |
 | 5 | [G, G] (fila 1, col 1) | 1     | **↖ Diagonal** desde [-,-]=0   | 0 + 1 (match G=G) = 1 ✓        | `G` alineado con `G`            |
 | 6 | [-, -] (fila 0, col 0) | 0     | **FIN**                        | Llegamos al origen             | —                               |
+
+> [!WARNING]
+> **¿Por qué en el paso 2 se va en diagonal hacia [T,A]=-1 y no hacia arriba donde [T,T]=1?**
+>
+> Esta es la duda más frecuente al aprender traceback, y es totalmente esperable. La zona de la matriz se ve así:
+>
+> ```text
+>                       col3(A)  col4(T)
+>         fila 3 (T):    -1       1     ← "¿por qué no ir aquí (↑)?"
+>         fila 4 (T):    -3      [0]    ← celda actual del traceback
+> ```
+>
+> La tentación es moverse **arriba** hacia el 1 porque es el valor más alto. Pero el traceback **NO** busca al vecino con el valor más alto. Busca al **vecino que generó el valor de la celda actual**.
+>
+> La celda actual vale **0**. Veamos qué vecino produce 0:
+>
+> | Opción      | Vecino | Valor del vecino | Operación          | Resultado | ¿Coincide con 0? |
+> |:------------|:-------|:-----------------|:-------------------|:----------|:-----------------|
+> | ↖ Diagonal  | [T, A] | **-1**           | -1 + 1 (match T=T) | **0**     | ✅ Sí             |
+> | ↑ Arriba    | [T, T] | **1**            | 1 + (-2) (gap)     | **-1**    | ❌ No             |
+> | ← Izquierda | [T, A] | **-3**           | -3 + (-2) (gap)    | **-5**    | ❌ No             |
+>
+> Solo la diagonal produce 0. Ir arriba produciría -1, no 0. Por tanto, la celda [T,T]=0 **no pudo** haberse generado desde [T,T]=1.
+>
+> **¿Qué pasaría si forzáramos a ir arriba?** Obtendríamos un alineamiento con un gap que daría peor score:
+>
+> ```text
+> Si fuéramos arriba → gap en Seq1 (GCATG):
+>
+> Seq 1:   G  C  A  T  -  G      ← la T de Seq2 no se alinea con nada de Seq1
+> Seq 2:   G  ?  ?  ?  T  G
+>
+> Este camino produciría gaps adicionales y un score ≤ 0, peor que el score 1 del alineamiento correcto.
+> ```
+>
+> **Regla clave:** el traceback no sigue "al vecino más alto", sino al vecino que, aplicando la operación correspondiente (match/mismatch/gap), **reproduce exactamente** el valor de la celda actual.
 
 **Construyendo el alineamiento (de atrás hacia adelante):**
 
