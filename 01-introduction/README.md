@@ -42,7 +42,7 @@ La bioinformática integra múltiples áreas:
 - **Física:** Propiedades moleculares
 
 > [!IMPORTANT]
-> ####  Ejemplos de proceso multidisciplinario:
+> **Ejemplos de proceso multidisciplinario:**
 >
 > **Problema biológico:** Identificar genes asociados a cáncer por _Helicobacter pylori_
 > 
