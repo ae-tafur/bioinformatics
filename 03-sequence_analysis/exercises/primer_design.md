@@ -6,7 +6,7 @@ El diseño de **primers** (cebadores) es una de las aplicaciones más directas y
 
 Aunque en el laboratorio los primers se compran como moléculas físicas, su diseño es un problema bioinformático: hay que seleccionar una región adecuada, verificar que la secuencia sea específica, evitar uniones inespecíficas, controlar propiedades termodinámicas básicas y estimar si el amplicón esperado tendrá el tamaño correcto.
 
-Por eso, esta práctica encaja muy bien en el **Módulo 3**. Aquí ya ha trabajado con bases de datos biológicas, formatos de secuencia y conceptos de alineamiento. El diseño de primers le permite aplicar todo esto a una tarea experimental real. Además, esta práctica funciona como un puente natural hacia el **Módulo 4**, porque en genómica los primers se usan para:
+Por eso, esta práctica encaja muy bien en el **Módulo 3**. Aquí ya ha trabajado con bases de datos biológicas, formatos de secuencia y conceptos de alineamiento. El diseño de primers le permite aplicar todo esto a una tarea experimental real. Además, esta práctica funciona como un puente natural hacia módulos posteriores, porque en genómica los primers se usan para:
 
 - verificar por PCR la presencia de un gen anotado;
 - confirmar resultados obtenidos por ensamblaje o anotación;
@@ -484,7 +484,7 @@ Si dispone de una herramienta externa que permita simular PCR o visualizar produ
 
 ---
 
-### Parte 9: Puente hacia el módulo 4
+### Parte 9: Puente hacia la genómica (Módulo 6)
 
 Imagine que en el módulo de genómica usted ensambló un genoma bacteriano y el software de anotación predijo un gen de resistencia. Un uso muy natural de esta práctica sería diseñar primers para:
 
@@ -569,4 +569,4 @@ Represente cómo esperaría ver el producto de PCR en un gel, usando el tamaño 
 
 El diseño de primers es una excelente demostración de cómo los conceptos de bioinformática se conectan con el laboratorio. Aquí convergen la búsqueda en bases de datos, el análisis de secuencias, el alineamiento, la especificidad y la interpretación biológica. Un primer bien diseñado no es solo una secuencia corta: es una hipótesis experimental construida a partir de evidencia computacional.
 
-Esta misma lógica reaparecerá más adelante cuando trabaje con ensamblaje de genomas, anotación y validación de genes en el **Módulo 4**, y también cuando piense en regiones conservadas para identificación o comparación evolutiva en módulos posteriores.
+Esta misma lógica reaparecerá más adelante cuando trabaje con ensamblaje de genomas, anotación y validación de genes en el **Módulo 6** (Genómica), y también cuando piense en regiones conservadas para identificación o comparación evolutiva en el **Módulo 4** (Filogenética).

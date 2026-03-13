@@ -75,18 +75,17 @@ Topics include:
 - Bash scripting to automate analysis steps
 - Python scripting fundamentals applied to FASTA/sequence manipulation
 
-## 03 - Alignments and Sequencing
+## 03 - Sequence Analysis
 
-**[Module 3 — DNA/RNA Sequencing, Alignments, Assembly and Annotation](03-sequence_analysis/README.md)**
+**[Module 3 — Sequence Analysis: BLAST, Alignments and Primer Design](03-sequence_analysis/README.md)**
 
-You’ll learn how sequencing data are produced and the key computational steps that turn raw reads into biological insight.
+This is where you start doing what bioinformaticians do most: comparing sequences.
 
 Topics include:
-- Timeline of sequencing technologies (Sanger → NGS → long reads)
-- Quality scores (Phred) and the FASTQ format
-- Global vs local alignment; identity vs similarity
-- Genome assembly (OLC, De Bruijn graphs; k-mers)
-- Genome annotation basics (what is a gene; prokaryotes vs eukaryotes)
+- Similarity search with BLAST (blastn, blastp, blastx) and result interpretation
+- Global vs local alignment; Needleman-Wunsch and Smith-Waterman algorithms
+- Identity vs similarity; scoring schemes and gap penalties
+- Primer design and *in silico* PCR
 
 ## 04 - Phylogenetics
 
@@ -98,46 +97,58 @@ Topics include:
 - Bootstrapping and support values
 - Interpreting phylogenies in biological context
 
-## 05 - Genomics
+## 05 - Sequencing
 
-**[Module 5 — Genomics: From Reads to Genomes](06-genomics/README.md)**
+**[Module 5 — DNA/RNA Sequencing](05_sequencing/README.md)**
+
+Now you learn where the data actually come from.
 
 Topics include:
-- Read QC and trimming; mapping vs assembly strategies
-- Bacterial genome assembly and evaluation metrics (N50, contigs)
+- Timeline of sequencing technologies (Sanger → NGS → long reads)
+- Quality scores (Phred) and the FASTQ format
+- Read QC, trimming and adapter removal
+- Coverage, depth and library preparation concepts
+
+## 06 - Genomics
+
+**[Module 6 — Genomics: From Reads to Genomes](06-genomics/README.md)**
+
+Topics include:
+- Mapping vs *de novo* assembly strategies
+- Bacterial genome assembly and evaluation metrics (N50, BUSCO, contigs)
 - Structural and functional annotation, basic comparative genomics
 - Introduction to variant calling concepts (SNPs/indels) and interpretation
 
-## 06 - Proteins
+## 07 - Proteins
 
-**[Module 6 — Protein Bioinformatics](06-proteins/README.md)**
+**[Module 7 — Protein Bioinformatics](06-proteins/README.md)**
 
 Topics include:
 - Protein sequences, domains, motifs and families
 - Searching and annotating proteins (BLASTp, Pfam/InterPro)
 - Structure basics and functional inference
 
-## 07 - Transcriptomics
+## 08 - Transcriptomics
 
-**[Module 7 — Transcriptomics (RNA-Seq)](07-transcriptomics/README.md)**
+**[Module 8 — Transcriptomics (RNA-Seq)](07-transcriptomics/README.md)**
 
 Topics include:
 - What RNA-Seq measures, experimental design and key biases
 - Quantification concepts (counts, TPM/FPKM) and normalization
 - Differential expression and functional interpretation
 
-## 08 - Proteomics
+## 09 - Proteomics
 
-**[Module 8 — Proteomics](08-proteomics/README.md)**
+**[Module 9 — Proteomics](08-proteomics/README.md)**
 
 Topics include:
 - Mass spectrometry basics and peptide identification
 - Protein quantification and common analysis steps
 - Linking proteomics to pathways and biological interpretation
 
-## 09 - Metabolic models
+## 10 - Metabolic models
 
-**[Module 9 — Metabolic Models](09-metabolic-models/README.md)**
+**[Module 10 — Metabolic Models](09-metabolic-models/README.md)**
 
 Topics include:
 - Metabolic networks and genome-scale metabolic models (GEMs)

@@ -1,296 +1,462 @@
-# Módulo 3: Secuenciación y comparación de secuencias de ADN y ARN
+# Módulo 3: Análisis de Secuencias
 
 ## Introducción
 
-La capacidad de leer el código genético ha revolucionado la biología moderna. Desde los primeros esfuerzos laboriosos hasta las tecnologías de alto rendimiento actuales, la secuenciación de ácidos nucleicos nos permite descifrar genomas completos, entender la diversidad microbiana, diagnosticar enfermedades genéticas y rastrear brotes epidemiológicos en tiempo real.
+En el Módulo 1 aprendió a buscar y descargar secuencias en bases de datos públicas como el NCBI, y a distinguir formatos como FASTA y GenBank. En el Módulo 2 adquirió las herramientas para trabajar desde la terminal y programar en Python. Ahora, en este módulo, va a usar todo eso para hacer lo que un bioinformático hace la mayor parte del tiempo: **comparar secuencias**.
 
-En este módulo exploraremos la evolución de las tecnologías de secuenciación, desde el método de Sanger hasta las plataformas de lectura larga de tercera generación. Entenderemos no solo cómo funcionan estas tecnologías, sino también qué tipo de datos producen, cuáles son sus perfiles de error y en qué contextos conviene utilizarlas. Además, nos adentraremos en los desafíos bioinformáticos que aparecen después de secuenciar: ¿cómo evaluamos la calidad de las lecturas?, ¿cómo alineamos secuencias?, ¿cómo reconstruimos un genoma a partir de millones de fragmentos?, ¿y cómo reconocemos genes dentro de esa secuencia?
+Comparar secuencias es, probablemente, la operación más fundamental en bioinformática. ¿Esa secuencia que acaba de obtener se parece a algo ya conocido? ¿Cuánto se parece? ¿En qué posiciones difiere? ¿Dónde poner un primer para amplificarla? Todas esas preguntas se responden comparando secuencias, y en este módulo aprenderá cómo hacerlo a nivel conceptual, algorítmico y práctico.
 
-Aunque muchas veces se habla principalmente de secuenciación de ADN, varios de estos principios también aplican al ARN. En RNA-seq, por ejemplo, el material biológico original es ARN, pero frecuentemente se convierte a ADN complementario (cDNA) antes de secuenciarse. En tecnologías como Oxford Nanopore, incluso es posible secuenciar ARN de forma más directa en ciertos flujos de trabajo.
+Trabajaremos con tres grandes bloques:
 
-Al finalizar este módulo, tendrá una comprensión sólida de los fundamentos de la secuenciación, la calidad de lecturas, el alineamiento de secuencias, el ensamblaje de genomas y la lógica general de la anotación genómica.
+1. **BLAST**, la herramienta más utilizada en el mundo para buscar secuencias similares en bases de datos.
+2. **Alineamiento de secuencias**, entendiendo los algoritmos de programación dinámica que permiten comparar dos secuencias de forma exacta.
+3. **Diseño de primers y PCR *in silico***, donde la comparación de secuencias se aplica a un problema experimental concreto.
 
-> **Reflexión:** Un buen bioinformático no es quien solo sabe correr un programa, sino quien entiende qué significan sus resultados y por qué el análisis puede fallar.
+> [!TIP]
+> **Reflexión:** Saber comparar secuencias no es solo una habilidad técnica: es la base sobre la cual se construyen la filogenética, la genómica comparada, la detección de variantes y casi cualquier análisis bioinformático que haga en su carrera.
 
-## Ruta conceptual del módulo
+---
 
-Este módulo sigue una lógica parecida a la de un análisis real:
+## Prerrequisitos y conexión con módulos previos
 
-1. **Generación de lecturas** mediante una plataforma de secuenciación.
-2. **Evaluación de calidad** de los archivos FASTQ.
-3. **Limpieza y filtrado** de lecturas cuando sea necesario.
-4. **Alineamiento o mapeo** contra una referencia, o **ensamblaje *de novo***.
-5. **Interpretación biológica** del resultado: comparación, anotación y análisis posterior.
+### Del Módulo 1
 
-En otras palabras, secuenciar no es el final del trabajo experimental; es el inicio del análisis bioinformático.
+Ya conoce:
+- qué es el **NCBI** y cómo buscar secuencias en **Nucleotide**, **Protein** y **Gene**;
+- los formatos **FASTA** y **GenBank**, y qué información contiene cada uno;
+- cómo descargar secuencias desde la web.
 
-## 1. Historia y línea de tiempo de la secuenciación
+Si necesita repasar → [README del Módulo 1](../01-introduction/README.md) y [Práctica de bases de datos](../01-introduction/exercises/01_databases.md).
 
-La historia de la secuenciación es una carrera constante hacia mayor velocidad, menor costo y mayor longitud de lectura.
+### Del Módulo 2
 
-*   **1977 - Secuenciación Sanger:** Frederick Sanger desarrolla el método de terminación de cadena, permitiendo secuenciar fragmentos de ADN de 500-1000 pb. Fue el estándar de oro durante décadas y se utilizó en el Proyecto Genoma Humano.
-*   **1987:** aparece el primer secuenciador automático (ABI 370A).
-*   **1990:** inicio del Proyecto Genoma Humano.
-*   **2005 - 454 Life Sciences (pirosecuenciación):** primera tecnología de “Nueva Generación” (NGS). Aumentó enormemente la capacidad de secuenciación, aunque tenía problemas con homopolímeros.
-*   **2006 - Solexa / Illumina:** introduce la secuenciación por síntesis con terminadores reversibles. Se convierte en la plataforma dominante por su alta precisión y bajo costo por base.
-*   **2010 - Ion Torrent:** secuenciación basada en detección de cambios de pH.
-*   **2011 - Pacific Biosciences (PacBio):** secuenciación de molécula única en tiempo real (SMRT), con lecturas largas.
-*   **2014 - Oxford Nanopore Technologies (ONT):** secuenciación portátil basada en cambios de corriente eléctrica al pasar ADN o ARN por un nanoporo.
+Ya sabe:
+- moverse en la terminal Unix y manipular archivos con `grep`, `cut`, `sort`, pipes y redirección;
+- programar en **Python**: variables, tipos de datos, condicionales, bucles, lectura de archivos y funciones;
+- ejecutar scripts `.py` desde Codespaces.
 
-En resumen, la secuenciación suele dividirse en tres generaciones:
+Si necesita repasar → [README del Módulo 2](../02-coding-basics/README.md).
 
-| Generación                | Tecnología líder | Longitud de lectura | Precisión       | Aplicación principal                                               |
-|:--------------------------|:-----------------|:--------------------|:----------------|:-------------------------------------------------------------------|
-| **1ra (Sanger)**          | ABI 3730xl       | 800 - 1000 pb       | 99.99%          | Validación de genes, plásmidos y fragmentos individuales           |
-| **2da (NGS)**             | Illumina         | 50 - 300 pb         | 99.9%           | Re-secuenciación, RNA-seq, genomas bacterianos, metagenómica       |
-| **3ra (lecturas largas)** | PacBio / ONT     | 10 kb - 2 Mb        | Variable (Q20+) | Ensamblaje *de novo*, variantes estructurales, isoformas completas |
+En este módulo usará Python para **implementar un algoritmo de alineamiento desde cero**, así que asegúrese de sentirse cómodo con listas, bucles anidados y funciones antes de continuar.
 
-## 2. Tecnologías de secuenciación
+---
 
-### 2.1 Primera generación: Sanger
+## 1. Búsqueda por similitud con BLAST
 
-*   **Principio:** uso de didesoxinucleótidos (ddNTPs) marcados con fluorescencia que detienen la polimerización del ADN en posiciones específicas. Los fragmentos resultantes se separan por electroforesis capilar.
-*   **Características:** lecturas de ~800-1000 pb.
-*   **Calidad:** muy alta (Q > 40), por lo que sigue siendo una referencia para validación.
-*   **Aplicaciones:** secuenciación de genes individuales, validación de variantes, confirmación de clones y plásmidos.
+### 1.1 ¿Qué es BLAST y por qué es tan importante?
 
-### 2.2 Segunda generación (NGS)
+**BLAST** (*Basic Local Alignment Search Tool*) es la herramienta más utilizada en bioinformática para buscar secuencias similares en bases de datos. Fue publicada por Altschul *et al.* en 1990 y desde entonces se ha convertido en el equivalente bioinformático de un buscador web: usted le da una secuencia y BLAST le devuelve las secuencias más parecidas que existen en una base de datos.
 
-#### 454 (pirosecuenciación) - *histórica*
+**Analogía:** imagine que tiene una frase en un idioma desconocido y quiere encontrar frases parecidas en una biblioteca con millones de libros. No puede leer cada libro completo, así que primero busca palabras clave coincidentes, luego extiende la comparación alrededor de esas coincidencias y finalmente evalúa cuáles son parecidos reales y cuáles son casualidades.
 
-*   **Principio:** detecta la liberación de pirofosfato cuando se incorpora un nucleótido.
-*   **Características:** lecturas de ~400-700 pb.
-*   **Limitaciones:** alta tasa de error en regiones con homopolímeros (por ejemplo, `AAAAAA`). Actualmente se usa poco.
+BLAST funciona exactamente así.
 
-#### Illumina (secuenciación por síntesis)
+### 1.2 ¿Cómo funciona BLAST conceptualmente?
 
-*   **Principio:** amplificación clonal en puente sobre una celda de flujo y uso de nucleótidos con terminadores reversibles fluorescentes. En cada ciclo, el sistema “fotografía” la base incorporada.
-*   **Características:** lecturas cortas, usualmente `paired-end` (por ejemplo, 2x150 pb).
-*   **Calidad:** muy alta, aunque suele disminuir hacia el final de la lectura. El error más frecuente es la sustitución.
-*   **Aplicaciones:** genomas completos, exomas, transcriptomas (RNA-seq), metagenómica, estudios de diversidad y vigilancia genómica.
+BLAST no compara su secuencia contra todas las secuencias de la base de datos base por base (eso sería demasiado lento). En cambio, usa una **estrategia heurística** en tres fases:
 
-### 2.3 Tercera generación (lecturas largas)
+#### Fase 1 — Semillas (*seeding*)
 
-#### Pacific Biosciences (PacBio SMRT)
+BLAST divide su secuencia en fragmentos cortos (llamados "palabras" o *words*) y busca coincidencias exactas o casi exactas en la base de datos. Estas coincidencias iniciales se llaman **semillas** (*seeds*).
 
-*   **Principio:** una polimerasa inmovilizada incorpora nucleótidos fluorescentes en tiempo real dentro de un pozo nanoscópico (ZMW).
-*   **Características:** lecturas largas (10 kb - 20 kb o más).
-*   **Calidad:** inicialmente presentaba errores relativamente altos por lectura individual, pero con HiFi/CCS se logran lecturas de alta precisión (Q30+).
-*   **Aplicaciones:** ensamblaje *de novo* de genomas complejos, detección de variantes estructurales y secuenciación de transcritos completos.
+#### Fase 2 — Extensión
 
-#### Oxford Nanopore Technologies (ONT)
+A partir de cada semilla, BLAST **extiende el alineamiento** en ambas direcciones, calculando una puntuación. Si la puntuación sube, sigue extendiendo. Si baja demasiado, se detiene.
 
-*   **Principio:** una molécula de ADN o ARN atraviesa un nanoporo, y cada base altera la corriente eléctrica de forma característica.
-*   **Características:** lecturas ultra largas, posibilidad de análisis en tiempo real y dispositivos portátiles.
-*   **Calidad:** históricamente inferior a Illumina, aunque ha mejorado mucho. Los errores suelen incluir inserciones y deleciones.
-*   **Aplicaciones:** secuenciación rápida en campo, ensamblaje de genomas completos, metagenómica en tiempo real, detección de metilación y, en algunos protocolos, secuenciación directa de ARN.
+#### Fase 3 — Evaluación estadística
 
-### 2.4 ¿Cuándo usar cada tecnología?
+Los alineamientos extendidos se evalúan para determinar si son **estadísticamente significativos** o si podrían haber ocurrido por azar.
 
-| Tecnología   | Fortalezas                                        | Limitaciones                  | Ejemplos de uso                                       |
-|:-------------|:--------------------------------------------------|:------------------------------|:------------------------------------------------------|
-| **Sanger**   | Muy alta precisión, fácil de interpretar          | Bajo rendimiento              | Validar una mutación o un clon                        |
-| **Illumina** | Alta precisión, gran volumen, costo por base bajo | Lecturas cortas               | Genomas bacterianos, RNA-seq, metagenómica            |
-| **PacBio**   | Lecturas largas y alta calidad en modo HiFi       | Mayor costo por muestra       | Ensamblajes complejos, isoformas completas            |
-| **Nanopore** | Lecturas ultra largas, portátil, tiempo real      | Mayor variabilidad en calidad | Vigilancia rápida, metagenómica, ensamblajes híbridos |
+> 💡 Esta estrategia hace que BLAST sea muy rápido, pero no garantiza encontrar el alineamiento óptimo en todos los casos. Para eso existen los algoritmos exactos como Smith-Waterman, que veremos más adelante.
 
-> La mejor tecnología no es necesariamente la más nueva, sino la que responde mejor a la pregunta biológica, al presupuesto disponible y al tipo de muestra.
+### 1.3 Tipos de BLAST
 
-## 3. Principios fundamentales
+Dependiendo de qué tipo de secuencia usted tiene (la *query*) y qué tipo de base de datos quiere buscar (el *subject*), BLAST ofrece diferentes programas:
 
-### 3.1 ¿Qué produce realmente un secuenciador?
+| Programa | Query | Base de datos | ¿Cuándo usarlo? |
+|:--|:--|:--|:--|
+| **blastn** | Nucleótidos | Nucleótidos | Buscar genes similares, identificar especies por 16S rRNA |
+| **blastp** | Proteínas | Proteínas | Buscar proteínas homólogas, anotar funciones |
+| **blastx** | Nucleótidos (traduce) | Proteínas | Tiene ADN y quiere buscar en bases de datos de proteínas |
+| **tblastn** | Proteínas | Nucleótidos (traduce) | Buscar genes en genomas no anotados usando proteínas como query |
+| **tblastx** | Nucleótidos (traduce) | Nucleótidos (traduce) | Comparación traducida en ambas direcciones (más lento, menos frecuente) |
 
-El producto directo de un secuenciador moderno no es un genoma completo, sino una colección de **lecturas** (*reads*): fragmentos de secuencia que luego deben analizarse computacionalmente.
+### 1.4 Interpretación de resultados
 
-Conceptos clave:
+Cuando BLAST devuelve resultados, hay cuatro valores que debe aprender a interpretar:
 
-*   **Lectura (*read*):** fragmento de ADN o ARN secuenciado.
-*   **Librería:** colección de fragmentos preparados con adaptadores para entrar al secuenciador.
-*   **Adaptadores:** secuencias artificiales añadidas durante la preparación de librería; si no se eliminan cuando aparecen en los datos, pueden interferir con el análisis.
-*   **Paired-end reads:** lecturas obtenidas desde ambos extremos de un mismo fragmento. Ayudan a resolver regiones repetitivas, mejorar alineamientos y apoyar ensamblajes.
+| Parámetro | ¿Qué mide? | ¿Qué significa un "buen" valor? |
+|:--|:--|:--|
+| **E-value** | Probabilidad de encontrar ese alineamiento por azar en una base de datos de ese tamaño | Mientras más bajo, mejor. Un E-value < 1e-5 suele considerarse significativo |
+| **Score (bit score)** | Puntuación normalizada del alineamiento | Mientras más alto, mejor |
+| **% Identity** | Porcentaje de posiciones idénticas en el alineamiento | Depende del contexto biológico |
+| **Query coverage** | Qué porcentaje de su secuencia se alineó | Un coverage bajo puede indicar que solo una parte de su secuencia es similar |
 
-### 3.2 Formatos de salida: FASTQ
+> ⚠️ **Error frecuente:** un E-value bajo con un coverage del 10% puede significar que solo un dominio pequeño es similar, no que toda la proteína sea homóloga. Siempre mire los cuatro parámetros juntos.
 
-El archivo **FASTQ** es el formato estándar para almacenar secuencias junto con sus puntuaciones de calidad. Cada lectura ocupa 4 líneas:
+### 1.5 BLAST en la práctica
 
-1. **Encabezado**, que comienza con `@`.
-2. **Secuencia** de nucleótidos.
-3. **Separador**, que comienza con `+`.
-4. **Calidad**, codificada en caracteres ASCII.
+BLAST se puede usar de dos formas principales:
 
-Ver también **[Módulo 1 → Formato `.fastq`](../01-introduction/README.md#fastq)**.
+- **BLAST web** en [https://blast.ncbi.nlm.nih.gov/](https://blast.ncbi.nlm.nih.gov/) — ideal para búsquedas rápidas y exploratorias.
+- **BLAST en línea de comandos** — ideal para búsquedas automatizadas, grandes volúmenes de datos o bases de datos locales.
 
-La diferencia principal entre FASTA y FASTQ es que:
+En este módulo trabajaremos principalmente con la versión web. La versión de línea de comandos se cubrirá cuando sea necesario en módulos posteriores.
 
-*   **FASTA** almacena solo la secuencia;
-*   **FASTQ** almacena la secuencia **y** la calidad de cada base.
+---
 
-### 3.3 Calidad Phred (Q-score)
+## 2. Alineamiento de secuencias
 
-La calidad de las lecturas es un aspecto crucial antes de cualquier análisis posterior. Las plataformas modernas producen grandes volúmenes de datos, pero no todas las bases tienen el mismo nivel de confianza.
+### 2.1 ¿Qué es un alineamiento y por qué importa?
 
-La puntuación Phred representa, en escala logarítmica, la probabilidad de error de una base:
-
-$Q = -10 \log_{10}(P)$
-
-Donde `P` es la probabilidad de que la base se haya llamado incorrectamente.
-
-Por ejemplo:
-
-*   **Q20** = 1 error por cada 100 bases (99% precisión)
-*   **Q30** = 1 error por cada 1000 bases (99.9% precisión)
-*   **Q40** = 1 error por cada 10,000 bases (99.99% precisión)
-
-#### Tabla 1. Calidad Phred
-
-| Nivel de calidad Phred (Q) | Probabilidad de error | Precisión de la base |
-|:---------------------------|:----------------------|:---------------------|
-| 10                         | 1 en 10               | 90%                  |
-| 20                         | 1 en 100              | 99%                  |
-| 30                         | 1 en 1000             | 99.9%                |
-| 40                         | 1 en 10,000           | 99.99%               |
-| 50                         | 1 en 100,000          | 99.999%              |
-
-Usualmente, se considera que una lectura de alta calidad tiene una puntuación Phred de al menos **Q30**. Sin embargo, la calidad puede variar a lo largo de la lectura, y es frecuente que disminuya hacia el final, especialmente en lecturas Illumina.
-
-### 3.4 Cobertura y profundidad
-
-Estos términos a veces se usan como sinónimos, pero conviene diferenciarlos:
-
-*   **Cobertura (coverage):** número promedio de veces que cada base del genoma fue leída a escala global. Por ejemplo, una cobertura de 30X sugiere que, en promedio, cada posición fue observada 30 veces.
-*   **Profundidad (depth):** número de lecturas que cubren una posición específica del genoma.
-
-Una cobertura suficiente aumenta la confianza en el ensamblaje y en la detección de variantes. Sin embargo, una cobertura alta no corrige por sí sola problemas como contaminación, sesgos de secuenciación o errores sistemáticos.
-
-### 3.5 Adaptadores, trimming y filtrado
-
-Antes de ensamblar o alinear lecturas, suele ser necesario revisar si contienen:
-
-*   **adaptadores residuales**;
-*   **bases de baja calidad** al inicio o al final;
-*   **lecturas demasiado cortas** después del recorte;
-*   **duplicación excesiva** o sesgos de contenido GC.
-
-A este proceso se le suele llamar **trimming** o limpieza de lecturas. No siempre se hace de forma agresiva: el objetivo no es “recortar por recortar”, sino mejorar la calidad de los datos sin eliminar información útil.
-
-## 4. Alineamiento y comparación de secuencias
-
-Una vez se tienen lecturas o secuencias de buena calidad, una de las tareas centrales es compararlas entre sí o frente a una referencia.
-
-### 4.1 ¿Qué es un alineamiento?
-
-Un **alineamiento de secuencias** organiza dos o más secuencias para identificar regiones equivalentes, coincidencias, sustituciones, inserciones o deleciones.
+Un **alineamiento de secuencias** organiza dos (o más) secuencias una encima de otra para identificar posiciones equivalentes: coincidencias, diferencias, inserciones y deleciones.
 
 Desde el punto de vista biológico, alinear secuencias permite:
 
-*   identificar genes homólogos;
-*   comparar variantes;
-*   inferir relaciones evolutivas;
-*   ubicar lecturas dentro de un genoma de referencia.
+- identificar genes **homólogos** (que comparten un ancestro común);
+- detectar **mutaciones** entre variantes;
+- encontrar **regiones conservadas** que probablemente tienen función importante;
+- evaluar la **distancia evolutiva** entre organismos.
 
-### 4.2 Alineamiento global y local
+### 2.2 Alineamiento global vs. local
+
+Esta es una distinción fundamental:
 
 #### Alineamiento global
 
-Intenta alinear las secuencias a lo largo de toda su longitud. Es útil cuando las secuencias son similares y comparables de extremo a extremo.
+Compara las secuencias **de extremo a extremo**, intentando alinear toda su longitud.
 
-**Ejemplo de uso:** comparar dos genes completos muy relacionados.
+**¿Cuándo usarlo?** Cuando ambas secuencias son del mismo gen o región y tienen longitudes similares.
+
+```text
+Secuencia 1:  A T G C G A T C G
+Secuencia 2:  A T G C - A T C A
+              * * * *   * * * ·
+```
 
 #### Alineamiento local
 
-Busca las regiones de mayor similitud dentro de secuencias más largas. Es útil cuando solo una parte de la secuencia coincide.
+Busca solo la **mejor región de similitud** dentro de secuencias que pueden ser de longitud muy diferente.
 
-**Ejemplo de uso:** buscar un dominio conservado o una región homóloga dentro de secuencias más grandes.
+**¿Cuándo usarlo?** Cuando solo una parte de las secuencias comparte similitud (por ejemplo, un dominio dentro de una proteína larga, o una región conservada en un genoma).
+
+```text
+Secuencia 1:  ...xxxATGCGATCGxxx...
+Secuencia 2:  ...yyyATGCGATCGyyy...
+                    **********
+              Solo esta región se reporta
+```
 
 En términos sencillos:
 
-*   **global** = “comparemos todo con todo”
-*   **local** = “encontremos el mejor fragmento compartido”
+- **Global** = "comparemos todo con todo, de punta a punta"
+- **Local** = "encontremos el mejor fragmento compartido"
 
-### 4.3 Mapping vs. alineamiento
+> BLAST usa alineamiento **local**. Por eso puede encontrar similitudes parciales entre secuencias muy diferentes.
 
-Estos términos están relacionados, pero no son exactamente lo mismo.
+### 2.3 Conceptos de scoring
 
-*   **Alineamiento** es el concepto general de comparar secuencias para ver cómo se corresponden.
-*   **Mapping** suele referirse al proceso de ubicar muchas lecturas cortas dentro de una secuencia de referencia conocida.
+Para decidir si un alineamiento es "bueno" o "malo", necesitamos un sistema de puntuación (*scoring*).
 
-Por ejemplo:
+#### Match y mismatch
 
-*   si compara dos secuencias para estudiar similitud, está haciendo un **alineamiento**;
-*   si toma millones de lecturas Illumina y las ubica sobre un genoma bacteriano de referencia, está haciendo **mapping**.
+Para secuencias de ADN, lo más simple es asignar:
+- un **premio** por cada coincidencia (*match*), por ejemplo **+1**;
+- una **penalización** por cada diferencia (*mismatch*), por ejemplo **-1**.
 
-### 4.4 Identidad y similitud
+#### Penalización por gap
 
-Estos conceptos también deben distinguirse:
+Un **gap** (`-`) representa una inserción o deleción (*indel*). Si no penalizamos los gaps, el algoritmo podría introducir gaps innecesarios para maximizar las coincidencias.
 
-*   **Identidad:** porcentaje de posiciones exactamente iguales entre dos secuencias alineadas.
-*   **Similitud:** grado de semejanza considerando no solo coincidencias exactas, sino también sustituciones conservadoras o relaciones funcionales, especialmente en proteínas.
+Existen dos modelos principales:
+- **Penalización lineal:** cada gap cuesta lo mismo (por ejemplo, **-2** por gap).
+- **Penalización afín:** abrir un gap cuesta más que extenderlo. Esto es más biológicamente realista, porque una deleción de 5 bases consecutivas es un solo evento evolutivo, no cinco eventos independientes.
 
-En ADN, con frecuencia se habla más de **identidad**. En proteínas, la **similitud** puede ser muy informativa porque diferentes aminoácidos pueden compartir propiedades químicas parecidas.
+#### Matrices de sustitución (para proteínas)
 
-### 4.5 ¿Por qué esto importa para el ensamblaje y la anotación?
+En proteínas, no todas las sustituciones son iguales. Cambiar una leucina por una isoleucina (ambos aminoácidos hidrofóbicos) es menos "grave" que cambiar una leucina por un ácido aspártico (hidrofóbico → cargado). Las matrices **BLOSUM** y **PAM** capturan estas diferencias asignando puntuaciones distintas a cada par de aminoácidos.
 
-Porque gran parte del análisis bioinformático depende de comparar secuencias:
+Para ADN en este módulo, usaremos el esquema simple de match/mismatch/gap.
 
-*   las lecturas se alinean contra referencias;
-*   los contigs se comparan entre sí o contra genomas conocidos;
-*   los genes predichos se comparan con bases de datos para inferir función.
+### 2.4 Algoritmo de Needleman-Wunsch (alineamiento global)
 
-Por eso, entender alineamiento es un paso previo natural antes de estudiar ensamblaje y anotación con más profundidad.
+Este algoritmo, publicado en 1970, fue el primero en resolver el problema de alineamiento global de forma exacta usando **programación dinámica**.
 
-## 5. Programas de análisis de secuenciación
+#### ¿Qué es programación dinámica?
 
-El ecosistema de herramientas es muy amplio, pero algunos nombres aparecen con frecuencia en flujos de trabajo reales y en las prácticas del curso.
+Es una estrategia de resolución de problemas que divide un problema grande en subproblemas más pequeños, los resuelve de forma ordenada y guarda los resultados intermedios para no repetir cálculos. En alineamiento, esto se traduce en llenar una **matriz** paso a paso.
 
-### 5.1 Control de calidad (QC)
+#### Ejemplo paso a paso
 
-*   **FastQC:** herramienta clásica para visualizar métricas de calidad como calidad por base, contenido GC, duplicación y presencia de adaptadores.
-*   **Falco:** implementación alternativa y más rápida para datos de lectura corta, especialmente útil cuando se manejan múltiples archivos.
-*   **MultiQC:** integra múltiples reportes en una sola vista resumida.
+Alineemos las secuencias `GCATG` y `GATTG` con:
+- Match: **+1**
+- Mismatch: **-1**
+- Gap: **-2**
 
-### 5.2 Limpieza y procesamiento de lecturas
+##### Paso 1: Crear la matriz
 
-*   **Trimmomatic / Cutadapt:** herramientas clásicas para remover adaptadores y bases de baja calidad.
-*   **Fastp:** herramienta todo-en-uno para control de calidad, filtrado y trimming.
+Se crea una tabla donde las filas representan una secuencia y las columnas la otra. La primera fila y columna se inicializan con penalizaciones acumuladas por gaps:
 
-### 5.3 Alineamiento
+```text
+        -     G     C     A     T     G
+  -     0    -2    -4    -6    -8   -10
+  G    -2
+  A    -4
+  T    -6
+  T    -8
+  G   -10
+```
 
-*   **BWA / Bowtie2:** estándares para alinear lecturas cortas contra una referencia.
-*   **Minimap2:** especialmente útil para lecturas largas, aunque también puede utilizarse en otros contextos.
+##### Paso 2: Llenar la matriz
 
-### 5.4 Ensamblaje *de novo*
+Para cada celda, se calcula el máximo entre tres opciones:
 
-*   **Velvet:** uno de los ensambladores clásicos basados en grafos de De Bruijn. Es muy útil para entender el efecto del tamaño del *k-mer*.
-*   **SPAdes / Shovill:** ampliamente utilizados en genómica bacteriana con lecturas Illumina.
-*   **Canu / Flye:** diseñados para lecturas largas de tercera generación.
+1. **Diagonal** (viene de arriba-izquierda): la celda diagonal + match/mismatch.
+2. **Arriba** (viene de la celda de arriba): la celda de arriba + gap.
+3. **Izquierda** (viene de la celda de la izquierda): la celda de la izquierda + gap.
 
-### 5.5 Visualización y anotación
+La celda guarda el **mejor valor** de los tres y una flecha que indica de dónde vino.
 
-*   **IGV (Integrative Genomics Viewer):** visualización de alineamientos, cobertura y variantes.
-*   **Tablet:** exploración visual de ensamblajes y lecturas alineadas.
-*   **Prokka / Bakta:** anotación rápida de genomas procariotas.
+Ejemplo para la celda [G, G] (primera fila de datos, primera columna de datos):
+- Diagonal: 0 + 1 (match G=G) = **1**
+- Arriba: -2 + (-2) = -4
+- Izquierda: -2 + (-2) = -4
+- Resultado: **1** (viene de la diagonal)
 
-### 5.6 Diseño de primers
+La matriz completa:
 
-*   **Primer-BLAST:** diseño de primers con evaluación de especificidad contra bases de datos.
-*   **Primer3:** herramienta clásica para proponer pares de primers con restricciones de longitud, Tm, %GC y tamaño de amplicón.
+```text
+        -     G     C     A     T     G
+  -     0    -2    -4    -6    -8   -10
+  G    -2     1    -1    -3    -5    -7
+  A    -4    -1     0     0    -2    -4
+  T    -6    -3    -2    -1     1    -1
+  T    -8    -5    -4    -3     0     0
+  G   -10    -7    -6    -5    -2     1
+```
 
-## 6. Conexión con las prácticas del curso
+##### Paso 3: Traceback
 
-Este módulo teórico prepara directamente el trabajo práctico que se desarrolla en genómica y análisis posterior. En particular:
+Desde la celda **inferior derecha** (valor = 1), se sigue el camino de flechas hacia la celda superior izquierda para reconstruir el alineamiento:
 
-| Tema teórico en este módulo                                   | Aplicación práctica en el curso                                                                                                                                                                               |
-|:--------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Calidad de lecturas y FASTQ                                   | [`genome_assembly_fastqc_velvet.md`](../06-genomics/exercises/genome_assembly_fastqc_velvet.md)                                                                                                               |
-| QC, trimming y preparación de datos                           | [`genome_assembly_falco_fastp_shovill.md`](../06-genomics/exercises/genome_assembly_falco_fastp_shovill.md)                                                                                                   |
-| Alineamiento, complementariedad y especificidad de secuencias | [`primer_design.md`](./exercises/primer_design.md)                                                                                                                                                            |
-| Ensamblaje y evaluación del resultado                         | [`genome_assembly_fastqc_velvet.md`](../06-genomics/exercises/genome_assembly_fastqc_velvet.md) y [`genome_assembly_falco_fastp_shovill.md`](../06-genomics/exercises/genome_assembly_falco_fastp_shovill.md) |
-| Anotación genómica básica                                     | [`genome_annotation.md`](../06-genomics/exercises/genome_annotation.md)                                                                                                                                       |
+```text
+G C A T G
+G A-T G
+* · · * *
+```
 
-De esta forma, el módulo 3 funciona como un puente entre los conceptos fundamentales de secuenciación y las prácticas más aplicadas de ensamblaje, anotación y análisis genómico del módulo 4.
+Con un gap insertado:
 
-## 7. Cierre conceptual
+```text
+G C A T - G
+G - A T T G
+*   * *   *
+```
 
-La secuenciación moderna no consiste solo en generar datos, sino en comprender qué representan esos datos y qué limitaciones arrastran desde el laboratorio hasta el análisis computacional. La elección de la tecnología, la evaluación de la calidad, el tipo de alineamiento y la estrategia de ensamblaje dependen siempre de la pregunta biológica.
+(El alineamiento exacto depende de cómo se resuelvan los empates en el traceback.)
 
-En los siguientes módulos, estos principios se aplicarán a problemas más concretos: reconstrucción de genomas, anotación de genes, comparación entre cepas, búsqueda de variantes y análisis funcional. Comprender bien esta base le permitirá interpretar mejor los resultados y tomar decisiones bioinformáticas más informadas.
+> 💡 Lo importante no es memorizar los números, sino entender la lógica: cada celda representa **la mejor forma de alinear esas dos subsecuencias hasta ese punto**.
+
+### 2.5 Algoritmo de Smith-Waterman (alineamiento local)
+
+Publicado en 1981, es una modificación del Needleman-Wunsch con dos diferencias clave:
+
+| Característica | Needleman-Wunsch (global) | Smith-Waterman (local) |
+|:--|:--|:--|
+| **Inicialización** | Primera fila y columna con penalizaciones acumuladas | Primera fila y columna con **ceros** |
+| **Valores negativos** | Se permiten | Se reemplazan por **0** (nunca bajan de cero) |
+| **Traceback** | Desde la celda **inferior derecha** | Desde la celda con el **valor más alto** en toda la matriz |
+| **Fin del traceback** | Llega a la celda [0,0] | Se detiene al llegar a un **0** |
+
+Usando las mismas secuencias `GCATG` y `GATTG`:
+
+```text
+        -     G     C     A     T     G
+  -     0     0     0     0     0     0
+  G     0     1     0     0     0     1
+  A     0     0     0     1     0     0
+  T     0     0     0     0     2     0
+  T     0     0     0     0     1     1
+  G     0     1     0     0     0     2
+```
+
+El valor más alto es **2** (aparece en dos celdas). El traceback desde la celda [T, T] con valor 2 reconstruye la mejor región local de similitud.
+
+> La diferencia es sutil pero poderosa: Smith-Waterman ignora las regiones que no aportan similitud, mientras que Needleman-Wunsch fuerza a alinear todo.
+
+### 2.6 Identidad vs. similitud
+
+Estos conceptos son diferentes y no deben usarse como sinónimos:
+
+- **Identidad:** porcentaje de posiciones **exactamente iguales** en un alineamiento.
+- **Similitud:** grado de semejanza que también considera **sustituciones conservadoras**, especialmente relevante en proteínas.
+
+En **ADN**, generalmente se habla de **identidad** porque las bases no tienen propiedades químicas comparables entre sí (una A no "se parece" a una G como una leucina se parece a una isoleucina).
+
+En **proteínas**, la **similitud** puede ser más informativa que la identidad, porque dos aminoácidos diferentes pueden cumplir funciones parecidas si comparten propiedades químicas.
+
+### 2.7 De la teoría a la práctica: relación con BLAST
+
+Ahora puede entender por qué BLAST es rápido pero no exacto:
+
+- **Smith-Waterman** (local, exacto) examina **todas** las posiciones posibles → es lento para bases de datos grandes.
+- **BLAST** (local, heurístico) usa semillas para saltar directamente a las zonas prometedoras y luego extiende → es mucho más rápido, pero puede perder similitudes débiles.
+
+En la práctica, BLAST es suficiente para la mayoría de las búsquedas. Smith-Waterman se reserva para casos donde se necesita sensibilidad máxima.
+
+---
+
+## 3. Ejemplo de código: alineamiento en Python
+
+### 3.1 Objetivo del ejercicio
+
+El objetivo es que usted entienda el algoritmo de alineamiento "por dentro", no como una caja negra. Para eso, en la carpeta de ejercicios del módulo encontrará un script Python que implementa tanto **Needleman-Wunsch** (global) como **Smith-Waterman** (local) desde cero usando programación dinámica.
+
+El script se encuentra en: [`exercises/code/alignment_dp.py`](./exercises/code/alignment_dp.py)
+
+### 3.2 ¿Qué hace el script?
+
+El script contiene:
+
+1. **Función `needleman_wunsch(seq1, seq2, match, mismatch, gap)`**
+   - Crea la matriz de scoring.
+   - La llena usando las reglas de programación dinámica.
+   - Realiza el traceback desde la esquina inferior derecha.
+   - Devuelve el alineamiento global y la puntuación.
+
+2. **Función `smith_waterman(seq1, seq2, match, mismatch, gap)`**
+   - Similar, pero inicializa con ceros, no permite valores negativos y hace traceback desde el máximo.
+   - Devuelve el mejor alineamiento local y la puntuación.
+
+3. **Función `print_matrix(matrix, seq1, seq2)`**
+   - Imprime la matriz de forma legible para que pueda verificar los cálculos a mano.
+
+4. **Bloque principal**
+   - Ejecuta ambos algoritmos con dos secuencias de ejemplo y muestra los resultados.
+
+### 3.3 Cómo ejecutarlo
+
+Desde la terminal de Codespaces:
+
+```bash
+cd exercises/code/
+python3 alignment_dp.py
+```
+
+Salida esperada (ejemplo):
+
+```text
+=======================================================
+  NEEDLEMAN-WUNSCH  (Global Alignment)
+=======================================================
+
+Sequences: 'GCATG' vs 'GATTG'
+Scoring:   match=+1, mismatch=-1, gap=-2
+
+Scoring matrix:
+           -     G     C     A     T     G
+     -     0    -2    -4    -6    -8   -10
+     G    -2     1    -1    -3    -5    -7
+     A    -4    -1     0     0    -2    -4
+     T    -6    -3    -2    -1     1    -1
+     T    -8    -5    -4    -3     0     0
+     G   -10    -7    -6    -5    -2     1
+
+Alignment:
+  GCATG
+  GATTG
+  *..**
+
+Score: 1
+```
+
+> 💡 El script resuelve los empates del traceback tomando un solo camino. Si usted resolvió la matriz a mano y obtuvo un alineamiento diferente (por ejemplo, con gaps), puede ser igualmente correcto. Lo importante es que la **puntuación** coincida.
+
+### 3.4 Extensiones sugeridas
+
+Una vez que entienda cómo funciona el script, puede intentar:
+
+- **Cambiar las secuencias** por otras más largas o con más diferencias.
+- **Modificar los parámetros de scoring** (match, mismatch, gap) y observar cómo cambia el alineamiento.
+- **Implementar penalización afín de gaps** (gap open vs. gap extension).
+- **Comparar con Biopython:** usar `Bio.Align.PairwiseAligner` y verificar que los resultados coincidan.
+
+```python
+# Ejemplo con Biopython (si está instalado)
+from Bio import Align
+
+aligner = Align.PairwiseAligner()
+aligner.mode = "global"
+aligner.match_score = 1
+aligner.mismatch_score = -1
+aligner.open_gap_score = -2
+aligner.extend_gap_score = -2
+
+alignments = aligner.align("GCATG", "GATTG")
+print(alignments[0])
+```
+
+---
+
+## 4. Diseño de primers y PCR *in silico*
+
+### 4.1 ¿Qué es un primer y por qué importa su diseño?
+
+Un **primer** (cebador) es un oligonucleótido corto de ADN (~18–25 nt) que se une a una secuencia molde y permite iniciar la replicación en una PCR. El diseño de primers es una de las aplicaciones más directas de los conceptos de complementariedad de bases y alineamiento.
+
+Diseñar un buen primer es un problema bioinformático: no basta con elegir cualquier secuencia corta. Hay que verificar que sea específica, que no forme estructuras secundarias y que funcione bien en las condiciones de la PCR.
+
+### 4.2 Parámetros clave de un buen primer
+
+| Parámetro | Recomendación | ¿Por qué? |
+|:--|:--|:--|
+| **Longitud** | 18–25 nt | Equilibrio entre especificidad y eficiencia de unión |
+| **Contenido GC** | 40–60% | Estabilidad del dúplex primer-molde |
+| **Tm** | 55–65 °C | El par de primers debe tener Tm similares (diferencia ≤ 2 °C) |
+| **Extremo 3'** | Evitar desajustes; a veces un "GC clamp" | Crítico para la extensión por la polimerasa |
+| **Auto-complementariedad** | Baja | Evitar horquillas y dímeros de primer |
+| **Tamaño del amplicón** | 100–500 pb (PCR convencional) | Productos muy largos son más difíciles de amplificar |
+
+### 4.3 Herramientas de diseño
+
+- **Primer-BLAST** ([https://www.ncbi.nlm.nih.gov/tools/primer-blast/](https://www.ncbi.nlm.nih.gov/tools/primer-blast/)): diseña primers y evalúa especificidad contra bases de datos.
+- **Primer3**: herramienta clásica para proponer pares de primers con restricciones configurables.
+
+### 4.4 PCR *in silico* y electroforesis *in silico*
+
+La **PCR *in silico*** consiste en verificar computacionalmente si un par de primers amplificaría el producto esperado. Esto incluye:
+
+- comprobar el **tamaño esperado del amplicón**;
+- evaluar si existen **productos inespecíficos**;
+- anticipar cómo se vería el resultado en un **gel de electroforesis** (electroforesis *in silico*).
+
+La práctica completa con procedimiento guiado, opciones A y B, y actividades de electroforesis *in silico* está disponible en:
+
+📄 **[Práctica: Diseño de primers](./exercises/primer_design.md)**
+
+---
+
+## 5. Conexión con las prácticas del curso
+
+| Tema teórico en este módulo | Aplicación práctica |
+|:--|:--|
+| Bases de datos y BLAST | [Práctica de bases de datos (Módulo 1)](../01-introduction/exercises/01_databases.md) |
+| Alineamiento con programación dinámica | [`exercises/code/alignment_dp.py`](./exercises/code/alignment_dp.py) |
+| Diseño de primers y PCR *in silico* | [`exercises/primer_design.md`](./exercises/primer_design.md) |
+
+---
+
+## 6. Cierre conceptual
+
+El análisis de secuencias es la base sobre la cual se construye casi todo en bioinformática. Comparar secuencias permite identificar genes, encontrar homólogos, detectar variantes, diseñar primers y establecer relaciones evolutivas.
+
+En este módulo ha aprendido:
+
+- cómo **BLAST** usa heurísticas para buscar similitudes de forma rápida;
+- cómo los algoritmos de **Needleman-Wunsch** y **Smith-Waterman** resuelven el problema de alineamiento de forma exacta;
+- por qué la elección entre alineamiento **global** y **local** depende de la pregunta biológica;
+- cómo el **diseño de primers** conecta el análisis computacional con el laboratorio.
+
+En el **Módulo 4** (Filogenética) usará estos conceptos de alineamiento para construir árboles evolutivos a partir de secuencias múltiples. En el **Módulo 5** (Secuenciación) entenderá cómo se generan las lecturas que luego se alinean y ensamblan. Y en el **Módulo 6** (Genómica) aplicará todo esto a genomas completos.
+
+> El análisis de secuencias no es un paso aislado; es el lenguaje con el que la bioinformática lee la biología.
