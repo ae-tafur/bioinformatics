@@ -165,7 +165,7 @@ You give biological meaning to assembled genomes: annotation, variants, and comp
 
 ## Module 7 — Protein Bioinformatics
 
-📂 **[06-proteins/README.md](06-proteins/README.md)**
+📂 **[06-proteins/README.md](07-proteins/README.md)**
 
 **Topics:**
 - Protein sequences, domains, motifs and families
@@ -176,7 +176,7 @@ You give biological meaning to assembled genomes: annotation, variants, and comp
 
 ## Module 8 — Transcriptomics (RNA-Seq)
 
-📂 **[07-transcriptomics/README.md](07-transcriptomics/README.md)**
+📂 **[07-transcriptomics/README.md](08-transcriptomics/README.md)**
 
 **Topics:**
 - What RNA-Seq measures, experimental design and key biases
