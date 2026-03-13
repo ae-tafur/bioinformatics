@@ -117,9 +117,9 @@ Las ómicas estudian moléculas biológicas de forma global:
 
 ### 1.7 Dogma Central de la Biología Molecular
 
-`ADN → ARN → Proteína`
-
-`(Replicación) → (Transcripción) → (Traducción)`
+> [!IMPORTANT]
+> `ADN → ARN → Proteína`
+> `(Replicación) → (Transcripción) → (Traducción)`
 
 * **ADN:** Almacena información genética
 * **ARN:** Intermediario, lleva información

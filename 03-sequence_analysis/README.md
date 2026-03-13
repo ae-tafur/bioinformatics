@@ -12,8 +12,8 @@ Trabajaremos con tres grandes bloques:
 2. **Alineamiento de secuencias**, entendiendo los algoritmos de programación dinámica que permiten comparar dos secuencias de forma exacta.
 3. **Diseño de primers y PCR *in silico***, donde la comparación de secuencias se aplica a un problema experimental concreto.
 
-> [!TIP]
-> **Reflexión:** Saber comparar secuencias no es solo una habilidad técnica: es la base sobre la cual se construyen la filogenética, la genómica comparada, la detección de variantes y casi cualquier análisis bioinformático que haga en su carrera.
+> [!NOTE]
+> Saber comparar secuencias no es solo una habilidad técnica: es la base sobre la cual se construyen la filogenética, la genómica comparada, la detección de variantes y casi cualquier análisis bioinformático que haga en su carrera.
 
 ---
 
