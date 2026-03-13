@@ -36,7 +36,7 @@ En esta práctica obtendrá una secuencia de interés desde una base de datos p�
 - Haber leído el **README del Módulo 3**, especialmente las secciones sobre FASTA, alineamiento, identidad y similitud.
 - Tener acceso a un navegador web.
 - Tener acceso a **GitHub Codespaces** o a una terminal Unix si desea descargar la secuencia con `wget`.
-- Como apoyo opcional, haber realizado la práctica [`scripting_in_python.md`](../../02-coding-basics/exercises/scripting_in_python.md), ya que reutilizaremos la idea de **complemento inverso**.
+- Como apoyo opcional, haber realizado la práctica [`scripting_in_python.md`](../../02-coding-basics/exercises/03_scripting_in_python.md), ya que reutilizaremos la idea de **complemento inverso**.
 
 ---
 

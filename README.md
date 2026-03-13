@@ -77,7 +77,7 @@ Topics include:
 
 ## 03 - Alignments and Sequencing
 
-**[Module 3 — DNA/RNA Sequencing, Alignments, Assembly and Annotation](03-sequencing/README.md)**
+**[Module 3 — DNA/RNA Sequencing, Alignments, Assembly and Annotation](03-sequence_analysis/README.md)**
 
 You’ll learn how sequencing data are produced and the key computational steps that turn raw reads into biological insight.
 
@@ -90,7 +90,7 @@ Topics include:
 
 ## 04 - Phylogenetics
 
-**[Module 4 — Phylogenetics and Evolutionary Inference](05-phylogenetics/README.md)**
+**[Module 4 — Phylogenetics and Evolutionary Inference](04-phylogenetics/README.md)**
 
 Topics include:
 - Multiple sequence alignment and model choice
@@ -100,7 +100,7 @@ Topics include:
 
 ## 05 - Genomics
 
-**[Module 5 — Genomics: From Reads to Genomes](04-genomics/README.md)**
+**[Module 5 — Genomics: From Reads to Genomes](06-genomics/README.md)**
 
 Topics include:
 - Read QC and trimming; mapping vs assembly strategies
