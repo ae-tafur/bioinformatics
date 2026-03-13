@@ -418,7 +418,7 @@ Publicado en 1981, es una modificación del Needleman-Wunsch con dos diferencias
 | **Traceback**         | Desde la celda **inferior derecha**                  | Desde la celda con el **valor más alto** en toda la matriz |
 | **Fin del traceback** | Llega a la celda [0,0]                               | Se detiene al llegar a un **0**                            |
 
-Usando las mismas secuencias `GCATG` y `GATTG`:
+Usando las mismas secuencias `GCATG` y `GATTG` (con match=+1, mismatch=-1, gap=-2):
 
 ```text
         -     G     C     A     T     G
@@ -430,10 +430,132 @@ Usando las mismas secuencias `GCATG` y `GATTG`:
   G     0     1     0     0     0     2
 ```
 
-El valor más alto es **2** (aparece en dos celdas). El traceback desde la celda [T, T] con valor 2 reconstruye la mejor región local de similitud.
+Note las diferencias con la matriz de Needleman-Wunsch:
+- La primera fila y columna son **ceros** (no penalizaciones acumuladas).
+- No hay valores negativos: cualquier cálculo que daría un número negativo se reemplaza por **0**.
+
+#### Traceback paso a paso
+
+El valor más alto en toda la matriz es **2**, que aparece en dos celdas: [T, T] (fila 3, col 4) y [G, G] (fila 5, col 5). Ambas son puntos de inicio válidos para el traceback. Tomemos la celda [T, T] con valor 2 (fila 3, col 4):
+
+```text
+Matriz con el camino del traceback marcado (★):
+
+              -     G     C     A     T     G
+        -     0     0     0     0     0     0
+        G     0     1     0     0     0     1
+        A     0     0     0    ★1     0     0
+        T     0     0     0     0    ★2     0   ← INICIO del traceback
+        T     0     0     0     0     1     1
+        G     0     1     0     0     0     2
+```
+
+| # | Celda actual           | Valor | ¿De dónde vino?               | Razón                                            | Se escribe en el alineamiento |
+|:--|:-----------------------|:------|:------------------------------|:-------------------------------------------------|:------------------------------|
+| 1 | [T, T] (fila 3, col 4) | 2     | **↖ Diagonal** desde [A, A]=1 | 1 + 1 (match T=T) = 2 ✓                          | `T` alineado con `T`          |
+| 2 | [A, A] (fila 2, col 3) | 1     | **↖ Diagonal** desde [G, C]=0 | 0 + 1 (match A=A) = 1 ✓                          | `A` alineado con `A`          |
+| 3 | [G, C] (fila 1, col 2) | 0     | **STOP**                      | Llegamos a un **0** → fin del alineamiento local | —                             |
+
+El alineamiento local resultante (leído en reversa):
+
+```text
+Seq 1 (fragmento):   A  T
+Seq 2 (fragmento):   A  T
+                     *  *
+
+Puntuación: +1 +1 = 2  ✓
+Región alineada: posiciones 3–4 de Seq 1 (GCATG) con posiciones 2–3 de Seq 2 (GATTG)
+```
+
+#### ¿Y si tomamos la otra celda con valor 2?
+
+Desde [G, G] (fila 5, col 5) con valor 2:
+
+```text
+Matriz con el camino alternativo (★):
+
+              -     G     C     A     T     G
+        -     0     0     0     0     0     0
+        G     0     1     0     0     0     1
+        A     0     0     0     1     0     0
+        T     0     0     0     0     2     0
+        T     0     0     0     0    ★1     1
+        G     0     1     0     0     0    ★2   ← INICIO
+```
+
+| # | Celda actual           | Valor | ¿De dónde vino?               | Razón                   | Se escribe           |
+|:--|:-----------------------|:------|:------------------------------|:------------------------|:---------------------|
+| 1 | [G, G] (fila 5, col 5) | 2     | **↖ Diagonal** desde [T, T]=1 | 1 + 1 (match G=G) = 2 ✓ | `G` alineado con `G` |
+| 2 | [T, T] (fila 4, col 4) | 1     | **↖ Diagonal** desde [T, A]=0 | 0 + 1 (match T=T) = 1 ✓ | `T` alineado con `T` |
+| 3 | [T, A] (fila 3, col 3) | 0     | **STOP**                      | —                       | —                    |
+
+Alineamiento local alternativo:
+
+```text
+Seq 1 (fragmento):   T  G
+Seq 2 (fragmento):   T  G
+                     *  *
+
+Puntuación: +1 +1 = 2  ✓
+Región alineada: posiciones 4–5 de Seq 1 con posiciones 4–5 de Seq 2
+```
+
+Ambos alineamientos locales tienen la misma puntuación (2) y ambos son correctos. Cada uno identifica una **región diferente** de similitud perfecta entre las dos secuencias.
+
+#### Comparación directa: Needleman-Wunsch vs. Smith-Waterman
+
+Usando las mismas secuencias y el mismo scoring, observe cómo los dos algoritmos producen resultados muy diferentes:
+
+```text
+NEEDLEMAN-WUNSCH (global):
+
+Seq 1:   G  C  A  T  G          Alinea TODO, de punta a punta
+Seq 2:   G  A  T  T  G          Incluye los mismatches (C≠A, A≠T)
+         *  ·  ·  *  *
+Score: 1
+
+SMITH-WATERMAN (local):
+
+Seq 1:   G  C [A  T] G          Trabaja con las secuencias completas,
+Seq 2:   G  - [A  T] T  G       pero REPORTA solo la mejor región (entre [])
+               *  *
+Score: 2
+```
+
+> [!WARNING]
+> **Aclaración importante:** Smith-Waterman **no ignora** las secuencias fuera de la región alineada — el algoritmo **sí recorre las secuencias completas** para llenar toda la matriz. Lo que ocurre es que el traceback se inicia en el valor más alto de la matriz y se detiene al llegar a un cero, por lo que solo **extrae** el fragmento de máxima similitud. Las regiones fuera de ese fragmento simplemente no contribuyen al score.
+>
+> Es como buscar un párrafo clave dentro de un libro: usted lee el libro entero para encontrarlo, pero al final solo subraya y reporta el párrafo relevante.
+
+Cuando las secuencias son cortas (como en este ejemplo), la diferencia parece menor. Pero con secuencias largas y diferentes, la ventaja del alineamiento local se hace evidente:
+
+```text
+Ejemplo con secuencias largas:
+
+Seq 1:  ──────────────────── ATGCGATCG ─────────────────────  (2,000 pb)
+Seq 2:  ──────── ATGCGATCG ─────────────────────────────────  (5,000 pb)
+
+NEEDLEMAN-WUNSCH: forzaría a alinear las 2,000 pb contra las 5,000 pb,
+                  incluyendo enormes regiones con gaps y mismatches.
+                  Score: probablemente negativo.
+
+SMITH-WATERMAN:   encuentra la región ATGCGATCG compartida,
+                  la reporta como el mejor alineamiento local.
+                  Score: +9 (9 matches)
+```
+
+| Aspecto                       | Needleman-Wunsch                           | Smith-Waterman                                      |
+|:------------------------------|:-------------------------------------------|:----------------------------------------------------|
+| **Entrada**                   | Secuencias completas                       | Secuencias completas (igual)                        |
+| **Matriz**                    | Se llena completa                          | Se llena completa (igual)                           |
+| **Traceback**                 | Desde esquina inferior derecha hasta [0,0] | Desde el **valor más alto** hasta llegar a un **0** |
+| **Resultado**                 | Alineamiento de extremo a extremo          | Solo la **región de mayor similitud**               |
+| Score                         | 1 (penalizado por mismatches)              | 2 (solo la región buena)                            |
+| Mismatches fuera de la región | Los incluye obligatoriamente               | No los reporta (están fuera del traceback)          |
+| **Mejor para**                | Comparar secuencias del mismo gen/región   | Buscar dominios, motivos o regiones conservadas     |
 
 > [!NOTE]
-> La diferencia es sutil pero poderosa: Smith-Waterman ignora las regiones que no aportan similitud, mientras que Needleman-Wunsch fuerza a alinear todo.
+> La diferencia es sutil pero poderosa: ambos algoritmos procesan las secuencias completas, pero Needleman-Wunsch fuerza a alinear todo de punta a punta, mientras que Smith-Waterman extrae solo el mejor fragmento compartido. Por eso BLAST (que usa alineamiento local) puede encontrar un dominio conservado dentro de una proteína enorme, mientras que un alineamiento global forzaría a alinear también las regiones no relacionadas.
 
 ### 2.7 Identidad vs. similitud
 
