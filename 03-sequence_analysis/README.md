@@ -26,7 +26,8 @@ Ya conoce:
 - los formatos **FASTA** y **GenBank**, y qué información contiene cada uno;
 - cómo descargar secuencias desde la web.
 
-Si necesita repasar → [README del Módulo 1](../01-introduction/README.md) y [Práctica de bases de datos](../01-introduction/exercises/01_databases.md).
+> [!NOTE]
+> Si necesita repasar → [README del Módulo 1](../01-introduction/README.md) y [Práctica de bases de datos](../01-introduction/exercises/01_databases.md).
 
 ### Del Módulo 2
 
@@ -35,7 +36,8 @@ Ya sabe:
 - programar en **Python**: variables, tipos de datos, condicionales, bucles, lectura de archivos y funciones;
 - ejecutar scripts `.py` desde Codespaces.
 
-Si necesita repasar → [README del Módulo 2](../02-coding-basics/README.md).
+> [!NOTE]
+> Si necesita repasar → [README del Módulo 2](../02-coding-basics/README.md).
 
 En este módulo usará Python para **implementar un algoritmo de alineamiento desde cero**, así que asegúrese de sentirse cómodo con listas, bucles anidados y funciones antes de continuar.
 
@@ -47,6 +49,7 @@ En este módulo usará Python para **implementar un algoritmo de alineamiento de
 
 **BLAST** (*Basic Local Alignment Search Tool*) es la herramienta más utilizada en bioinformática para buscar secuencias similares en bases de datos. Fue publicada por Altschul *et al.* en 1990 y desde entonces se ha convertido en el equivalente bioinformático de un buscador web: usted le da una secuencia y BLAST le devuelve las secuencias más parecidas que existen en una base de datos.
 
+> [!NOTE]
 **Analogía:** imagine que tiene una frase en un idioma desconocido y quiere encontrar frases parecidas en una biblioteca con millones de libros. No puede leer cada libro completo, así que primero busca palabras clave coincidentes, luego extiende la comparación alrededor de esas coincidencias y finalmente evalúa cuáles son parecidos reales y cuáles son casualidades.
 
 BLAST funciona exactamente así.
@@ -67,32 +70,34 @@ A partir de cada semilla, BLAST **extiende el alineamiento** en ambas direccione
 
 Los alineamientos extendidos se evalúan para determinar si son **estadísticamente significativos** o si podrían haber ocurrido por azar.
 
-> 💡 Esta estrategia hace que BLAST sea muy rápido, pero no garantiza encontrar el alineamiento óptimo en todos los casos. Para eso existen los algoritmos exactos como Smith-Waterman, que veremos más adelante.
+> [!IMPORTANT]
+> Esta estrategia hace que BLAST sea muy rápido, pero no garantiza encontrar el alineamiento óptimo en todos los casos. Para eso existen los algoritmos exactos como Smith-Waterman, que veremos más adelante.
 
 ### 1.3 Tipos de BLAST
 
 Dependiendo de qué tipo de secuencia usted tiene (la *query*) y qué tipo de base de datos quiere buscar (el *subject*), BLAST ofrece diferentes programas:
 
-| Programa | Query | Base de datos | ¿Cuándo usarlo? |
-|:--|:--|:--|:--|
-| **blastn** | Nucleótidos | Nucleótidos | Buscar genes similares, identificar especies por 16S rRNA |
-| **blastp** | Proteínas | Proteínas | Buscar proteínas homólogas, anotar funciones |
-| **blastx** | Nucleótidos (traduce) | Proteínas | Tiene ADN y quiere buscar en bases de datos de proteínas |
-| **tblastn** | Proteínas | Nucleótidos (traduce) | Buscar genes en genomas no anotados usando proteínas como query |
+| Programa    | Query                 | Base de datos         | ¿Cuándo usarlo?                                                         |
+|:------------|:----------------------|:----------------------|:------------------------------------------------------------------------|
+| **blastn**  | Nucleótidos           | Nucleótidos           | Buscar genes similares, identificar especies por 16S rRNA               |
+| **blastp**  | Proteínas             | Proteínas             | Buscar proteínas homólogas, anotar funciones                            |
+| **blastx**  | Nucleótidos (traduce) | Proteínas             | Tiene ADN y quiere buscar en bases de datos de proteínas                |
+| **tblastn** | Proteínas             | Nucleótidos (traduce) | Buscar genes en genomas no anotados usando proteínas como query         |
 | **tblastx** | Nucleótidos (traduce) | Nucleótidos (traduce) | Comparación traducida en ambas direcciones (más lento, menos frecuente) |
 
 ### 1.4 Interpretación de resultados
 
 Cuando BLAST devuelve resultados, hay cuatro valores que debe aprender a interpretar:
 
-| Parámetro | ¿Qué mide? | ¿Qué significa un "buen" valor? |
-|:--|:--|:--|
-| **E-value** | Probabilidad de encontrar ese alineamiento por azar en una base de datos de ese tamaño | Mientras más bajo, mejor. Un E-value < 1e-5 suele considerarse significativo |
-| **Score (bit score)** | Puntuación normalizada del alineamiento | Mientras más alto, mejor |
-| **% Identity** | Porcentaje de posiciones idénticas en el alineamiento | Depende del contexto biológico |
-| **Query coverage** | Qué porcentaje de su secuencia se alineó | Un coverage bajo puede indicar que solo una parte de su secuencia es similar |
+| Parámetro             | ¿Qué mide?                                                                             | ¿Qué significa un "buen" valor?                                              |
+|:----------------------|:---------------------------------------------------------------------------------------|:-----------------------------------------------------------------------------|
+| **E-value**           | Probabilidad de encontrar ese alineamiento por azar en una base de datos de ese tamaño | Mientras más bajo, mejor. Un E-value < 1e-5 suele considerarse significativo |
+| **Score (bit score)** | Puntuación normalizada del alineamiento                                                | Mientras más alto, mejor                                                     |
+| **% Identity**        | Porcentaje de posiciones idénticas en el alineamiento                                  | Depende del contexto biológico                                               |
+| **Query coverage**    | Qué porcentaje de su secuencia se alineó                                               | Un coverage bajo puede indicar que solo una parte de su secuencia es similar |
 
-> ⚠️ **Error frecuente:** un E-value bajo con un coverage del 10% puede significar que solo un dominio pequeño es similar, no que toda la proteína sea homóloga. Siempre mire los cuatro parámetros juntos.
+> [!WARNING]
+> **Error frecuente:** un E-value bajo con un coverage del 10% puede significar que solo un dominio pequeño es similar, no que toda la proteína sea homóloga. Siempre mire los cuatro parámetros juntos.
 
 ### 1.5 BLAST en la práctica
 
@@ -126,7 +131,8 @@ Esta es una distinción fundamental:
 
 Compara las secuencias **de extremo a extremo**, intentando alinear toda su longitud.
 
-**¿Cuándo usarlo?** Cuando ambas secuencias son del mismo gen o región y tienen longitudes similares.
+> [!TIP]
+> **¿Cuándo usarlo?** Cuando ambas secuencias son del mismo gen o región y tienen longitudes similares.
 
 ```text
 Secuencia 1:  A T G C G A T C G
@@ -138,7 +144,8 @@ Secuencia 2:  A T G C - A T C A
 
 Busca solo la **mejor región de similitud** dentro de secuencias que pueden ser de longitud muy diferente.
 
-**¿Cuándo usarlo?** Cuando solo una parte de las secuencias comparte similitud (por ejemplo, un dominio dentro de una proteína larga, o una región conservada en un genoma).
+> [!TIP]
+> **¿Cuándo usarlo?** Cuando solo una parte de las secuencias comparte similitud (por ejemplo, un dominio dentro de una proteína larga, o una región conservada en un genoma).
 
 ```text
 Secuencia 1:  ...xxxATGCGATCGxxx...
@@ -152,6 +159,7 @@ En términos sencillos:
 - **Global** = "comparemos todo con todo, de punta a punta"
 - **Local** = "encontremos el mejor fragmento compartido"
 
+> [!NOTE]
 > BLAST usa alineamiento **local**. Por eso puede encontrar similitudes parciales entre secuencias muy diferentes.
 
 ### 2.3 Conceptos de scoring
@@ -253,20 +261,22 @@ G - A T T G
 *   * *   *
 ```
 
+> [!NOTE]
 (El alineamiento exacto depende de cómo se resuelvan los empates en el traceback.)
 
-> 💡 Lo importante no es memorizar los números, sino entender la lógica: cada celda representa **la mejor forma de alinear esas dos subsecuencias hasta ese punto**.
+> [!IMPORTANT]
+> Lo importante no es memorizar los números, sino entender la lógica: cada celda representa **la mejor forma de alinear esas dos subsecuencias hasta ese punto**.
 
 ### 2.5 Algoritmo de Smith-Waterman (alineamiento local)
 
 Publicado en 1981, es una modificación del Needleman-Wunsch con dos diferencias clave:
 
-| Característica | Needleman-Wunsch (global) | Smith-Waterman (local) |
-|:--|:--|:--|
-| **Inicialización** | Primera fila y columna con penalizaciones acumuladas | Primera fila y columna con **ceros** |
-| **Valores negativos** | Se permiten | Se reemplazan por **0** (nunca bajan de cero) |
-| **Traceback** | Desde la celda **inferior derecha** | Desde la celda con el **valor más alto** en toda la matriz |
-| **Fin del traceback** | Llega a la celda [0,0] | Se detiene al llegar a un **0** |
+| Característica        | Needleman-Wunsch (global)                            | Smith-Waterman (local)                                     |
+|:----------------------|:-----------------------------------------------------|:-----------------------------------------------------------|
+| **Inicialización**    | Primera fila y columna con penalizaciones acumuladas | Primera fila y columna con **ceros**                       |
+| **Valores negativos** | Se permiten                                          | Se reemplazan por **0** (nunca bajan de cero)              |
+| **Traceback**         | Desde la celda **inferior derecha**                  | Desde la celda con el **valor más alto** en toda la matriz |
+| **Fin del traceback** | Llega a la celda [0,0]                               | Se detiene al llegar a un **0**                            |
 
 Usando las mismas secuencias `GCATG` y `GATTG`:
 
@@ -282,6 +292,7 @@ Usando las mismas secuencias `GCATG` y `GATTG`:
 
 El valor más alto es **2** (aparece en dos celdas). El traceback desde la celda [T, T] con valor 2 reconstruye la mejor región local de similitud.
 
+> [!NOTE]
 > La diferencia es sutil pero poderosa: Smith-Waterman ignora las regiones que no aportan similitud, mientras que Needleman-Wunsch fuerza a alinear todo.
 
 ### 2.6 Identidad vs. similitud
@@ -370,7 +381,8 @@ Alignment:
 Score: 1
 ```
 
-> 💡 El script resuelve los empates del traceback tomando un solo camino. Si usted resolvió la matriz a mano y obtuvo un alineamiento diferente (por ejemplo, con gaps), puede ser igualmente correcto. Lo importante es que la **puntuación** coincida.
+> [!NOTE]
+> El script resuelve los empates del traceback tomando un solo camino. Si usted resolvió la matriz a mano y obtuvo un alineamiento diferente (por ejemplo, con gaps), puede ser igualmente correcto. Lo importante es que la **puntuación** coincida.
 
 ### 3.4 Extensiones sugeridas
 
@@ -408,14 +420,14 @@ Diseñar un buen primer es un problema bioinformático: no basta con elegir cual
 
 ### 4.2 Parámetros clave de un buen primer
 
-| Parámetro | Recomendación | ¿Por qué? |
-|:--|:--|:--|
-| **Longitud** | 18–25 nt | Equilibrio entre especificidad y eficiencia de unión |
-| **Contenido GC** | 40–60% | Estabilidad del dúplex primer-molde |
-| **Tm** | 55–65 °C | El par de primers debe tener Tm similares (diferencia ≤ 2 °C) |
-| **Extremo 3'** | Evitar desajustes; a veces un "GC clamp" | Crítico para la extensión por la polimerasa |
-| **Auto-complementariedad** | Baja | Evitar horquillas y dímeros de primer |
-| **Tamaño del amplicón** | 100–500 pb (PCR convencional) | Productos muy largos son más difíciles de amplificar |
+| Parámetro                  | Recomendación                            | ¿Por qué?                                                     |
+|:---------------------------|:-----------------------------------------|:--------------------------------------------------------------|
+| **Longitud**               | 18–25 nt                                 | Equilibrio entre especificidad y eficiencia de unión          |
+| **Contenido GC**           | 40–60%                                   | Estabilidad del dúplex primer-molde                           |
+| **Tm**                     | 55–65 °C                                 | El par de primers debe tener Tm similares (diferencia ≤ 2 °C) |
+| **Extremo 3'**             | Evitar desajustes; a veces un "GC clamp" | Crítico para la extensión por la polimerasa                   |
+| **Auto-complementariedad** | Baja                                     | Evitar horquillas y dímeros de primer                         |
+| **Tamaño del amplicón**    | 100–500 pb (PCR convencional)            | Productos muy largos son más difíciles de amplificar          |
 
 ### 4.3 Herramientas de diseño
 
@@ -438,11 +450,11 @@ La práctica completa con procedimiento guiado, opciones A y B, y actividades de
 
 ## 5. Conexión con las prácticas del curso
 
-| Tema teórico en este módulo | Aplicación práctica |
-|:--|:--|
-| Bases de datos y BLAST | [Práctica de bases de datos (Módulo 1)](../01-introduction/exercises/01_databases.md) |
-| Alineamiento con programación dinámica | [`exercises/code/alignment_dp.py`](./exercises/code/alignment_dp.py) |
-| Diseño de primers y PCR *in silico* | [`exercises/primer_design.md`](./exercises/primer_design.md) |
+| Tema teórico en este módulo            | Aplicación práctica                                                                   |
+|:---------------------------------------|:--------------------------------------------------------------------------------------|
+| Bases de datos y BLAST                 | [Práctica de bases de datos (Módulo 1)](../01-introduction/exercises/01_databases.md) |
+| Alineamiento con programación dinámica | [`exercises/code/alignment_dp.py`](./exercises/code/alignment_dp.py)                  |
+| Diseño de primers y PCR *in silico*    | [`exercises/primer_design.md`](./exercises/primer_design.md)                          |
 
 ---
 
@@ -459,4 +471,5 @@ En este módulo ha aprendido:
 
 En el **Módulo 4** (Filogenética) usará estos conceptos de alineamiento para construir árboles evolutivos a partir de secuencias múltiples. En el **Módulo 5** (Secuenciación) entenderá cómo se generan las lecturas que luego se alinean y ensamblan. Y en el **Módulo 6** (Genómica) aplicará todo esto a genomas completos.
 
+> [!IMPORTANT]
 > El análisis de secuencias no es un paso aislado; es el lenguaje con el que la bioinformática lee la biología.

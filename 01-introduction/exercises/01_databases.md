@@ -72,11 +72,13 @@ Objetivo: Obtener y diferenciar la información genética de la Beta-lactamasa (
    * Descarga la secuencia en FASTA (para ver la secuencia limpia).
    * Descarga la secuencia en GenBank (Full) (para ver la "biografía" del gen).
    * Descarga la secuencia en GFF3 (para ver la anotación estructural).
-5. Abrir con editor de texto. Puedes dar en click derecho `Abrir con` → `Notepad++` o `VSCode` o `Block de notas` para una mejor visualización.
+5. Abrir con editor de texto. 
+> [!TIP]
+> Puedes dar en click derecho `Abrir con` → `Notepad++` o `VSCode` o `Block de notas` para una mejor visualización.
 6. Reto 1: Localiza el nombre de la cepa bacteriana (Strain) de la cual proviene esa secuencia específica en el archivo GenBank.
-6. Reto 2: Compara la longitud de la secuencia en ambos formatos. ¿Son iguales? ¿Por qué?
-7. Reto 3: En el archivo GFF3, identifica la anotación de la región codificante (CDS) y compárala con las coordenadas encontradas en el formato GenBank.
-8. Reto 4: En el archivo GFF3, solo aparecen las coordenadas de la región codificante (CDS) y no la secuencia completa. ¿Por qué crees que es así? ¿En qué situaciones sería más útil un archivo GFF3 en lugar de un archivo FASTA o GenBank? ¿Qué otros tipos de elementos podrían estar anotados en un archivo GFF3 además de las regiones codificantes?
+7. Reto 2: Compara la longitud de la secuencia en ambos formatos. ¿Son iguales? ¿Por qué?
+8. Reto 3: En el archivo GFF3, identifica la anotación de la región codificante (CDS) y compárala con las coordenadas encontradas en el formato GenBank.
+9. Reto 4: En el archivo GFF3, solo aparecen las coordenadas de la región codificante (CDS) y no la secuencia completa. ¿Por qué crees que es así? ¿En qué situaciones sería más útil un archivo GFF3 en lugar de un archivo FASTA o GenBank? ¿Qué otros tipos de elementos podrían estar anotados en un archivo GFF3 además de las regiones codificantes?
 
 ### 📝 Preguntas de Reflexión (Post-Práctica)
 

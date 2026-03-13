@@ -10,6 +10,7 @@ Posteriormente, dará sus primeros pasos en la programación con **Bash** y **Py
 
 Al finalizar este módulo, usted será capaz de moverse con autonomía en una terminal Unix, escribir scripts básicos y aplicar estos conocimientos directamente al análisis de archivos biológicos como secuencias FASTA y datos genéticos.
 
+> [!IMPORTANT]
 > 🧪 Las prácticas de laboratorio de este módulo se realizarán usando **GitHub Codespaces**, el entorno de desarrollo en la nube configurado en la Práctica 1 (creating_an_github_account). Asegúrese de tener su cuenta de GitHub activa antes de comenzar.
 
 ---
@@ -27,14 +28,15 @@ De Unix derivan directamente dos sistemas operativos que probablemente ya conoce
 
 ```
         Unix (AT&T Bell Labs, 1970s)
-               /           \
-         BSD Unix          System V
-            |
-          Darwin (Apple)          Linux (Torvalds, 1991)
-            |                            |
-          macOS / iOS             Ubuntu, CentOS, Debian...
+               /               \
+         BSD Unix             System V
+             |                   |
+       Darwin (Apple)    Linux (Torvalds, 1991)
+             |                   |
+        macOS / iOS     Ubuntu, CentOS, Debian...
 ```
 
+> [!IMPORTANT]
 > 💡 Esto significa que si aprende a usar la terminal en Linux (usando GitHub Codespaces, por ejemplo), podrá aplicar exactamente los mismos conocimientos en macOS y en cualquier servidor Unix del mundo.
 
 **¿Y Windows?**
@@ -70,27 +72,27 @@ A diferencia de Windows (que organiza los archivos por unidades como `C:\`, `D:\
 
 **Conceptos clave de navegación:**
 
-| Símbolo / Término | Significado |
-|---|---|
-| `/` | Directorio raíz (el "tope" del sistema) |
-| `~` | Directorio personal del usuario (`/home/usuario`) |
-| `.` | Directorio actual |
-| `..` | Directorio padre (un nivel arriba) |
+| Símbolo / Término | Significado                                            |
+|-------------------|--------------------------------------------------------|
+| `/`               | Directorio raíz (el "tope" del sistema)                |
+| `~`               | Directorio personal del usuario (`/home/usuario`)      |
+| `.`               | Directorio actual                                      |
+| `..`              | Directorio padre (un nivel arriba)                     |
 | **Ruta absoluta** | Empieza desde `/`, ej. `/home/usuario/datos/seq.fasta` |
-| **Ruta relativa** | Relativa al directorio actual, ej. `datos/seq.fasta` |
+| **Ruta relativa** | Relativa al directorio actual, ej. `datos/seq.fasta`   |
 
 ### 1.4 Comandos Básicos de Navegación
 
 Los comandos de navegación son los primeros que debe memorizar. Permiten moverse por el sistema de archivos y conocer el entorno de trabajo.
 
-| Comando | Descripción | Ejemplo |
-|---|---|---|
-| `pwd` | Muestra el directorio actual (*print working directory*) | `pwd` |
-| `ls` | Lista archivos y carpetas | `ls -la` |
-| `cd` | Cambia de directorio (*change directory*) | `cd /home/usuario` |
-| `mkdir` | Crea un nuevo directorio | `mkdir resultados` |
-| `rmdir` | Elimina un directorio vacío | `rmdir temp` |
-| `tree` | Muestra la estructura de directorios en árbol | `tree datos/` |
+| Comando | Descripción                                              | Ejemplo            |
+|---------|----------------------------------------------------------|--------------------|
+| `pwd`   | Muestra el directorio actual (*print working directory*) | `pwd`              |
+| `ls`    | Lista archivos y carpetas                                | `ls -la`           |
+| `cd`    | Cambia de directorio (*change directory*)                | `cd /home/usuario` |
+| `mkdir` | Crea un nuevo directorio                                 | `mkdir resultados` |
+| `rmdir` | Elimina un directorio vacío                              | `rmdir temp`       |
+| `tree`  | Muestra la estructura de directorios en árbol            | `tree datos/`      |
 
 **Opciones útiles de `ls`:**
 
@@ -106,30 +108,31 @@ ls *.fasta  # Lista solo archivos con extensión .fasta
 
 Una vez que puede navegar, necesita crear, copiar, mover y eliminar archivos. Estos comandos son los más usados en el día a día bioinformático.
 
-| Comando | Descripción | Ejemplo |
-|---|---|---|
-| `touch` | Crea un archivo vacío | `touch secuencias.fasta` |
-| `cp` | Copia archivos o directorios | `cp seq.fasta backup/` |
-| `mv` | Mueve o renombra archivos | `mv seq.fasta datos/` |
-| `rm` | Elimina archivos | `rm temp.txt` |
-| `cat` | Muestra el contenido de un archivo | `cat seq.fasta` |
-| `less` | Visualiza archivos paginados (útil para archivos grandes) | `less genome.fastq` |
-| `head` | Muestra las primeras líneas de un archivo | `head -10 seq.fasta` |
-| `tail` | Muestra las últimas líneas de un archivo | `tail -5 resultados.txt` |
-| `wc` | Cuenta líneas, palabras y caracteres | `wc -l seq.fasta` |
+| Comando | Descripción                                               | Ejemplo                  |
+|---------|-----------------------------------------------------------|--------------------------|
+| `touch` | Crea un archivo vacío                                     | `touch secuencias.fasta` |
+| `cp`    | Copia archivos o directorios                              | `cp seq.fasta backup/`   |
+| `mv`    | Mueve o renombra archivos                                 | `mv seq.fasta datos/`    |
+| `rm`    | Elimina archivos                                          | `rm temp.txt`            |
+| `cat`   | Muestra el contenido de un archivo                        | `cat seq.fasta`          |
+| `less`  | Visualiza archivos paginados (útil para archivos grandes) | `less genome.fastq`      |
+| `head`  | Muestra las primeras líneas de un archivo                 | `head -10 seq.fasta`     |
+| `tail`  | Muestra las últimas líneas de un archivo                  | `tail -5 resultados.txt` |
+| `wc`    | Cuenta líneas, palabras y caracteres                      | `wc -l seq.fasta`        |
 
-> ⚠️ **Precaución:** El comando `rm` en Linux **no envía archivos a la papelera**. Los elimina de forma permanente e irrecuperable. Úselo con cuidado, especialmente con `rm -r` (elimina directorios completos).
+> [!WARNING]
+> El comando `rm` en Linux **no envía archivos a la papelera**. Los elimina de forma permanente e irrecuperable. Úselo con cuidado, especialmente con `rm -r` (elimina directorios completos).
 
 **Comandos de búsqueda y filtrado — fundamentales en bioinformática:**
 
-| Comando | Descripción | Ejemplo bioinformático |
-|---|---|---|
-| `grep` | Busca patrones de texto en archivos | `grep ">" seq.fasta` (cuenta secuencias) |
-| `sort` | Ordena líneas de un archivo | `sort genes.txt` |
-| `uniq` | Elimina líneas duplicadas consecutivas | `sort genes.txt \| uniq` |
-| `cut` | Extrae columnas de un archivo tabular | `cut -f1,3 anotaciones.gff` |
-| `sed` | Editor de flujo para sustituir texto | `sed 's/chr/chromosome/g' archivo.gff` |
-| `awk` | Procesamiento de texto por columnas | `awk '$3 == "gene"' anotaciones.gff` |
+| Comando | Descripción                            | Ejemplo bioinformático                   |
+|---------|----------------------------------------|------------------------------------------|
+| `grep`  | Busca patrones de texto en archivos    | `grep ">" seq.fasta` (cuenta secuencias) |
+| `sort`  | Ordena líneas de un archivo            | `sort genes.txt`                         |
+| `uniq`  | Elimina líneas duplicadas consecutivas | `sort genes.txt \| uniq`                 |
+| `cut`   | Extrae columnas de un archivo tabular  | `cut -f1,3 anotaciones.gff`              |
+| `sed`   | Editor de flujo para sustituir texto   | `sed 's/chr/chromosome/g' archivo.gff`   |
+| `awk`   | Procesamiento de texto por columnas    | `awk '$3 == "gene"' anotaciones.gff`     |
 
 ### 1.6 El Pipe `|` y la Redirección
 
@@ -173,12 +176,12 @@ $ ls -la
 -rwxr-xr-- 1 usuario grupo 4096 Feb 25 10:00 mi_script.sh
 ```
 
-| Parte | Significado |
-|---|---|
-| `-` | Tipo: `-` archivo, `d` directorio, `l` enlace |
-| `rwx` | Permisos del **dueño**: lectura, escritura, ejecución |
+| Parte | Significado                                               |
+|-------|-----------------------------------------------------------|
+| `-`   | Tipo: `-` archivo, `d` directorio, `l` enlace             |
+| `rwx` | Permisos del **dueño**: lectura, escritura, ejecución     |
 | `r-x` | Permisos del **grupo**: lectura, sin escritura, ejecución |
-| `r--` | Permisos de **otros**: solo lectura |
+| `r--` | Permisos de **otros**: solo lectura                       |
 
 **Modificar permisos con `chmod`:**
 
@@ -187,8 +190,8 @@ chmod +x mi_script.sh        # Dar permiso de ejecución
 chmod 755 mi_script.sh       # rwxr-xr-x (dueño: todo; grupo y otros: leer y ejecutar)
 chmod 644 datos.fasta        # rw-r--r-- (dueño: leer/escribir; otros: solo leer)
 ```
-
-> 💡 En bioinformática, el error más común al ejecutar un script es `Permission denied`. La solución es casi siempre `chmod +x nombre_script.sh`.
+> [!IMPORTANT]
+> En bioinformática, el error más común al ejecutar un script es `Permission denied`. La solución es casi siempre `chmod +x nombre_script.sh`.
 
 ### 1.8 Ejecución de Scripts en Linux
 
@@ -243,7 +246,8 @@ Imagine que va a realizar un protocolo de extracción de ADN. Antes de empezar, 
 
 Un **algoritmo** es exactamente eso: una secuencia finita y ordenada de instrucciones que resuelven un problema o realizan una tarea. No es código todavía; es la *lógica* del proceso, independiente del lenguaje que se use para implementarlo. Todo programa comienza como un algoritmo en papel (o en la mente del programador) antes de convertirse en código.
 
-> 💡 **Analogía:** El protocolo de laboratorio = el algoritmo. El código = el protocolo escrito en un lenguaje que la computadora puede leer y ejecutar.
+> [!NOTE]
+> **Analogía:** El protocolo de laboratorio = el algoritmo. El código = el protocolo escrito en un lenguaje que la computadora puede leer y ejecutar.
 
 #### 📄 Script
 
@@ -279,8 +283,8 @@ organismo = "Escherichia coli"
 2muestra = "..."      # Empieza con número
 gc content = 0.5      # Tiene espacio
 ```
-
-> 💡 **Sintaxis**: La sintaxis es el conjunto de reglas que define la estructura de un lenguaje de programación. Al igual que en español existen reglas gramaticales (sujeto + verbo + predicado), cada lenguaje de programación tiene su propia sintaxis. Si no se respeta la sintaxis, el computador no puede interpretar el código, igual que una oración sin estructura gramatical no transmite su mensaje correctamente.
+> [!TIP]
+> **Sintaxis**: La sintaxis es el conjunto de reglas que define la estructura de un lenguaje de programación. Al igual que en español existen reglas gramaticales (sujeto + verbo + predicado), cada lenguaje de programación tiene su propia sintaxis. Si no se respeta la sintaxis, el computador no puede interpretar el código, igual que una oración sin estructura gramatical no transmite su mensaje correctamente.
 
 ---
 
@@ -292,17 +296,18 @@ En programación, esto se llama **tipo de dato** (*data type*). Cada variable ti
 
 Los tipos de datos fundamentales son:
 
-| Tipo | Analogía de laboratorio | Descripción | Ejemplo |
-|---|---|---|---|
-| `int` (entero) | Número de colonias contadas (sin decimales) | Números enteros, positivos o negativos | `num_colonias = 156` |
-| `float` (decimal) | Volumen en mL o concentración en µg/µL | Números con decimales | `concentracion = 0.45` |
-| `str` (cadena de texto) | La secuencia escrita en el gel o el nombre de la cepa | Texto: letras, números, símbolos entre comillas | `cepa = "E. coli K-12"` |
-| `bool` (booleano) | Resultado de una prueba: positivo o negativo | Solo dos valores: `True` o `False` | `es_patogena = True` |
-| `list` (lista) | Una gradilla con múltiples tubos ordenados | Colección ordenada y modificable de valores | `muestras = ["M1", "M2", "M3"]` |
-| `dict` (diccionario) | Un cuaderno de laboratorio: clave → valor | Pares clave:valor, accesibles por nombre | `conteo = {"A": 45, "T": 42}` |
-| `tuple` (tupla) | Coordenadas fijas de un gen en el genoma | Colección ordenada e **inmutable** | `coords = (1450, 2300)` |
+| Tipo                    | Analogía de laboratorio                               | Descripción                                     | Ejemplo                         |
+|-------------------------|-------------------------------------------------------|-------------------------------------------------|---------------------------------|
+| `int` (entero)          | Número de colonias contadas (sin decimales)           | Números enteros, positivos o negativos          | `num_colonias = 156`            |
+| `float` (decimal)       | Volumen en mL o concentración en µg/µL                | Números con decimales                           | `concentracion = 0.45`          |
+| `str` (cadena de texto) | La secuencia escrita en el gel o el nombre de la cepa | Texto: letras, números, símbolos entre comillas | `cepa = "E. coli K-12"`         |
+| `bool` (booleano)       | Resultado de una prueba: positivo o negativo          | Solo dos valores: `True` o `False`              | `es_patogena = True`            |
+| `list` (lista)          | Una gradilla con múltiples tubos ordenados            | Colección ordenada y modificable de valores     | `muestras = ["M1", "M2", "M3"]` |
+| `dict` (diccionario)    | Un cuaderno de laboratorio: clave → valor             | Pares clave:valor, accesibles por nombre        | `conteo = {"A": 45, "T": 42}`   |
+| `tuple` (tupla)         | Coordenadas fijas de un gen en el genoma              | Colección ordenada e **inmutable**              | `coords = (1450, 2300)`         |
 
-> 💡 En Python, el tipo de dato se asigna **automáticamente** según el valor que se guarda. No es necesario declararlo explícitamente como en otros lenguajes. Python infiere que `num_colonias = 156` es un entero y que `cepa = "E. coli"` es un string.
+> [!IMPORTANT]
+> En Python, el tipo de dato se asigna **automáticamente** según el valor que se guarda. No es necesario declararlo explícitamente como en otros lenguajes. Python infiere que `num_colonias = 156` es un entero y que `cepa = "E. coli"` es un string.
 
 ---
 
@@ -310,31 +315,32 @@ Los tipos de datos fundamentales son:
 
 Los **operadores** son los símbolos que le indican al programa qué hacer con los valores almacenados en las variables. Son el equivalente a las operaciones que realiza en el laboratorio: mezclar, medir, comparar, decidir. Existen cuatro categorías principales:
 
-| Operador | Tipo | Significado | Ejemplo bioinformático | Resultado |
-|---|---|---|---|---|
-| `+` | Aritmético | Suma | `A + T + G + C` | `total_bases` |
-| `-` | Aritmético | Resta | `longitud - gc` | bases no GC |
-| `*` | Aritmético | Multiplicación | `stock * factor_dilucion` | concentración final |
-| `/` | Aritmético | División real | `gc / longitud * 100` | % GC con decimales |
-| `//` | Aritmético | División entera (sin decimales) | `longitud // 3` | número de codones |
-| `%` | Aritmético | Módulo — residuo de la división | `longitud % 3` | `0` si divisible por 3 |
-| `**` | Aritmético | Potencia | `4 ** 10` | posibles k-mers de 10 bases |
-| `=` | Asignación | Asigna un valor a una variable | `gc_content = 0.57` | — |
-| `+=` | Asignación | Suma y reasigna | `conteo += 1` | incrementa en 1 |
-| `-=` | Asignación | Resta y reasigna | `restantes -= 1` | decrementa en 1 |
-| `==` | Comparación | Igual a | `organismo == "E. coli"` | `True` o `False` |
-| `!=` | Comparación | Distinto de | `organismo != "humano"` | `True` o `False` |
-| `>` | Comparación | Mayor que | `longitud > 500` | `True` o `False` |
-| `<` | Comparación | Menor que | `calidad < 30` | `True` o `False` |
-| `>=` | Comparación | Mayor o igual que | `cobertura >= 20` | `True` o `False` |
-| `<=` | Comparación | Menor o igual que | `longitud <= 200` | `True` o `False` |
-| `and` | Lógico | Ambas condiciones verdaderas | `gc > 0.4 and longitud > 200` | `True` solo si ambas son `True` |
-| `or` | Lógico | Al menos una condición verdadera | `org == "E. coli" or org == "Salmonella"` | `True` si alguna es `True` |
-| `not` | Lógico | Invierte el resultado | `not es_patogena` | `True` si era `False` |
-| `in` | Pertenencia | Comprueba si un elemento está en una colección | `"A" in secuencia` | `True` o `False` |
-| `not in` | Pertenencia | Comprueba si un elemento NO está en una colección | `"X" not in nucleotidos` | `True` o `False` |
+| Operador | Tipo        | Significado                                       | Ejemplo bioinformático                    | Resultado                       |
+|----------|-------------|---------------------------------------------------|-------------------------------------------|---------------------------------|
+| `+`      | Aritmético  | Suma                                              | `A + T + G + C`                           | `total_bases`                   |
+| `-`      | Aritmético  | Resta                                             | `longitud - gc`                           | bases no GC                     |
+| `*`      | Aritmético  | Multiplicación                                    | `stock * factor_dilucion`                 | concentración final             |
+| `/`      | Aritmético  | División real                                     | `gc / longitud * 100`                     | % GC con decimales              |
+| `//`     | Aritmético  | División entera (sin decimales)                   | `longitud // 3`                           | número de codones               |
+| `%`      | Aritmético  | Módulo — residuo de la división                   | `longitud % 3`                            | `0` si divisible por 3          |
+| `**`     | Aritmético  | Potencia                                          | `4 ** 10`                                 | posibles k-mers de 10 bases     |
+| `=`      | Asignación  | Asigna un valor a una variable                    | `gc_content = 0.57`                       | —                               |
+| `+=`     | Asignación  | Suma y reasigna                                   | `conteo += 1`                             | incrementa en 1                 |
+| `-=`     | Asignación  | Resta y reasigna                                  | `restantes -= 1`                          | decrementa en 1                 |
+| `==`     | Comparación | Igual a                                           | `organismo == "E. coli"`                  | `True` o `False`                |
+| `!=`     | Comparación | Distinto de                                       | `organismo != "humano"`                   | `True` o `False`                |
+| `>`      | Comparación | Mayor que                                         | `longitud > 500`                          | `True` o `False`                |
+| `<`      | Comparación | Menor que                                         | `calidad < 30`                            | `True` o `False`                |
+| `>=`     | Comparación | Mayor o igual que                                 | `cobertura >= 20`                         | `True` o `False`                |
+| `<=`     | Comparación | Menor o igual que                                 | `longitud <= 200`                         | `True` o `False`                |
+| `and`    | Lógico      | Ambas condiciones verdaderas                      | `gc > 0.4 and longitud > 200`             | `True` solo si ambas son `True` |
+| `or`     | Lógico      | Al menos una condición verdadera                  | `org == "E. coli" or org == "Salmonella"` | `True` si alguna es `True`      |
+| `not`    | Lógico      | Invierte el resultado                             | `not es_patogena`                         | `True` si era `False`           |
+| `in`     | Pertenencia | Comprueba si un elemento está en una colección    | `"A" in secuencia`                        | `True` o `False`                |
+| `not in` | Pertenencia | Comprueba si un elemento NO está en una colección | `"X" not in nucleotidos`                  | `True` o `False`                |
 
-> ⚠️ **Error frecuente:** `=` y `==` son completamente diferentes. `=` **asigna** un valor (`gc = 0.5` guarda el número en la variable). `==` **compara** dos valores (`gc == 0.5` pregunta si son iguales y devuelve `True` o `False`). Confundirlos es uno de los errores más comunes al comenzar a programar.
+> [!TIP]
+> **Error frecuente:** `=` y `==` son completamente diferentes. `=` **asigna** un valor (`gc = 0.5` guarda el número en la variable). `==` **compara** dos valores (`gc == 0.5` pregunta si son iguales y devuelve `True` o `False`). Confundirlos es uno de los errores más comunes al comenzar a programar.
 
 ---
 
@@ -349,35 +355,36 @@ Los operadores lógicos (`and`, `or`, `not`) trabajan con valores booleanos (`Tr
 > *"La bacteria es Gram positiva **Y** catalasa positiva"* → solo si ambas pruebas dan positivo.
 
 | Condición A | Condición B | A `and` B |
-|---|---|---|
-| `True` | `True` | ✅ `True` |
-| `True` | `False` | ❌ `False` |
-| `False` | `True` | ❌ `False` |
-| `False` | `False` | ❌ `False` |
+|-------------|-------------|-----------|
+| `True`      | `True`      | ✅ `True`  |
+| `True`      | `False`     | ❌ `False` |
+| `False`     | `True`      | ❌ `False` |
+| `False`     | `False`     | ❌ `False` |
 
 **Operador `or` — al menos una condición debe ser verdadera:**
 
 > *"La bacteria es Gram positiva **O** produce beta-lactamasa"* → basta con que una de las dos sea cierta.
 
-| Condición A | Condición B | A `or` B |
-|---|---|---|
-| `True` | `True` | ✅ `True` |
-| `True` | `False` | ✅ `True` |
-| `False` | `True` | ✅ `True` |
-| `False` | `False` | ❌ `False` |
+| Condición A | Condición B | A `or` B  |
+|-------------|-------------|-----------|
+| `True`      | `True`      | ✅ `True`  |
+| `True`      | `False`     | ✅ `True`  |
+| `False`     | `True`      | ✅ `True`  |
+| `False`     | `False`     | ❌ `False` |
 
 **Operador `not` — invierte el resultado:**
 
 > *"La bacteria **NO** es Gram negativa"* → si era `False`, pasa a `True`, y viceversa.
 
-| Condición A | `not` A |
-|---|---|
-| `True` | ❌ `False` |
-| `False` | ✅ `True` |
+| Condición A | `not` A   |
+|-------------|-----------|
+| `True`      | ❌ `False` |
+| `False`     | ✅ `True`  |
 
 ---
 
-> ⚠️ **Aclaración frecuente: ¿`False and False` no debería ser `True` porque "ambas se cumplen igual"?**
+> [!IMPORTANT]
+> **Aclaración frecuente: ¿`False and False` no debería ser `True` porque "ambas se cumplen igual"?**
 >
 > No. La clave está en entender **qué pregunta hace cada operador**:
 >
@@ -389,11 +396,11 @@ Los operadores lógicos (`and`, `or`, `not`) trabajan con valores booleanos (`Tr
 > **Analogía:** Regla del laboratorio: *"Solo puede usar la muestra si está descongelada **Y** está etiquetada."*
 >
 > | ¿Está descongelada? | ¿Está etiquetada? | ¿Puede usarla? (`and`) |
-> |---|---|---|
-> | ✅ Sí | ✅ Sí | ✅ Sí |
-> | ✅ Sí | ❌ No | ❌ No |
-> | ❌ No | ✅ Sí | ❌ No |
-> | ❌ No | ❌ No | ❌ No |
+> |---------------------|-------------------|------------------------|
+> | ✅ Sí                | ✅ Sí              | ✅ Sí                   |
+> | ✅ Sí                | ❌ No              | ❌ No                   |
+> | ❌ No                | ✅ Sí              | ❌ No                   |
+> | ❌ No                | ❌ No              | ❌ No                   |
 >
 > En la última fila, la muestra **no** está descongelada **y tampoco** está etiquetada. El hecho de que ambas condiciones fallen de la misma manera no cambia el resultado: sigue siendo **No**.
 >
@@ -407,12 +414,12 @@ Los operadores lógicos (`and`, `or`, `not`) trabajan con valores booleanos (`Tr
 > False and False  # → False ❌ (ninguna es verdadera)
 > ```
 >
-> | Expresión | Pregunta que hace | Resultado |
-> |---|---|---|
+> | Expresión         | Pregunta que hace          | Resultado |
+> |-------------------|----------------------------|-----------|
 > | `False and False` | ¿Ambas son **verdaderas**? | ❌ `False` |
-> | `False or False` | ¿**Alguna** es verdadera? | ❌ `False` |
-> | `not False` | ¿Lo opuesto de `False`? | ✅ `True` |
-> | `False == False` | ¿Son **iguales** entre sí? | ✅ `True` |
+> | `False or False`  | ¿**Alguna** es verdadera?  | ❌ `False` |
+> | `not False`       | ¿Lo opuesto de `False`?    | ✅ `True`  |
+> | `False == False`  | ¿Son **iguales** entre sí? | ✅ `True`  |
 
 ---
 
@@ -420,16 +427,16 @@ Los operadores lógicos (`and`, `or`, `not`) trabajan con valores booleanos (`Tr
 
 Al igual que en matemáticas, los operadores tienen un **orden de precedencia**: algunos se evalúan antes que otros. Cuando hay ambigüedad, el computador sigue este orden (de mayor a menor prioridad):
 
-| Prioridad | Operador(es) | Descripción |
-|---|---|---|
-| 1 (más alta) | `( )` | **Paréntesis** — lo que está dentro se evalúa primero |
-| 2 | `**` | Potencia |
-| 3 | `*`, `/`, `//`, `%` | Multiplicación y división |
-| 4 | `+`, `-` | Suma y resta |
-| 5 | `==`, `!=`, `<`, `>`, `<=`, `>=` | Comparación |
-| 6 | `not` | Negación lógica |
-| 7 | `and` | Y lógico |
-| 8 (más baja) | `or` | O lógico |
+| Prioridad    | Operador(es)                     | Descripción                                           |
+|--------------|----------------------------------|-------------------------------------------------------|
+| 1 (más alta) | `( )`                            | **Paréntesis** — lo que está dentro se evalúa primero |
+| 2            | `**`                             | Potencia                                              |
+| 3            | `*`, `/`, `//`, `%`              | Multiplicación y división                             |
+| 4            | `+`, `-`                         | Suma y resta                                          |
+| 5            | `==`, `!=`, `<`, `>`, `<=`, `>=` | Comparación                                           |
+| 6            | `not`                            | Negación lógica                                       |
+| 7            | `and`                            | Y lógico                                              |
+| 8 (más baja) | `or`                             | O lógico                                              |
 
 **Los paréntesis son su mejor herramienta para controlar el orden de evaluación y hacer el código más legible:**
 
@@ -447,8 +454,8 @@ porcentaje = G + C / longitud * 100
 # ✅ Con paréntesis: primero suma G+C, luego divide por longitud
 porcentaje = (G + C) / longitud * 100
 ```
-
-> 💡 **Regla de oro:** cuando combine múltiples operadores lógicos o aritméticos en una sola línea, use paréntesis aunque no sean estrictamente necesarios. Su código será más claro y evitará errores difíciles de detectar.
+> [!TIP]
+> **Regla de oro:** cuando combine múltiples operadores lógicos o aritméticos en una sola línea, use paréntesis aunque no sean estrictamente necesarios. Su código será más claro y evitará errores difíciles de detectar.
 
 ---
 
@@ -458,7 +465,8 @@ En el laboratorio, muchos protocolos incluyen puntos de decisión: *"Si el pH es
 
 Una estructura condicional permite que el programa **ejecute diferentes bloques de código según si una condición es verdadera o falsa**. Es el mecanismo fundamental para que un programa tome decisiones inteligentes basadas en los datos.
 
-> 💡 **Analogía:** Es como el árbol de decisiones en un flujograma de diagnóstico clínico microbiológico: *"¿Tinción de Gram positiva?"* → Sí → *"¿Morfología en racimos?"* → Sí → posible *Staphylococcus*. Cada rama del árbol depende del resultado anterior.
+> [!NOTE]
+> **Analogía:** Es como el árbol de decisiones en un flujograma de diagnóstico clínico microbiológico: *"¿Tinción de Gram positiva?"* → Sí → *"¿Morfología en racimos?"* → Sí → posible *Staphylococcus*. Cada rama del árbol depende del resultado anterior.
 
 **Estructura básica (`if` / `elif` / `else`):**
 
@@ -559,22 +567,22 @@ fi
 
 **Operadores de comparación en Bash** (la sintaxis es distinta a Python):
 
-| Operador Bash | Tipo | Equivalente en Python | Significado |
-|---|---|---|---|
-| `-eq` | Numérico | `==` | Igual a |
-| `-ne` | Numérico | `!=` | Distinto de |
-| `-gt` | Numérico | `>` | Mayor que |
-| `-lt` | Numérico | `<` | Menor que |
-| `-ge` | Numérico | `>=` | Mayor o igual que |
-| `-le` | Numérico | `<=` | Menor o igual que |
-| `==` | Texto | `==` | Igual a (cadenas) |
-| `!=` | Texto | `!=` | Distinto de (cadenas) |
-| `-f` | Archivo | — | El archivo existe |
-| `-d` | Directorio | — | El directorio existe |
-| `-z` | Texto | `== ""` | La cadena está vacía |
-| `!` | Lógico | `not` | Negación |
-| `-a` | Lógico | `and` | Y lógico (dentro de `[ ]`) |
-| `-o` | Lógico | `or` | O lógico (dentro de `[ ]`) |
+| Operador Bash | Tipo       | Equivalente en Python | Significado                |
+|---------------|------------|-----------------------|----------------------------|
+| `-eq`         | Numérico   | `==`                  | Igual a                    |
+| `-ne`         | Numérico   | `!=`                  | Distinto de                |
+| `-gt`         | Numérico   | `>`                   | Mayor que                  |
+| `-lt`         | Numérico   | `<`                   | Menor que                  |
+| `-ge`         | Numérico   | `>=`                  | Mayor o igual que          |
+| `-le`         | Numérico   | `<=`                  | Menor o igual que          |
+| `==`          | Texto      | `==`                  | Igual a (cadenas)          |
+| `!=`          | Texto      | `!=`                  | Distinto de (cadenas)      |
+| `-f`          | Archivo    | —                     | El archivo existe          |
+| `-d`          | Directorio | —                     | El directorio existe       |
+| `-z`          | Texto      | `== ""`               | La cadena está vacía       |
+| `!`           | Lógico     | `not`                 | Negación                   |
+| `-a`          | Lógico     | `and`                 | Y lógico (dentro de `[ ]`) |
+| `-o`          | Lógico     | `or`                  | O lógico (dentro de `[ ]`) |
 
 ---
 
@@ -584,7 +592,8 @@ Imagine que debe medir la absorbancia de 96 muestras en una placa de ELISA. El p
 
 Un **bucle** (*loop*) permite repetir un bloque de instrucciones múltiples veces, ya sea un número determinado de veces (`for`) o mientras se cumpla una condición (`while`). En bioinformática, los bucles son omnipresentes: procesar cada secuencia de un archivo FASTA, cada lectura de un FASTQ, cada gen de una anotación.
 
-> 💡 **Analogía:** El bucle es como el brazo robótico de un secuenciador: realiza exactamente la misma operación sobre miles de muestras, sin fatiga y sin errores.
+> [!NOTE]
+> **Analogía:** El bucle es como el brazo robótico de un secuenciador: realiza exactamente la misma operación sobre miles de muestras, sin fatiga y sin errores.
 
 ---
 
@@ -594,7 +603,8 @@ En un laboratorio bien organizado, los protocolos más usados se estandarizan y 
 
 En programación, esto se logra con las **funciones**. Una función es un bloque de código con un nombre, que realiza una tarea específica y puede ser llamado (ejecutado) cuantas veces sea necesario, desde cualquier parte del programa, pasándole diferentes datos de entrada (**parámetros**) y obteniendo un resultado de salida (**retorno**).
 
-> 💡 **Analogía:** La función = el protocolo estandarizado. Los parámetros = las muestras que le pasa al protocolo. El retorno = el resultado que obtiene del protocolo.
+> [!NOTE]
+> **Analogía:** La función = el protocolo estandarizado. Los parámetros = las muestras que le pasa al protocolo. El retorno = el resultado que obtiene del protocolo.
 
 ### 2.3 Introducción a Bash Scripting
 
@@ -613,7 +623,8 @@ echo "Analizando: $ORGANISMO"
 echo "Número de secuencias en $ARCHIVO: $NUM_SECUENCIAS"
 ```
 
-> 💡 Los ejemplos de condicionales en Bash y la tabla completa de operadores de comparación se encuentran en la sección 2.2. Allí también se explican las tablas de verdad y el uso de paréntesis.
+> [!TIP]
+> Los ejemplos de condicionales en Bash y la tabla completa de operadores de comparación se encuentran en la sección 2.2. Allí también se explican las tablas de verdad y el uso de paréntesis.
 
 #### Bucles en Bash
 
@@ -711,6 +722,7 @@ print(secuencia[::-1])          # Secuencia invertida
 
 #### Estructuras Condicionales en Python
 
+> [!NOTE]
 > Los conceptos, tablas de verdad y uso de paréntesis están explicados en la sección 2.2. Aquí se muestra la implementación en Python con ejemplos de análisis de secuencias.
 
 ```python
@@ -869,7 +881,8 @@ proyecto_genomica/
 └── README.md         → Descripción del proyecto
 ```
 
-> 💡 **¿No quieres crear esta estructura manualmente cada vez?** Existe un template de GitHub diseñado específicamente para proyectos de biología computacional que genera esta estructura automáticamente. Puedes usarlo como punto de partida para cualquier proyecto:
+> [!TIP]
+> **¿No quieres crear esta estructura manualmente cada vez?** Existe un template de GitHub diseñado específicamente para proyectos de biología computacional que genera esta estructura automáticamente. Puedes usarlo como punto de partida para cualquier proyecto:
 > **[github.com/ae-tafur/computational-biology-projects](https://github.com/ae-tafur/computational-biology-projects)**
 > Para usarlo, ve al repositorio y haz clic en **"Use this template"** → **"Create a new repository"**. GitHub creará un repositorio nuevo en tu cuenta con toda la estructura de carpetas lista para trabajar.
 
@@ -894,7 +907,8 @@ Este módulo sienta las bases computacionales para todo el trabajo bioinformáti
 | Análisis de datos        | Python               | Parsear secuencias, calcular estadísticas, filtrar datos |
 | Reproducibilidad         | Git + GitHub         | Versionar código, compartir análisis                     |
 
-Recuerde: la programación es una habilidad que se adquiere con práctica constante. No se preocupe si al principio los comandos o el código no le resultan intuitivos: con cada ejercicio, cada error y cada solución encontrada, estará construyendo una competencia que transformará la manera en que hace ciencia.
+> [!TIP]
+> Recuerde: la programación es una habilidad que se adquiere con práctica constante. No se preocupe si al principio los comandos o el código no le resultan intuitivos: con cada ejercicio, cada error y cada solución encontrada, estará construyendo una competencia que transformará la manera en que hace ciencia.
 
 ---
 
