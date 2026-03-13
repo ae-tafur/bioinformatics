@@ -136,7 +136,7 @@ Estos genes se conocen como **genes marcadores** o **marcadores filogenéticos**
 
 Con este contexto, veamos los marcadores específicos más usados:
 
-#### Gen 16S rRNA (procariotas)
+* #### Gen 16S rRNA (procariotas)
 
 El gen que codifica la subunidad pequeña del **ARN ribosomal 16S** (~1,500 pb) es el marcador molecular más utilizado en microbiología. Está presente en **todas las bacterias y arqueas**, contiene **9 regiones hipervariables** (V1–V9) flanqueadas por regiones conservadas, y tiene una enorme base de datos de referencia.
 
@@ -148,17 +148,17 @@ Se usa para:
 > [!NOTE]
 > Las regiones conservadas permiten diseñar **primers universales** que amplifican el gen en prácticamente cualquier bacteria. Las regiones variables son las que permiten distinguir entre especies o géneros.
 
-#### Gen 23S rRNA (procariotas)
+* #### Gen 23S rRNA (procariotas)
 
 Codifica la subunidad grande del ARN ribosomal (~2,900 pb). Es más largo que el 16S y contiene más información filogenética, pero su base de datos de referencia es más pequeña. Se usa como complemento del 16S cuando este no tiene suficiente resolución.
 
-#### Región ITS (hongos y eucariotas)
+* #### Región ITS (hongos y eucariotas)
 
 La región **ITS** (*Internal Transcribed Spacer*) es el marcador más utilizado para la identificación y filogenia de **hongos**. Se encuentra entre los genes 18S y 28S del ARN ribosomal. Es altamente variable entre especies (más que el 16S entre bacterias), lo que le da buena resolución a nivel de especie.
 
 Para hongos, ITS se considera el **código de barras oficial** (*DNA barcode*) desde 2012.
 
-#### Otros marcadores importantes
+* #### Otros marcadores importantes
 
 | Marcador                           | Grupo      | Características                                                                            |
 |:-----------------------------------|:-----------|:-------------------------------------------------------------------------------------------|
