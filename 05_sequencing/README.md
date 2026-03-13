@@ -10,6 +10,7 @@ Aunque muchas veces se habla principalmente de secuenciación de ADN, varios de 
 
 Al finalizar este módulo, tendrá una comprensión sólida de los fundamentos de la secuenciación, la calidad de lecturas, el alineamiento de secuencias, el ensamblaje de genomas y la lógica general de la anotación genómica.
 
+> [!NOTE]
 > **Reflexión:** Un buen bioinformático no es quien solo sabe correr un programa, sino quien entiende qué significan sus resultados y por qué el análisis puede fallar.
 
 ## Ruta conceptual del módulo
@@ -118,7 +119,8 @@ El archivo **FASTQ** es el formato estándar para almacenar secuencias junto con
 3. **Separador**, que comienza con `+`.
 4. **Calidad**, codificada en caracteres ASCII.
 
-Ver también **[Módulo 1 → Formato `.fastq`](../01-introduction/README.md#fastq)**.
+> [!NOTE]
+> Si necesita repasar **[Módulo 1 → Formato `.fastq`](../01-introduction/README.md#fastq)**.
 
 La diferencia principal entre FASTA y FASTQ es que:
 
