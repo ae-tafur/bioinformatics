@@ -26,7 +26,8 @@ Esta práctica corresponde a la **Parte 2 del Módulo 2**. Todos los conceptos t
 - Haber leído la **Parte 2** del README del Módulo 2 (secciones 2.2 a 2.4).
 - Codespace activo con el repositorio del curso abierto.
 
-> 💡 **¿Ya tiene un Codespace activo?** Reutilícelo. Vaya a [github.com/codespaces](https://github.com/codespaces), seleccione el que ya creó y retómelo donde lo dejó. No cree uno nuevo cada vez.
+> [!TIP]
+> **¿Ya tiene un Codespace activo?** Reutilícelo. Vaya a [github.com/codespaces](https://github.com/codespaces), seleccione el que ya creó y retómelo donde lo dejó. No cree uno nuevo cada vez.
 
 ---
 
@@ -259,7 +260,8 @@ gc_porcentaje = (gc / total) * 100
 print(f"Contenido GC: {gc_porcentaje:.2f}%")
 ```
 
-> ⚠️ **Error frecuente con diccionarios:** intentar acceder a una clave que no existe:
+> [!TIP]
+> **Error frecuente con diccionarios:** intentar acceder a una clave que no existe:
 > ```python
 > print(conteo_bases["N"])   # KeyError: 'N'
 > ```
@@ -407,7 +409,8 @@ for nombre, seq in secuencias.items():
 
 A partir de aquí trabajará con los archivos reales de la carpeta `data/`. Cree un nuevo script para cada ejercicio.
 
-> 💡 **Tip para leer archivos:** asegurese de usar la ruta correcta al archivo, relativa a la ubicación de su script. Por ejemplo, si su script está en `scripts/` y el archivo en `data/`, la ruta sería `../data/archivo.ext`.
+> [!TIP]
+> **Para leer archivos:** asegurese de usar la ruta correcta al archivo, relativa a la ubicación de su script. Por ejemplo, si su script está en `scripts/` y el archivo en `data/`, la ruta sería `../data/archivo.ext`.
 
 #### Paso 7: Leer un archivo FASTA
 
@@ -524,7 +527,9 @@ mkdir -p scripts/
 **Ejercicio 1 — Conteo de secuencias en archivo FASTA**
 Archivo: `data/01_sequences.fasta`
 Escriba un script que abra el archivo y cuente cuántas secuencias contiene.
-> 💡 Recuerde: cada secuencia empieza con `>`. Cuente esas líneas.
+
+> [!TIP]
+> Recuerde: cada secuencia empieza con `>`. Cuente esas líneas.
 
 ---
 
@@ -549,7 +554,9 @@ Usando la misma secuencia del ejercicio anterior, calcule e imprima el **%GC**.
 **Ejercicio 5 — Contar genes en un archivo GFF**
 Archivo: `data/05_genome.gff3`
 Lea el archivo línea por línea y cuente cuántas líneas contienen la palabra `gene` en la tercera columna (tipo de elemento).
-> 💡 Use `.split()` para dividir la línea en columnas y verifique `columnas[2] == "gene"`.
+
+> [!TIP]
+> Use `.split()` para dividir la línea en columnas y verifique `columnas[2] == "gene"`.
 
 ---
 
@@ -604,7 +611,9 @@ Para cada cultivo, calcule el **promedio de consumo** de sus tres réplicas. Al 
 **Ejercicio 14 — Conteo de especies en muestreo bacteriano**
 Archivo: `data/14_bacterias_muestreo.csv`
 Lea el archivo e imprima cuántas veces aparece cada especie. Al final, indique cuántas **especies distintas** fueron encontradas.
-> 💡 Use un diccionario donde la clave sea la especie y el valor sea el conteo.
+
+> [!TIP]
+> Use un diccionario donde la clave sea la especie y el valor sea el conteo.
 
 ---
 

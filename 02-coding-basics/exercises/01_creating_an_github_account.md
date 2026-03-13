@@ -69,7 +69,8 @@ Algunos conceptos clave que encontrará en GitHub:
    - Ve a tu foto de perfil (esquina superior derecha) → `Settings`.
    - Agrega tu nombre completo, institución y una foto de perfil.
 
-> 💡 **Consejo**: Elige un nombre de usuario profesional. Este nombre aparecerá en todos tus repositorios públicos y es frecuentemente usado como referencia en el ámbito académico y laboral.
+> [!TIP]
+> Elige un nombre de usuario profesional. Este nombre aparecerá en todos tus repositorios públicos y es frecuentemente usado como referencia en el ámbito académico y laboral.
 
 ---
 
@@ -101,9 +102,11 @@ Una vez creada la cuenta, tómate unos minutos para explorar la plataforma:
    - Identifica el **explorador de archivos** (panel izquierdo), el **editor de código** (panel central) y la **terminal** (panel inferior).
 5. **Abrir la terminal**: Si la terminal no está visible, ve a `Terminal` → `New Terminal` en el menú superior, o usa el atajo `` Ctrl + ` ``.
 
-> 💡 **Nota**: Cada Codespace es un contenedor Linux independiente. Los archivos creados allí se guardan en tu cuenta de GitHub mientras el Codespace esté activo.
+> [!NOTE]
+> Cada Codespace es un contenedor Linux independiente. Los archivos creados allí se guardan en tu cuenta de GitHub mientras el Codespace esté activo.
 
-> ⚠️ **¿Los cambios son permanentes?** No del todo. Ten en cuenta lo siguiente:
+> [!WARNING]
+> **¿Los cambios son permanentes?** No del todo. Ten en cuenta lo siguiente:
 > - Los archivos **persisten** aunque cierres el navegador, siempre que el Codespace siga activo.
 > - GitHub **detiene el Codespace automáticamente** tras ~30 minutos de inactividad (los archivos se conservan, pero el entorno se "congela").
 > - Si el Codespace lleva **30 días sin usarse**, GitHub lo **elimina automáticamente** y se pierden todos los cambios que no hayas guardado.

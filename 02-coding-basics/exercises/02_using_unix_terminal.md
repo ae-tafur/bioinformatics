@@ -32,17 +32,17 @@ En esta práctica trabajará con archivos del tipo que encontrará en cualquier 
 
 Todos los archivos de esta práctica se encuentran en la carpeta `data/` dentro del directorio de ejercicios. Antes de comenzar, familiarícese con su contenido:
 
-| Archivo                | Formato   | Descripción                                  |
-|------------------------|-----------|----------------------------------------------|
-| `01_sequences.fasta`   | FASTA     | 10 secuencias de ADN de ejemplo              |
-| `02_results_pcr_96.csv` | CSV       | Resultados de PCR en placa de 96 pocillos    |
-| `03_nucleotides.fa`    | FASTA     | Secuencia única de ADN para análisis         |
-| `05_genome.gff3`       | GFF3      | Anotación de genes en dos cromosomas         |
-| `06_bacterial_growth.tsv` | TSV       | Absorbancias OD600 de tres cepas bacterianas |
-| `07_mutations.fasta`   | FASTA     | Secuencia de referencia y dos mutantes       |
-| `08_antibiogram.csv`   | CSV       | Resultados de antibiograma (R/S/I)           |
+| Archivo                    | Formato   | Descripción                                  |
+|----------------------------|-----------|----------------------------------------------|
+| `01_sequences.fasta`       | FASTA     | 10 secuencias de ADN de ejemplo              |
+| `02_results_pcr_96.csv`    | CSV       | Resultados de PCR en placa de 96 pocillos    |
+| `03_nucleotides.fa`        | FASTA     | Secuencia única de ADN para análisis         |
+| `05_genome.gff3`           | GFF3      | Anotación de genes en dos cromosomas         |
+| `06_bacterial_growth.tsv`  | TSV       | Absorbancias OD600 de tres cepas bacterianas |
+| `07_mutations.fasta`       | FASTA     | Secuencia de referencia y dos mutantes       |
+| `08_antibiogram.csv`       | CSV       | Resultados de antibiograma (R/S/I)           |
 | `09_short_sequences.fasta` | FASTA     | Secuencias de distinta longitud              |
-| `12_gene_annotations.tsv` | TSV       | Anotación funcional de genes (KO IDs)        |
+| `12_gene_annotations.tsv`  | TSV       | Anotación funcional de genes (KO IDs)        |
 
 ---
 
@@ -84,7 +84,8 @@ Todos los archivos de esta práctica se encuentran en la carpeta `data/` dentro 
    ```bash
    tree .
    ```
-   > 💡 La opción `-p` en `mkdir` crea también los directorios intermedios si no existen. Si `tree` no está disponible, use `ls -R`.
+   > [!TIP]
+   > La opción `-p` en `mkdir` crea también los directorios intermedios si no existen. Si `tree` no está disponible, use `ls -R`.
 
 5. **Copie los archivos de datos a su área de trabajo:**
    ```bash
@@ -186,7 +187,8 @@ Aquí es donde la terminal comienza a mostrar su verdadero poder. Estos comandos
     ```bash
     cut -f1 data/05_genome.gff3
     ```
-    > 💡 `cut -f1` extrae la primera columna usando tabulación como separador por defecto. Para CSV use `cut -d',' -f1`.
+    > [!NOTE]
+    > `cut -f1` extrae la primera columna usando tabulación como separador por defecto. Para CSV use `cut -d',' -f1`.
 
 19. **Extraer la columna de resultados del antibiograma** y ordenarla:
     ```bash
@@ -204,7 +206,8 @@ Aquí es donde la terminal comienza a mostrar su verdadero poder. Estos comandos
     ```bash
     grep -v "NA" data/12_gene_annotations.tsv | head -10
     ```
-    > 💡 `grep -v` invierte el filtro: muestra las líneas que **no** contienen el patrón.
+    > [!NOTE]
+    > `grep -v` invierte el filtro: muestra las líneas que **no** contienen el patrón.
 
 22. **Contar cuántos genes tienen y no tienen anotación funcional:**
     ```bash
@@ -221,13 +224,15 @@ Aquí es donde la terminal comienza a mostrar su verdadero poder. Estos comandos
     grep ">" data/01_sequences.fasta | sed 's/>//' > results/reports/sequence_ids.txt
     cat results/reports/sequence_ids.txt
     ```
-    > 💡 `sed 's/>//'` sustituye el símbolo `>` por nada (lo elimina), dejando solo el nombre de la secuencia.
+    > [!NOTE]
+    > `sed 's/>//'` sustituye el símbolo `>` por nada (lo elimina), dejando solo el nombre de la secuencia.
 
 24. **Contar el total de bases** en la secuencia del archivo `03_nucleotides.fa`:
     ```bash
     grep -v ">" data/03_nucleotides.fa | wc -c
     ```
-    > Nota: `wc -c` cuenta caracteres incluyendo el salto de línea (`\n`). Reste 1 al resultado para obtener el número real de bases.
+    > [!NOTE]
+    > `wc -c` cuenta caracteres incluyendo el salto de línea (`\n`). Reste 1 al resultado para obtener el número real de bases.
 
 25. **Construir un reporte rápido de todos los archivos FASTA** — número de secuencias por archivo:
     ```bash
@@ -258,7 +263,8 @@ Aquí es donde la terminal comienza a mostrar su verdadero poder. Estos comandos
 
 En bioinformática, rara vez los datos viven en su computador desde el principio. Lo más habitual es descargarlos directamente desde bases de datos públicas como **NCBI**, **UniProt** o **Ensembl** sin salir de la terminal. El comando `wget` es la herramienta estándar para hacerlo.
 
-> 💡 `wget` ("World Wide Web get") descarga archivos desde una URL, exactamente como lo haría un navegador, pero sin interfaz gráfica. Esto lo hace ideal para scripts automatizados y servidores remotos.
+> [!NOTE]
+> `wget` ("World Wide Web get") descarga archivos desde una URL, exactamente como lo haría un navegador, pero sin interfaz gráfica. Esto lo hace ideal para scripts automatizados y servidores remotos.
 
 #### Descargando un archivo FASTA desde NCBI con `wget`
 
@@ -288,8 +294,9 @@ El NCBI ofrece acceso programático a sus bases de datos a través de su API **E
     cat data/ecoli_16S.fasta data/bsubtilis_16S.fasta > results/sequences/16S_comparison.fasta
     grep ">" results/sequences/16S_comparison.fasta
     ```
-
-> 💡 **Sobre FTP:** Algunas bases de datos grandes como **NCBI FTP** o **Ensembl** distribuyen sus archivos a través del protocolo **FTP** (File Transfer Protocol). `wget` también soporta FTP con URLs que comienzan por `ftp://`. Por ejemplo, para descargar el genoma completo de *E. coli* K-12 desde NCBI FTP usaría:
+    
+> [!IMPORTANT]
+> **Sobre FTP:** Algunas bases de datos grandes como **NCBI FTP** o **Ensembl** distribuyen sus archivos a través del protocolo **FTP** (File Transfer Protocol). `wget` también soporta FTP con URLs que comienzan por `ftp://`. Por ejemplo, para descargar el genoma completo de *E. coli* K-12 desde NCBI FTP usaría:
 > ```bash
 > wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/005/845/GCF_000005845.2_ASM584v2/GCF_000005845.2_ASM584v2_genomic.fna.gz
 > ```
@@ -319,7 +326,8 @@ El NCBI ofrece acceso programático a sus bases de datos a través de su API **E
     ls results/reports/ >> results/README.txt
     cat results/README.txt
     ```
-    > 💡 `$(date)` es una sustitución de comando: ejecuta `date` y pega su resultado en la línea. Este es el mismo mecanismo que usamos con `$(grep -c ...)` en los scripts de Bash.
+    > [!NOTE]
+    >  `$(date)` es una sustitución de comando: ejecuta `date` y pega su resultado en la línea. Este es el mismo mecanismo que usamos con `$(grep -c ...)` en los scripts de Bash.
 
 ---
 
