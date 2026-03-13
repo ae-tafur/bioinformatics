@@ -151,14 +151,14 @@ La **diagonal principal** (de esquina superior izquierda a inferior derecha) apa
 
 El poder real del dot plot está en la interpretación visual de los patrones:
 
-| Patrón en el dot plot | ¿Qué indica? |
-|:--|:--|
-| **Diagonal continua** | Región de alta similitud entre las dos secuencias |
-| **Diagonal desplazada (paralela a la principal)** | Secuencia repetida o duplicación |
-| **Diagonal perpendicular (anti-diagonal)** | Secuencia en complemento inverso (*palindrome* o repetición invertida) |
-| **Ruptura en la diagonal** | Inserción, deleción o región divergente |
-| **Múltiples diagonales cortas** | Repeticiones dispersas o baja complejidad |
-| **Sin patrón claro** | Las secuencias no comparten similitud significativa |
+| Patrón en el dot plot                             | ¿Qué indica?                                                           |
+|:--------------------------------------------------|:-----------------------------------------------------------------------|
+| **Diagonal continua**                             | Región de alta similitud entre las dos secuencias                      |
+| **Diagonal desplazada (paralela a la principal)** | Secuencia repetida o duplicación                                       |
+| **Diagonal perpendicular (anti-diagonal)**        | Secuencia en complemento inverso (*palindrome* o repetición invertida) |
+| **Ruptura en la diagonal**                        | Inserción, deleción o región divergente                                |
+| **Múltiples diagonales cortas**                   | Repeticiones dispersas o baja complejidad                              |
+| **Sin patrón claro**                              | Las secuencias no comparten similitud significativa                    |
 
 #### Ejemplo con dos secuencias diferentes
 
@@ -326,29 +326,86 @@ La matriz completa:
   G   -10    -7    -6    -5    -2     1
 ```
 
-##### Paso 3: Traceback
+##### Paso 3: Traceback (reconstruir el alineamiento)
 
-Desde la celda **inferior derecha** (valor = 1), se sigue el camino de flechas hacia la celda superior izquierda para reconstruir el alineamiento:
+Llenar la matriz nos da la **puntuación** del mejor alineamiento (celda inferior derecha = **1**), pero no nos dice directamente cuál **es** ese alineamiento. Para reconstruirlo, necesitamos **retroceder** (*traceback*) desde la celda final hasta la celda inicial, siguiendo el camino que generó cada valor.
+
+**¿Cómo se sigue el camino?**
+
+Durante el Paso 2, cada celda se llenó eligiendo el máximo entre tres opciones (diagonal, arriba, izquierda). El traceback consiste en, desde cada celda, preguntar: *"¿de cuál de mis tres vecinos vine?"* — y moverse hacia allá. Cada movimiento tiene un significado en el alineamiento:
+
+| Movimiento en la matriz           | Significado en el alineamiento                                                       |
+|:----------------------------------|:-------------------------------------------------------------------------------------|
+| **↖ Diagonal** (arriba-izquierda) | Alinear una base de la secuencia 1 con una base de la secuencia 2 (match o mismatch) |
+| **↑ Arriba**                      | Gap en la secuencia 1 (la secuencia 2 avanza, la 1 tiene un `-`)                     |
+| **← Izquierda**                   | Gap en la secuencia 2 (la secuencia 1 avanza, la 2 tiene un `-`)                     |
+
+Veamos el recorrido paso a paso. Partimos de la celda inferior derecha [G,G] con valor **1**:
 
 ```text
-G C A T G
-G A-T G
-* · · * *
+Matriz con el camino del traceback marcado (★):
+
+              -     G     C     A     T     G
+        -     ★0   -2    -4    -6    -8   -10
+        G    -2    ★1    -1    -3    -5    -7
+        A    -4    -1    ★0     0    -2    -4
+        T    -6    -3    -2    ★-1    1    -1
+        T    -8    -5    -4    -3    ★0     0
+        G   -10    -7    -6    -5    -2    ★1  ← INICIO del traceback
 ```
 
-Con un gap insertado:
+**Paso a paso:**
+
+| # | Celda actual           | Valor | ¿De dónde vino?                | Razón                          | Se escribe en el alineamiento   |
+|:--|:-----------------------|:------|:-------------------------------|:-------------------------------|:--------------------------------|
+| 1 | [G, G] (fila 5, col 5) | 1     | **↖ Diagonal** desde [T, T]=0  | 0 + 1 (match G=G) = 1 ✓        | `G` alineado con `G`            |
+| 2 | [T, T] (fila 4, col 4) | 0     | **↖ Diagonal** desde [T, A]=-1 | -1 + 1 (match T=T) = 0 ✓       | `T` alineado con `T`            |
+| 3 | [T, A] (fila 3, col 3) | -1    | **↖ Diagonal** desde [A, C]=0  | 0 + (-1) (mismatch T≠A) = -1 ✓ | `A` alineado con `T` (mismatch) |
+| 4 | [A, C] (fila 2, col 2) | 0     | **↖ Diagonal** desde [G, G]=1  | 1 + (-1) (mismatch A≠C) = 0 ✓  | `C` alineado con `A` (mismatch) |
+| 5 | [G, G] (fila 1, col 1) | 1     | **↖ Diagonal** desde [-,-]=0   | 0 + 1 (match G=G) = 1 ✓        | `G` alineado con `G`            |
+| 6 | [-, -] (fila 0, col 0) | 0     | **FIN**                        | Llegamos al origen             | —                               |
+
+**Construyendo el alineamiento (de atrás hacia adelante):**
+
+Como el traceback va desde el final hacia el inicio, el alineamiento se construye en reversa y luego se invierte:
 
 ```text
-G C A T - G
-G - A T T G
-*   * *   *
+Paso 1: G ↔ G     →  leído al revés:    G C A T G
+Paso 2: T ↔ T                            G A T T G
+Paso 3: A ↔ T                            * · · * *
+Paso 4: C ↔ A
+Paso 5: G ↔ G
+```
+
+El alineamiento final (en este camino particular):
+
+```text
+Seq 1 (GCATG):   G  C  A  T  G
+Seq 2 (GATTG):   G  A  T  T  G
+                  *  ·  ·  *  *
+
+Puntuación: +1 -1 -1 +1 +1 = 1  ✓ (coincide con la celda inferior derecha)
+```
+
+**¿Qué pasa si hay empates?**
+
+En algunos casos, dos o más vecinos dan el mismo valor máximo. Cuando eso ocurre, hay **más de un camino posible** y por lo tanto **más de un alineamiento óptimo** con la misma puntuación. Por ejemplo, un camino alternativo podría incluir gaps:
+
+```text
+Alineamiento alternativo (mismo score = 1):
+
+Seq 1 (GCATG):   G  C  A  T  -  G
+Seq 2 (GATTG):   G  -  A  T  T  G
+                  *     *  *     *
+
+Puntuación: +1 -2 +1 +1 -2 +1 = 0... (este da 0, no 1)
 ```
 
 > [!NOTE]
-(El alineamiento exacto depende de cómo se resuelvan los empates en el traceback.)
+> No todos los caminos alternativos producen la misma puntuación. Solo son **igualmente óptimos** aquellos que dan exactamente el mismo score. El traceback elige **un** camino; si hay empates, la elección entre ellos es arbitraria (el programa decide). Ambos alineamientos son igualmente válidos.
 
 > [!IMPORTANT]
-> Lo importante no es memorizar los números, sino entender la lógica: cada celda representa **la mejor forma de alinear esas dos subsecuencias hasta ese punto**.
+> Lo importante no es memorizar los números, sino entender la lógica: cada celda representa **la mejor forma de alinear esas dos subsecuencias hasta ese punto**, y el traceback reconstruye esa solución óptima paso a paso.
 
 ### 2.6 Algoritmo de Smith-Waterman (alineamiento local)
 
