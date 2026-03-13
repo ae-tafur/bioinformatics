@@ -110,10 +110,10 @@ Estos genes se conocen como **genes marcadores** o **marcadores filogenéticos**
 > 
 > ```text
 > ──[18S]──ITS1──[5.8S]──ITS2──[28S]──
->            ↑              ↑
->     Espaciador       Espaciador
->     transcrito       transcrito
->      interno 1       interno 2
+>           ↑             ↑
+>      Espaciador    Espaciador
+>      transcrito    transcrito
+>      interno 1     interno 2
 > ```
 > 
 > Aquí es donde las regiones **ITS** cobran protagonismo: **ITS1** (entre 18S y 5.8S) e **ITS2** (entre 5.8S y 28S) son las más utilizadas para la identificación de **hongos**. ¿Por qué?
