@@ -449,17 +449,7 @@ La práctica completa con procedimiento guiado, opciones A y B, y actividades de
 
 ---
 
-## 5. Conexión con las prácticas del curso
-
-| Tema teórico en este módulo            | Aplicación práctica                                                                   |
-|:---------------------------------------|:--------------------------------------------------------------------------------------|
-| Bases de datos y BLAST                 | [Práctica de bases de datos (Módulo 1)](../01-introduction/exercises/01_databases.md) |
-| Alineamiento con programación dinámica | [`exercises/code/alignment_dp.py`](./exercises/code/alignment_dp.py)                  |
-| Diseño de primers y PCR *in silico*    | [`exercises/primer_design.md`](./exercises/primer_design.md)                          |
-
----
-
-## 6. Cierre conceptual
+## 5. Cierre conceptual
 
 El análisis de secuencias es la base sobre la cual se construye casi todo en bioinformática. Comparar secuencias permite identificar genes, encontrar homólogos, detectar variantes, diseñar primers y establecer relaciones evolutivas.
 
@@ -474,3 +464,14 @@ En el **Módulo 4** (Filogenética) usará estos conceptos de alineamiento para 
 
 > [!IMPORTANT]
 > El análisis de secuencias no es un paso aislado; es el lenguaje con el que la bioinformática lee la biología.
+
+---
+
+## Prácticas del módulo
+
+| Práctica                                                                             | Descripción                                                                                     |
+|:-------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------------|
+| [Bases de datos biológicas (Módulo 1)](../01-introduction/exercises/01_databases.md) | Búsqueda por similitud en NCBI y descarga de secuencias — base para los análisis de este módulo |
+| [Alineamiento con programación dinámica](./exercises/code/alignment_dp.py)           | Script Python que implementa Needleman-Wunsch y Smith-Waterman desde cero                       |
+| [Diseño de primers y PCR *in silico*](./exercises/primer_design.md)                  | Diseño de primers con Primer-BLAST, validación del amplicón y electroforesis *in silico*        |
+

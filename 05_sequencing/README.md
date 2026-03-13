@@ -205,18 +205,6 @@ El ecosistema de herramientas es muy amplio, pero algunos nombres aparecen con f
 *   **Tablet:** exploración visual de ensamblajes y lecturas alineadas.
 *   **Prokka / Bakta:** anotación rápida de genomas procariotas.
 
-## 5. Conexión con las prácticas del curso
-
-Este módulo teórico prepara directamente el trabajo práctico que se desarrolla en genómica y análisis posterior. En particular:
-
-| Tema teórico en este módulo                                   | Aplicación práctica en el curso                                                                                                                                                                                                       |
-|:--------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Calidad de lecturas y FASTQ                                   | [`genome_assembly_fastqc_velvet.md`](../06-genomics/exercises/genome_assembly_fastqc_velvet.md)                                                                                                                                       |
-| QC, trimming y preparación de datos                           | [`genome_assembly_falco_fastp_shovill.md`](../06-genomics/exercises/genome_assembly_falco_fastp_shovill.md)                                                                                                                           |
-| Alineamiento, complementariedad y especificidad de secuencias | [`primer_design.md`](../03-sequence_analysis/exercises/exercises/primer_design.md)                                                                                                                                                             |
-| Ensamblaje y evaluación del resultado                         | [`genome_assembly_fastqc_velvet.md`](../06-genomics/exercises/genome_assembly_fastqc_velvet.md) y [`genome_assembly_falco_fastp_shovill.md`](../06-genomics/exercises/genome_assembly_falco_fastp_shovill.md)                         |
-| Anotación genómica básica                                     | [`genome_annotation.md`](../06-genomics/exercises/genome_annotation.md)                                                                                                                                                               |
-
 De esta forma, el módulo 5 funciona como un puente entre los conceptos fundamentales de secuenciación y las prácticas más aplicadas de ensamblaje, anotación y análisis genómico del módulo 6.
 
 ## 7. Cierre conceptual
@@ -224,3 +212,16 @@ De esta forma, el módulo 5 funciona como un puente entre los conceptos fundamen
 La secuenciación moderna no consiste solo en generar datos, sino en comprender qué representan esos datos y qué limitaciones arrastran desde el laboratorio hasta el análisis computacional. La elección de la tecnología, la evaluación de la calidad, el tipo de alineamiento y la estrategia de ensamblaje dependen siempre de la pregunta biológica.
 
 En los siguientes módulos, estos principios se aplicarán a problemas más concretos: reconstrucción de genomas, anotación de genes, comparación entre cepas, búsqueda de variantes y análisis funcional. Comprender bien esta base le permitirá interpretar mejor los resultados y tomar decisiones bioinformáticas más informadas.
+
+---
+
+## Prácticas del módulo
+
+Este módulo teórico prepara directamente el trabajo práctico que se desarrolla en análisis de secuencias y genómica. Las prácticas asociadas se encuentran en los módulos 3 y 6:
+
+| Práctica                                                                                                  | Descripción                                                          |
+|:----------------------------------------------------------------------------------------------------------|:---------------------------------------------------------------------|
+| [Ensamblaje con FastQC + Velvet](../06-genomics/exercises/genome_assembly_fastqc_velvet.md)               | Calidad de lecturas (FASTQ) y ensamblaje *de novo* con Velvet        |
+| [Ensamblaje con Falco + fastp + Shovill](../06-genomics/exercises/genome_assembly_falco_fastp_shovill.md) | QC, trimming y ensamblaje con pipeline moderno                       |
+| [Diseño de primers](../03-sequence_analysis/exercises/primer_design.md)                                   | Alineamiento, complementariedad y especificidad de secuencias        |
+| [Anotación genómica](../06-genomics/exercises/genome_annotation.md)                                       | Predicción de genes y asignación de funciones en genomas bacterianos |

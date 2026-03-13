@@ -364,3 +364,14 @@ En un análisis real, estas herramientas no se usan de manera aislada. Se combin
 La genómica moderna integra biología molecular, estadística y ciencias computacionales para transformar datos crudos en conocimiento interpretable. Un ensamblaje no es el final del proceso, sino el punto de partida para entender la organización del genoma, el repertorio génico de un organismo y las diferencias que lo distinguen de otros.
 
 En módulos y prácticas posteriores, estos principios se conectarán con preguntas biológicas concretas: desde la identificación de genes y funciones hasta la comparación entre cepas, la búsqueda de variantes y la interpretación de resultados en contextos clínicos, ambientales y biotecnológicos.
+
+
+---
+
+## Prácticas del módulo
+
+| Práctica | Descripción |
+|:--|:--|
+| [Ensamblaje con FastQC + Velvet](./exercises/genome_assembly_fastqc_velvet.md) | Control de calidad con FastQC y ensamblaje *de novo* con Velvet |
+| [Ensamblaje con Falco + fastp + Shovill](./exercises/genome_assembly_falco_fastp_shovill.md) | Pipeline moderno: QC con Falco, trimming con fastp y ensamblaje con Shovill |
+| [Anotación genómica](./exercises/genome_annotation.md) | Predicción de genes y asignación de funciones en genomas bacterianos |

@@ -1,6 +1,6 @@
 # Bioinformatics: Leaving the science of coat and pipette
 
-### An course by Albert Tafur Rangel, Ph.D.
+### A course by Albert Tafur Rangel, Ph.D.
 
 ------------------------------------------------------------------------
 
@@ -13,9 +13,9 @@
 
 # Course Overview
 
-This course introduces the foundations of **bioinformatics and computational biology** from a practical perspective: you’ll learn where biological data come from, how they’re stored and shared, and how to analyze them using a Unix-like environment and scripting.
+This course introduces the foundations of **bioinformatics and computational biology** from a practical perspective: you'll learn where biological data come from, how they're stored and shared, and how to analyze them using a Unix-like environment and scripting.
 
-Throughout the modules, we’ll connect core concepts (sequence data, alignments, assemblies, annotation, phylogenetics, and multiple “omics”) to real-world workflows used in research and industry.
+Throughout the modules, we'll connect core concepts (sequence data, alignments, assemblies, annotation, phylogenetics, and multiple "omics") to real-world workflows used in research and industry.
 
 **By the end of the course, you should be able to:**
 
@@ -23,144 +23,198 @@ Throughout the modules, we’ll connect core concepts (sequence data, alignments
 - Work comfortably in a **Unix/Linux** terminal (also applicable to macOS)
 - Automate repetitive tasks with small scripts (Bash and Python)
 - Understand the principles behind sequencing, alignment, assembly and genome annotation
+- Build phylogenetic trees and interpret evolutionary relationships
 - Interpret results in context: quality, limitations, and biological meaning
 
 ## Learning objectives
 
-- Understanding the general concepts
-- Learning
-- Gaining 
-- Being able to generate complex
+- Understanding the general concepts of bioinformatics and computational biology
+- Learning to navigate, retrieve and interpret biological data from public databases
+- Gaining practical skills in Unix command-line tools and Python scripting for biological data analysis
+- Being able to generate and interpret complex analyses: alignments, phylogenies, assemblies and annotations
 
 ## Is this course for me?
 
 This course will be appropriate for you if you answer yes to these questions:
 
--   Do you aim to ?
+-   Are you a student or researcher in biology, microbiology, biotechnology or related fields?
 
--   Do you enjoy ?
+-   Do you want to understand how bioinformatics tools work, not just run them?
 
--   Would you like to learn ?
+-   Would you like to learn to automate analyses and work with biological data programmatically?
 
 
 ## Instructor
 
-[**Dr. Albert Tafur Rangel**](https://orcid.org/0000-0002-9428-183X) (he/him) is a graduated computational biologist with a passion for design. After his PhD, he combined his expertise in 
+[**Dr. Albert Tafur Rangel**](https://orcid.org/0000-0002-9428-183X) (he/him) is a computational biologist with a passion for teaching and design. After his PhD, he combined his expertise in bioinformatics, microbiology and data science to create educational materials that bridge wet-lab and dry-lab thinking.
+
+---
 
 # Content
 
-> Tip: each module title links to its `README.md`.
+> **Tip:** each module title links to its `README.md`. Practices are listed separately below each description.
 
-## 01 - Introduction
+---
 
-**[Module 1 — Introduction to Bioinformatics](01-introduction/README.md)**
+## Module 1 — Introduction to Bioinformatics
+
+📂 **[01-introduction/README.md](01-introduction/README.md)**
 
 Core ideas: what bioinformatics is, why it matters, and the ecosystem of biological data.
 
-Topics include:
+**Topics:**
 - The bioinformatics mindset: multidisciplinary science and computational thinking
-- The central dogma, “omics” and how they generate data
-- Biological databases (NCBI/ENA/UniProt), identifiers and metadata
-- File formats used across the course (FASTA/FASTQ/GFF/GenBank, etc.)
+- The central dogma, "omics" and how they generate data
+- Biological databases (NCBI / ENA / UniProt), identifiers and metadata
+- File formats used across the course: FASTA, FASTQ, GFF, GenBank, etc.
 
-## 02 - Coding basics
+**Practices:**
+- [Biological databases](01-introduction/exercises/01_databases.md) — search, navigate and download sequences from NCBI
 
-**[Module 2 — Coding Basics: Unix + Scripting](02-coding-basics/README.md)**
+---
 
-You’ll learn the “everyday tools” of bioinformatics: the command line and automation.
+## Module 2 — Coding Basics: Unix + Scripting
 
-Topics include:
+📂 **[02-coding-basics/README.md](02-coding-basics/README.md)**
+
+You'll learn the "everyday tools" of bioinformatics: the command line and automation.
+
+**Topics:**
 - Unix/Linux foundations (also relevant for macOS): navigation, permissions, pipes and redirection
-- Text processing for biological files (grep/sed/awk basics)
-- Bash scripting to automate analysis steps
-- Python scripting fundamentals applied to FASTA/sequence manipulation
+- Text processing for biological files (`grep`, `cut`, `sort`, `wc`, pipes)
+- Scripting fundamentals in Python: variables, types, control flow, file I/O
+- Application of scripting to FASTA/sequence manipulation and biological data analysis
 
-## 03 - Sequence Analysis
+**Practices:**
+- [Creating a GitHub account](02-coding-basics/exercises/01_creating_an_github_account.md) — set up GitHub and Codespaces for the course
+- [Using the Unix terminal](02-coding-basics/exercises/02_using_unix_terminal.md) — navigation, file manipulation and text processing with biological files
+- [Scripting in Python](02-coding-basics/exercises/03_scripting_in_python.md) — variables, data types, conditionals, loops and scripts for biological analysis
 
-**[Module 3 — Sequence Analysis: BLAST, Alignments and Primer Design](03-sequence_analysis/README.md)**
+---
 
-This is where you start doing what bioinformaticians do most: comparing sequences.
+## Module 3 — Sequence Analysis: BLAST, Alignments and Primer Design
 
-Topics include:
-- Similarity search with BLAST (blastn, blastp, blastx) and result interpretation
-- Global vs local alignment; Needleman-Wunsch and Smith-Waterman algorithms
+📂 **[03-sequence_analysis/README.md](03-sequence_analysis/README.md)**
+
+This is where you start doing what bioinformaticians do most: **comparing sequences**.
+
+**Topics:**
+- Similarity search with BLAST (`blastn`, `blastp`, `blastx`) and result interpretation (E-value, score, identity, coverage)
+- Global vs local alignment: Needleman-Wunsch and Smith-Waterman algorithms with dynamic programming
 - Identity vs similarity; scoring schemes and gap penalties
-- Primer design and *in silico* PCR
+- Primer design criteria, Primer-BLAST and *in silico* PCR / electrophoresis
 
-## 04 - Phylogenetics
+**Practices:**
+- [Alignment with dynamic programming](03-sequence_analysis/exercises/code/alignment_dp.py) — Python implementation of Needleman-Wunsch and Smith-Waterman from scratch
+- [Primer design](03-sequence_analysis/exercises/primer_design.md) — design primers with Primer-BLAST, validate amplicon size and simulate gel electrophoresis
 
-**[Module 4 — Phylogenetics and Evolutionary Inference](04-phylogenetics/README.md)**
+---
 
-Topics include:
-- Multiple sequence alignment and model choice
-- Distance-based vs character-based trees (NJ, ML)
-- Bootstrapping and support values
-- Interpreting phylogenies in biological context
+## Module 4 — Phylogenetics and Evolutionary Inference
 
-## 05 - Sequencing
+📂 **[04-phylogenetics/README.md](04-phylogenetics/README.md)**
 
-**[Module 5 — DNA/RNA Sequencing](05_sequencing/README.md)**
+You'll build and interpret evolutionary trees from molecular data.
+
+**Topics:**
+- Multiple sequence alignment (MSA) and model choice
+- Distance-based vs character-based methods (Neighbor-Joining, Maximum Likelihood)
+- Bootstrapping and statistical support values
+- Interpreting phylogenies in biological and clinical context
+
+**Practices:**
+- [Phylogenetic analysis with 16S rRNA](04-phylogenetics/exercises/phylogenetics.md) — align 16S sequences, build NJ/ML trees in MEGA and identify an unknown bacterium
+
+---
+
+## Module 5 — DNA/RNA Sequencing
+
+📂 **[05_sequencing/README.md](05_sequencing/README.md)**
 
 Now you learn where the data actually come from.
 
-Topics include:
-- Timeline of sequencing technologies (Sanger → NGS → long reads)
+**Topics:**
+- Timeline of sequencing technologies: Sanger → 454 → Illumina → PacBio → Nanopore
+- Principles, error profiles and applications of each platform
 - Quality scores (Phred) and the FASTQ format
-- Read QC, trimming and adapter removal
-- Coverage, depth and library preparation concepts
+- Read QC, trimming, adapter removal and quality assessment
+- Coverage, depth, library preparation concepts
 
-## 06 - Genomics
+---
 
-**[Module 6 — Genomics: From Reads to Genomes](06-genomics/README.md)**
+## Module 6 — Genomics: From Reads to Genomes
 
-Topics include:
-- Mapping vs *de novo* assembly strategies
-- Bacterial genome assembly and evaluation metrics (N50, BUSCO, contigs)
-- Structural and functional annotation, basic comparative genomics
-- Introduction to variant calling concepts (SNPs/indels) and interpretation
+📂 **[06-genomics/README.md](06-genomics/README.md)**
 
-## 07 - Proteins
+You turn raw sequencing reads into assembled and annotated genomes.
 
-**[Module 7 — Protein Bioinformatics](06-proteins/README.md)**
+**Topics:**
+- Assembly strategies: mapping vs *de novo*; OLC and De Bruijn graphs
+- k-mers and their role in assembly algorithms
+- Assembly evaluation: N50, L50, NG50, BUSCO, contamination checks
+- Genome annotation: gene prediction (prokaryotes vs eukaryotes), functional assignment (GFF/GBK)
+- Introduction to variant calling: SNPs, indels, mapping against a reference
 
-Topics include:
+**Practices:**
+- [Genome assembly with FastQC + Velvet](06-genomics/exercises/genome_assembly_fastqc_velvet.md)
+- [Genome assembly with Falco + fastp + Shovill](06-genomics/exercises/genome_assembly_falco_fastp_shovill.md)
+- [Genome annotation](06-genomics/exercises/genome_annotation.md)
+
+---
+
+## Module 7 — Protein Bioinformatics
+
+📂 **[06-proteins/README.md](06-proteins/README.md)**
+
+**Topics:**
 - Protein sequences, domains, motifs and families
 - Searching and annotating proteins (BLASTp, Pfam/InterPro)
 - Structure basics and functional inference
 
-## 08 - Transcriptomics
+---
 
-**[Module 8 — Transcriptomics (RNA-Seq)](07-transcriptomics/README.md)**
+## Module 8 — Transcriptomics (RNA-Seq)
 
-Topics include:
+📂 **[07-transcriptomics/README.md](07-transcriptomics/README.md)**
+
+**Topics:**
 - What RNA-Seq measures, experimental design and key biases
 - Quantification concepts (counts, TPM/FPKM) and normalization
 - Differential expression and functional interpretation
 
-## 09 - Proteomics
+---
 
-**[Module 9 — Proteomics](08-proteomics/README.md)**
+## Module 9 — Proteomics
 
-Topics include:
+📂 **[08-proteomics/README.md](08-proteomics/README.md)**
+
+**Topics:**
 - Mass spectrometry basics and peptide identification
 - Protein quantification and common analysis steps
 - Linking proteomics to pathways and biological interpretation
 
-## 10 - Metabolic models
+---
 
-**[Module 10 — Metabolic Models](09-metabolic-models/README.md)**
+## Module 10 — Metabolic Models
 
-Topics include:
+📂 **[09-metabolic-models/README.md](09-metabolic-models/README.md)**
+
+**Topics:**
 - Metabolic networks and genome-scale metabolic models (GEMs)
 - Flux Balance Analysis (FBA): intuition, constraints and objective functions
 - Interpreting predictions and connecting models to experiments
+
+---
 
 ## Pre-work
 
 
 ## Required software and toolbox
 
--   xxxxxxxxxxxxx
+- **GitHub account** — free, for Codespaces access ([github.com](https://github.com))
+- **MEGA X** — phylogenetic analysis ([megasoftware.net](https://www.megasoftware.net/))
+- **Web browser** — for NCBI, BLAST, Primer-BLAST and other online tools
+- Any additional tools will be introduced in the corresponding module
 
 ------------------------------------------------------------------------
 

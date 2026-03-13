@@ -893,8 +893,6 @@ proyecto_genomica/
 - Usar **control de versiones** (Git/GitHub) para todos los scripts.
 - Escribir scripts que **fallen con mensajes claros** cuando algo no funciona.
 
----
-
 ## Resumen del Módulo
 
 Este módulo sienta las bases computacionales para todo el trabajo bioinformático que vendrá. La línea de comandos de Linux, combinada con la capacidad de escribir scripts en Bash y Python, le da acceso a prácticamente la totalidad del ecosistema de herramientas bioinformáticas.
@@ -920,4 +918,14 @@ Este módulo sienta las bases computacionales para todo el trabajo bioinformáti
 - **Software Carpentry: Unix Shell** — https://swcarpentry.github.io/shell-novice/
 - **Software Carpentry: Programming with Python** — https://swcarpentry.github.io/python-novice-inflammation/
 - **Rosalind** (ejercicios prácticos de bioinformática) — https://rosalind.info/
+
+---
+
+## Prácticas del módulo
+
+| Práctica                                                                   | Descripción                                                                                             |
+|:---------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------|
+| [Crear una cuenta de GitHub](./exercises/01_creating_an_github_account.md) | Configurar GitHub y GitHub Codespaces como entorno de trabajo para el curso                             |
+| [Uso de la terminal Unix](./exercises/02_using_unix_terminal.md)           | Navegación por el sistema de archivos, manipulación de archivos biológicos, pipes y redirección         |
+| [Scripting en Python](./exercises/03_scripting_in_python.md)               | Variables, tipos de datos, condicionales, bucles, lectura de archivos y scripts para análisis biológico |
 

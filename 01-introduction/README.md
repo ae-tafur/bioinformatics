@@ -272,3 +272,12 @@ NCBI Handbook: Guía completa de recursos
 Tutorial BLAST: https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs
 Bioinformatics Data Skills (Libro): Vince Buffalo
 Rosalind: Plataforma de ejercicios prácticos
+
+---
+
+## Prácticas del módulo
+
+| Práctica                                                 | Descripción                                                                              |
+|:---------------------------------------------------------|:-----------------------------------------------------------------------------------------|
+| [Bases de datos biológicas](./exercises/01_databases.md) | Búsqueda, navegación y descarga de secuencias desde NCBI y otras bases de datos públicas |
+
