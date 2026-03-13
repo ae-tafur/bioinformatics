@@ -115,21 +115,21 @@ Estos genes se conocen como **genes marcadores** o **marcadores filogenéticos**
 >     transcrito       transcrito
 >      interno 1       interno 2
 > ```
-
-Aquí es donde las regiones **ITS** cobran protagonismo: **ITS1** (entre 18S y 5.8S) e **ITS2** (entre 5.8S y 28S) son las más utilizadas para la identificación de **hongos**. ¿Por qué?
-
-- Los genes ribosomales (18S, 5.8S, 28S) están muy conservados → se pueden usar **primers universales** que anclan en estas regiones conservadas para amplificar los ITS.
-- Las regiones ITS **no tienen función en el ribosoma maduro** (se eliminan) → están bajo menos presión de selección → evolucionan más rápido → tienen mayor resolución a nivel de especie.
-- En conjunto, ITS1 + 5.8S + ITS2 suman ~500–800 pb, un tamaño ideal para amplificación y secuenciación.
-
-##### Resumen comparativo
-
-| Componente | Procariotas | Eucariotas | Tamaño aprox. | Uso como marcador |
-|:--|:--|:--|:--|:--|
-| Subunidad pequeña rRNA | **16S** | **18S** | ~1,500 / ~1,800 pb | ⭐ Principal en bacterias / útil en eucariotas |
-| Subunidad grande rRNA | **23S** | **28S** | ~2,900 / ~5,000 pb | Complementario, más info filogenética |
-| rRNA corto | 5S | 5S + **5.8S** | ~120 / ~160 pb | Poco usado (muy corto) |
-| Espaciadores (ITS) | ITS (16S–23S) | **ITS1** + **ITS2** | Variable | ⭐ Principal en hongos; poco usado en procariotas |
+> 
+> Aquí es donde las regiones **ITS** cobran protagonismo: **ITS1** (entre 18S y 5.8S) e **ITS2** (entre 5.8S y 28S) son las más utilizadas para la identificación de **hongos**. ¿Por qué?
+> 
+> - Los genes ribosomales (18S, 5.8S, 28S) están muy conservados → se pueden usar **primers universales** que anclan en estas regiones conservadas para amplificar los ITS.
+> - Las regiones ITS **no tienen función en el ribosoma maduro** (se eliminan) → están bajo menos presión de selección → evolucionan más rápido → tienen mayor resolución a nivel de especie.
+> - En conjunto, ITS1 + 5.8S + ITS2 suman ~500–800 pb, un tamaño ideal para amplificación y secuenciación.
+> 
+> **Resumen comparativo**
+> 
+> | Componente             | Procariotas   | Eucariotas          | Tamaño aprox.      | Uso como marcador                                |
+> |:-----------------------|:--------------|:--------------------|:-------------------|:-------------------------------------------------|
+> | Subunidad pequeña rRNA | **16S**       | **18S**             | ~1,500 / ~1,800 pb | ⭐ Principal en bacterias / útil en eucariotas    |
+> | Subunidad grande rRNA  | **23S**       | **28S**             | ~2,900 / ~5,000 pb | Complementario, más info filogenética            |
+> | rRNA corto             | 5S            | 5S + **5.8S**       | ~120 / ~160 pb     | Poco usado (muy corto)                           |
+> | Espaciadores (ITS)     | ITS (16S–23S) | **ITS1** + **ITS2** | Variable           | ⭐ Principal en hongos; poco usado en procariotas |
 
 > [!TIP]
 > Cuando lea un artículo que menciona "análisis del gen 16S", recuerde que se refiere al gen que codifica el rRNA de la subunidad pequeña del ribosoma **procariota**. Si el organismo es un hongo, busque ITS; si es un animal, COI; si es una planta, matK/rbcL.
