@@ -50,7 +50,7 @@ Esta práctica se organiza por **casos**. El profesor indicará cuál caso traba
 
 **Contexto:** En el laboratorio de microbiología clínica de un hospital se aisló una bacteria de un hemocultivo. La tinción de Gram mostró **bacilos Gram negativos** y las pruebas bioquímicas iniciales indican fermentación de lactosa. Se realizó la secuenciación parcial del gen 16S rRNA para confirmar la identidad.
 
-- **Secuencia:** `>unknown clinical bacterium` en `data/unknown_seqs.fasta`
+- **Secuencia:** `>16S ribosomal RNA gene, partial sequence, unknown clinical bacterium` en `data/unknown_seqs.fasta`
 - **Pistas:** Gram negativa, bacilo, fermentadora de lactosa, origen clínico.
 - **Familia probable:** Enterobacteriaceae.
 
@@ -58,7 +58,7 @@ Esta práctica se organiza por **casos**. El profesor indicará cuál caso traba
 
 **Contexto:** Durante un muestreo de biodiversidad en un bosque tropical, se aisló una bacteria de la corteza de un árbol de bosques del norte de Europa. La morfología muestra **bacilos Gram negativos**, no fermentadores. Se sospecha de un organismo asociado a la rizósfera.
 
-- **Secuencia:** `>unknown environment bacterium` en `data/unknown_seqs.fasta`
+- **Secuencia:** `>16S ribosomal RNA gene, partial sequence, unknown environment bacterium` en `data/unknown_seqs.fasta`
 - **Pistas:** Gram negativa, bacilo, no fermentadora, asociada a planta/suelo.
 - **Familias probables:** Rhizobiaceae, Bradyrhizobiaceae o Xanthomonadaceae.
 
@@ -66,7 +66,7 @@ Esta práctica se organiza por **casos**. El profesor indicará cuál caso traba
 
 **Contexto:** En un proyecto de bioprospección, se aislaron dos colonias de aspecto pulverulento y olor terroso de muestras de suelo agrícola. La microscopía reveló filamentos ramificados compatibles con **actinobacterias**. Se sospecha que pertenecen al género *Streptomyces*, un grupo de enorme importancia biotecnológica por su producción de antibióticos.
 
-- **Secuencias:** `>unknown soil bacterium_1` y `>unknown soil bacterium_2` en `data/unknown_seqs.fasta`
+- **Secuencias:** `>16S ribosomal RNA gene, partial sequence, unknown soil bacterium_1` y `>...unknown soil bacterium_2` en `data/unknown_seqs.fasta`
 - **Pistas:** Gram positiva (alto contenido GC), filamentosa, olor terroso, suelo agrícola.
 - **Familia probable:** Streptomycetaceae.
 
@@ -103,7 +103,7 @@ Cree un archivo FASTA separado para su secuencia problema. Puede hacerlo de dos 
 caso_X_unknown.fasta
 ```
 
-(donde `X` es A, B, C1 o C2 según su caso).
+(donde `X` es A, B o C según su caso).
 
 **Opción B — Desde terminal (Codespaces):**
 
@@ -113,17 +113,22 @@ mkdir -p phylo_analysis/data phylo_analysis/results
 cd phylo_analysis
 
 # Extraer solo la secuencia de su caso (ejemplo para Caso A):
-grep -A 100 "^>Case_A" ../data/unknown_seqs.fasta | sed '/^>Case_B/,$d' > data/caso_A_unknown.fasta
+grep -A 100 "unknown clinical" ../data/unknown_seqs.fasta | sed '/^>16S.*unknown environment/,$d' > data/caso_A_unknown.fasta
 
 # Verificar
 head data/caso_A_unknown.fasta
 ```
 
 > [!TIP]
-> El comando `grep -A 100` busca el encabezado y muestra las 100 líneas siguientes. El `sed '/^>Case_B/,$d'` elimina todo desde la siguiente secuencia en adelante. Si trabaja con el Caso C, ajuste los nombres:
-> ```bash
-> grep -A 100 "^>Case_C1" ../data/unknown_seqs.fasta | sed '/^>Case_C2/,$d' > data/caso_C1_unknown.fasta
-> ```
+> El comando `grep -A 100` busca el encabezado que contiene la palabra clave y muestra las 100 líneas siguientes. El `sed '/^>16S.*unknown environment/,$d'` elimina todo desde la siguiente secuencia en adelante. Ajuste las palabras clave según su caso:
+>
+> | Caso | Comando                                                                                                                                     |
+> |:-----|:--------------------------------------------------------------------------------------------------------------------------------------------|
+> | A    | `grep -A 100 "unknown clinical" ../data/unknown_seqs.fasta \| sed '/^>16S.*unknown environment/,$d' > data/caso_A_unknown.fasta`            |
+> | B    | `grep -A 100 "unknown environment" ../data/unknown_seqs.fasta \| sed '/^>16S.*unknown soil/,$d' > data/caso_B_unknown.fasta`                |
+> | C    | `grep -A 200 "unknown soil" ../data/unknown_seqs.fasta > data/caso_C_unknown.fasta`                                                         |
+>
+> **Nota sobre el Caso C:** el `grep "unknown soil"` captura **ambas** secuencias (`bacterium_1` y `bacterium_2`) porque las dos contienen la palabra `soil`. Al usar `-A 200` se incluyen las líneas de secuencia de ambas. Como son las dos últimas del archivo, no se necesita `sed` para cortar.
 
 #### Paso 3 — Inspección rápida de la secuencia
 
@@ -170,14 +175,14 @@ echo ""
 
 Cuando aparezcan los resultados, observe la **tabla de hits** (*Descriptions*). Registre para los **10 mejores hits**:
 
-| Dato a registrar | ¿Dónde lo encuentra?                 |
-|:-----------------|:--------------------------------------|
-| **Accession**    | Columna "Accession" en la tabla       |
+| Dato a registrar | ¿Dónde lo encuentra?                   |
+|:-----------------|:---------------------------------------|
+| **Accession**    | Columna "Accession" en la tabla        |
 | **Organism**     | Nombre del organismo en la descripción |
-| **% Identity**   | Columna "Per. Ident"                  |
-| **Query Cover**  | Columna "Query Cover"                 |
-| **E-value**      | Columna "E value"                     |
-| **Bit Score**    | Columna "Total Score"                 |
+| **% Identity**   | Columna "Per. Ident"                   |
+| **Query Cover**  | Columna "Query Cover"                  |
+| **E-value**      | Columna "E value"                      |
+| **Bit Score**    | Columna "Total Score"                  |
 
 > [!WARNING]
 > **No se quede solo con el primer hit.** Es común que los primeros 5–10 hits tengan porcentajes de identidad muy similares (por ejemplo, 99.5% vs. 99.3%). Revise las descripciones para ver si pertenecen a **géneros diferentes** o son todas de la misma especie.
@@ -220,12 +225,12 @@ Esta es la parte clave de la práctica. Un árbol filogenético es tan informati
 
 A partir de los resultados de BLAST, seleccione **al menos 10 secuencias de referencia** que cumplan:
 
-| Criterio                                              | Razón                                                                           |
-|:------------------------------------------------------|:--------------------------------------------------------------------------------|
-| Al menos **3–4 géneros diferentes**                   | Para dar contexto filogenético amplio                                           |
-| Al menos **2–3 especies del género más cercano**      | Para evaluar a qué especie se acerca más su muestra                             |
-| Al menos **1 secuencia de un grupo externo (outgroup)** | Para enraizar el árbol (por ejemplo, un Firmicute si sus hits son Proteobacteria) |
-| Preferir secuencias de **cepas tipo** (*type strain*) | Son la referencia oficial de cada especie                                       |
+| Criterio                                                | Razón                                                                                  |
+|:--------------------------------------------------------|:---------------------------------------------------------------------------------------|
+| Al menos **3–4 géneros diferentes**                     | Para dar contexto filogenético amplio                                                  |
+| Al menos **2–3 especies del género más cercano**        | Para evaluar a qué especie se acerca más su muestra                                    |
+| Al menos **1 secuencia de un grupo externo (outgroup)** | Para enraizar el árbol (por ejemplo, un Firmicute si sus hits son Proteobacteria)      |
+| Preferir secuencias de **cepas tipo** (*type strain*)   | Son la referencia oficial de cada especie                                              |
 
 > [!TIP]
 > **¿Qué es un outgroup?** Es una secuencia de un organismo que usted sabe que es más lejano que todos los demás en su análisis. Sirve para **enraizar** el árbol (definir qué dirección es "hacia el pasado"). Por ejemplo:
