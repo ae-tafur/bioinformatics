@@ -55,7 +55,8 @@ Un buen primer no se elige al azar. Debe cumplir, en general, varios criterios b
 | **Auto-complementariedad**       | Baja                                                                                  | Reduce la formación de horquillas y dímeros                                               |
 | **Tamaño del amplicón**          | Depende del objetivo; 100–500 pb es cómodo para PCR convencional y análisis básico    | Productos muy largos pueden ser más difíciles de amplificar                               |
 
-> 💡 **Idea clave:** la PCR no "lee intenciones". Si el primer puede unirse a varios sitios o formar dímeros, lo hará. Por eso la especificidad es tan importante como la longitud o la Tm.
+> [!IMPORTANT]
+> **Idea clave:** la PCR no "lee intenciones". Si el primer puede unirse a varios sitios o formar dímeros, lo hará. Por eso la especificidad es tan importante como la longitud o la Tm.
 
 ---
 
@@ -78,7 +79,8 @@ Ejemplos de genes o regiones que puede buscar en NCBI:
 
 Aquí descargará varias secuencias homólogas (por ejemplo, del mismo gen en varias cepas o especies), las alineará y luego elegirá una región conservada para diseñar los primers.
 
-> 💡 Recomendación docente: todos los estudiantes pueden completar primero la **Opción A** y luego, si el tiempo lo permite, avanzar a la **Opción B**.
+> [!TIP]
+> ERecomendación docente: todos los estudiantes pueden completar primero la **Opción A** y luego, si el tiempo lo permite, avanzar a la **Opción B**.
 
 ---
 
@@ -94,7 +96,8 @@ Preguntas orientadoras:
 - ¿Quiere amplificar una región conservada para identificación taxonómica?
 - ¿Quiere amplificar una región variable para distinguir cepas?
 
-> ⚠️ **Importante:** para esta práctica inicial, es mejor trabajar con la secuencia de un **gen** o una **región puntual**, no con un genoma completo. Si descarga un cromosoma entero, el análisis será menos manejable.
+> [!IMPORTANT]
+> Para esta práctica inicial, es mejor trabajar con la secuencia de un **gen** o una **región puntual**, no con un genoma completo. Si descarga un cromosoma entero, el análisis será menos manejable.
 
 ---
 
@@ -104,14 +107,22 @@ Tiene dos formas sugeridas de hacerlo.
 
 #### Opción 1 — Desde la web usando un GenBank ID
 
-1. Vaya a [NCBI Nucleotide](https://www.ncbi.nlm.nih.gov/nucleotide/).
-2. Busque un gen bacteriano de interés. Por ejemplo:
+1. Vaya a [NCBI Nucleotide](https://www.ncbi.nlm.nih.gov).
+2. Seleccione la base de datos `nucleotide`
+3. Busque un gen bacteriano de interés. Por ejemplo:
+   - `Streptomyces griseus rpoB gene`
+   - `Pseudomonas aeruginosa 16S rRNA`
+   - `Staphylococcus aureus gyrA gene`
    - `Escherichia coli recA gene`
    - `Klebsiella pneumoniae blaKPC`
    - `bacterial 16S ribosomal RNA`
-3. Abra un registro que corresponda a una **secuencia nucleotídica específica**.
-4. Identifique el **accession** o **GenBank ID** del registro.
-5. Use la opción **Send to → File → FASTA** para descargar la secuencia.
+4. Abra un registro que corresponda a una **secuencia nucleotídica específica**.
+
+> [!TIP]
+> Verifique que el registro corresponda a un gen o región puntual, no a un genoma completo. Si el título del registro menciona “complete genome” o tiene una longitud de decenas de miles de bases, probablemente no sea el ideal para esta práctica. Si es un genoma completo, asegúrese de anotar el inicio y el final (Posición en el genoma) del gen o región que le interesa.
+
+5. Identifique el **accession** o **GenBank ID** del registro.
+6. Use la opción **Send to → File → FASTA** para descargar la secuencia.
 
 **Preguntas**
 - ¿Qué organismo seleccionó?
@@ -123,19 +134,25 @@ Tiene dos formas sugeridas de hacerlo.
 
 Si ya tiene el accession, puede descargar la secuencia directamente desde la terminal.
 
-Primero cree una carpeta de trabajo:
+Primero cree una carpeta de trabajo, defina el accession y descargue la secuencia en formato FASTA:
 
 ```bash
-mkdir -p primer_design/data primer_design/results
+mkdir -p primer_design/{data,results}
 cd primer_design
 ```
+> [!TIP]
+> 1. En bash el código anterior es equivalente a `mkdir -p primer_design/data primer_design/results` o `mkdir -p primer_design && cd primer_design`. 
+> 2. Si en el futuro necesitas crear una jerarquía aún más profunda (como carpetas para diferentes tipos de datos), puedes anidarlas: `mkdir -p primer_design/{data/{raw,processed},results/figures}`
 
 Luego defina el accession y descargue la secuencia en formato FASTA:
 
 ```bash
 ACCESSION="PEGUE_AQUI_EL_ACCESSION"
-wget -O data/target.fasta "https://www.ncbi.nlm.nih.gov/sviewer/viewer.fcgi?id=${ACCESSION}&db=nuccore&report=fasta&retmode=text"
+wget -O data/target.fasta "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=${ACCESSION}&rettype=fasta&retmode=text"
 ```
+
+> [!WARNING]
+> Si obtiene el error `data/target.fasta: No such file or directory`, significa que la carpeta `data/` no existe. Asegúrese de ejecutar el comando `mkdir -p` primero, **o ejecute todo el bloque junto** (copie y pegue las 4 líneas).
 
 Inspeccione el archivo descargado:
 
@@ -149,7 +166,8 @@ Y estime la longitud de la secuencia:
 grep -v "^>" data/target.fasta | tr -d '\n' | wc -c
 ```
 
-> 💡 Si el archivo es enorme, probablemente descargó un genoma completo o un registro que no era el ideal para esta práctica.
+> [!TIP]
+> Si el archivo es enorme, probablemente descargó un genoma completo.
 
 ---
 
@@ -233,7 +251,8 @@ Primer forward (reportado)         5' - A T G C G G - 3'
 Hebra antisentido             3' - T A C G C C A A T G G T - 5'
 ```
 
-> 💡 **Nota:** en el esquema, cada primer se muestra junto a la hebra a la que se une (hibrida). El forward se hibrida con la hebra antisentido; el reverse se hibrida con la hebra sentido. Pero ambos se reportan siempre en orientación **5' → 3'**.
+> [!NOTE]
+> En el esquema, cada primer se muestra junto a la hebra a la que se une (hibrida). El forward se hibrida con la hebra antisentido; el reverse se hibrida con la hebra sentido. Pero ambos se reportan siempre en orientación **5' → 3'**.
 
 La polimerasa extenderá también desde el extremo **3'** de este primer, pero ahora avanzando hacia la **izquierda** en el dibujo, es decir, hacia el interior de la región a amplificar.
 
@@ -346,7 +365,7 @@ Abra la herramienta:
    - **Primer size**: preferido alrededor de `20 nt`
    - **Tm**: preferido alrededor de `60 °C`
    - **GC%**: dentro de rangos razonables
-4. En la parte de especificidad, seleccione el organismo si desea restringir la búsqueda.
+4. En la parte de especificidad, seleccione la base de datos necesaria y el organismo si desea restringir la búsqueda.
 5. Ejecute el análisis.
 
 ##### Parámetros orientadores para esta práctica
@@ -376,6 +395,7 @@ Para cada par de primers candidato, observe:
 - ¿Cuál es el tamaño esperado del amplicón?
 - ¿La diferencia de Tm entre ambos primers es pequeña?
 - ¿La herramienta predice productos inespecíficos adicionales?
+- ¿Su primer forward y reverse han sido publicados antes o son nuevos?
 
 ---
 
@@ -404,7 +424,8 @@ Busque una región que:
 - permita generar un amplicón de tamaño razonable;
 - idealmente flanquee una región informativa, si su objetivo es comparación o identificación.
 
-> 💡 En diseño de primers, el extremo **3'** merece atención especial. Un desajuste en esa zona suele ser más problemático que uno más interno.
+> [!TIP]
+> En diseño de primers, el extremo **3'** merece atención especial. Un desajuste en esa zona suele ser más problemático que uno más interno.
 
 #### Paso 6B.4 — Diseñar los primers a partir de la región conservada
 
