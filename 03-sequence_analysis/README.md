@@ -8,8 +8,8 @@ Comparar secuencias es, probablemente, la operación más fundamental en bioinfo
 
 Trabajaremos con tres grandes bloques:
 
-1. **BLAST**, la herramienta más utilizada en el mundo para buscar secuencias similares en bases de datos.
-2. **Alineamiento de secuencias**, entendiendo los algoritmos de programación dinámica que permiten comparar dos secuencias de forma exacta.
+1. **Alineamiento de secuencias**, entendiendo los algoritmos de programación dinámica que permiten comparar dos secuencias de forma exacta.
+2. **BLAST**, la herramienta más utilizada en el mundo para buscar secuencias similares en bases de datos — ahora que ya sabe qué es un alineamiento, entenderá cómo y por qué funciona.
 3. **Diseño de primers y PCR *in silico***, donde la comparación de secuencias se aplica a un problema experimental concreto.
 
 > [!NOTE]
@@ -43,76 +43,9 @@ En este módulo usará Python para **implementar un algoritmo de alineamiento de
 
 ---
 
-## 1. Búsqueda por similitud con BLAST
+## 1. Alineamiento de secuencias
 
-### 1.1 ¿Qué es BLAST y por qué es tan importante?
-
-**BLAST** (*Basic Local Alignment Search Tool*) es la herramienta más utilizada en bioinformática para buscar secuencias similares en bases de datos. Fue publicada por Altschul *et al.* en 1990 y desde entonces se ha convertido en el equivalente bioinformático de un buscador web: usted le da una secuencia y BLAST le devuelve las secuencias más parecidas que existen en una base de datos.
-
-> [!NOTE]
-**Analogía:** imagine que tiene una frase en un idioma desconocido y quiere encontrar frases parecidas en una biblioteca con millones de libros. No puede leer cada libro completo, así que primero busca palabras clave coincidentes, luego extiende la comparación alrededor de esas coincidencias y finalmente evalúa cuáles son parecidos reales y cuáles son casualidades.
-
-BLAST funciona exactamente así.
-
-### 1.2 ¿Cómo funciona BLAST conceptualmente?
-
-BLAST no compara su secuencia contra todas las secuencias de la base de datos base por base (eso sería demasiado lento). En cambio, usa una **estrategia heurística** en tres fases:
-
-#### Fase 1 — Semillas (*seeding*)
-
-BLAST divide su secuencia en fragmentos cortos (llamados "palabras" o *words*) y busca coincidencias exactas o casi exactas en la base de datos. Estas coincidencias iniciales se llaman **semillas** (*seeds*).
-
-#### Fase 2 — Extensión
-
-A partir de cada semilla, BLAST **extiende el alineamiento** en ambas direcciones, calculando una puntuación. Si la puntuación sube, sigue extendiendo. Si baja demasiado, se detiene.
-
-#### Fase 3 — Evaluación estadística
-
-Los alineamientos extendidos se evalúan para determinar si son **estadísticamente significativos** o si podrían haber ocurrido por azar.
-
-> [!IMPORTANT]
-> Esta estrategia hace que BLAST sea muy rápido, pero no garantiza encontrar el alineamiento óptimo en todos los casos. Para eso existen los algoritmos exactos como Smith-Waterman, que veremos más adelante.
-
-### 1.3 Tipos de BLAST
-
-Dependiendo de qué tipo de secuencia usted tiene (la *query*) y qué tipo de base de datos quiere buscar (el *subject*), BLAST ofrece diferentes programas:
-
-| Programa    | Query                 | Base de datos         | ¿Cuándo usarlo?                                                         |
-|:------------|:----------------------|:----------------------|:------------------------------------------------------------------------|
-| **blastn**  | Nucleótidos           | Nucleótidos           | Buscar genes similares, identificar especies por 16S rRNA               |
-| **blastp**  | Proteínas             | Proteínas             | Buscar proteínas homólogas, anotar funciones                            |
-| **blastx**  | Nucleótidos (traduce) | Proteínas             | Tiene ADN y quiere buscar en bases de datos de proteínas                |
-| **tblastn** | Proteínas             | Nucleótidos (traduce) | Buscar genes en genomas no anotados usando proteínas como query         |
-| **tblastx** | Nucleótidos (traduce) | Nucleótidos (traduce) | Comparación traducida en ambas direcciones (más lento, menos frecuente) |
-
-### 1.4 Interpretación de resultados
-
-Cuando BLAST devuelve resultados, hay cuatro valores que debe aprender a interpretar:
-
-| Parámetro             | ¿Qué mide?                                                                             | ¿Qué significa un "buen" valor?                                              |
-|:----------------------|:---------------------------------------------------------------------------------------|:-----------------------------------------------------------------------------|
-| **E-value**           | Probabilidad de encontrar ese alineamiento por azar en una base de datos de ese tamaño | Mientras más bajo, mejor. Un E-value < 1e-5 suele considerarse significativo |
-| **Score (bit score)** | Puntuación normalizada del alineamiento                                                | Mientras más alto, mejor                                                     |
-| **% Identity**        | Porcentaje de posiciones idénticas en el alineamiento                                  | Depende del contexto biológico                                               |
-| **Query coverage**    | Qué porcentaje de su secuencia se alineó                                               | Un coverage bajo puede indicar que solo una parte de su secuencia es similar |
-
-> [!WARNING]
-> **Error frecuente:** un E-value bajo con un coverage del 10% puede significar que solo un dominio pequeño es similar, no que toda la proteína sea homóloga. Siempre mire los cuatro parámetros juntos.
-
-### 1.5 BLAST en la práctica
-
-BLAST se puede usar de dos formas principales:
-
-- **BLAST web** en [https://blast.ncbi.nlm.nih.gov/](https://blast.ncbi.nlm.nih.gov/) — ideal para búsquedas rápidas y exploratorias.
-- **BLAST en línea de comandos** — ideal para búsquedas automatizadas, grandes volúmenes de datos o bases de datos locales.
-
-En este módulo trabajaremos principalmente con la versión web. La versión de línea de comandos se cubrirá cuando sea necesario en módulos posteriores.
-
----
-
-## 2. Alineamiento de secuencias
-
-### 2.1 ¿Qué es un alineamiento y por qué importa?
+### 1.1 ¿Qué es un alineamiento y por qué importa?
 
 Un **alineamiento de secuencias** organiza dos (o más) secuencias una encima de otra para identificar posiciones equivalentes: coincidencias, diferencias, inserciones y deleciones.
 
@@ -123,7 +56,7 @@ Desde el punto de vista biológico, alinear secuencias permite:
 - encontrar **regiones conservadas** que probablemente tienen función importante;
 - evaluar la **distancia evolutiva** entre organismos.
 
-### 2.2 Matriz de puntos (*Dot Plot*)
+### 1.2 Matriz de puntos (*Dot Plot*)
 
 Antes de hablar de algoritmos sofisticados, existe una herramienta visual sorprendentemente simple y poderosa para comparar dos secuencias: la **matriz de puntos** o *dot plot*.
 
@@ -206,7 +139,7 @@ Esto elimina las coincidencias aleatorias y deja solo las diagonales que represe
 > [!TIP]
 > El dot plot no le dice *cuál* es el mejor alineamiento, pero sí le da una **visión global** de la relación entre dos secuencias que ningún alineamiento individual puede ofrecer. Es como mirar un mapa antes de entrar a recorrer las calles.
 
-### 2.3 Alineamiento global vs. local
+### 1.3 Alineamiento global vs. local
 
 Esta es una distinción fundamental:
 
@@ -245,7 +178,7 @@ En términos sencillos:
 > [!NOTE]
 > BLAST usa alineamiento **local**. Por eso puede encontrar similitudes parciales entre secuencias muy diferentes.
 
-### 2.4 Conceptos de scoring
+### 1.4 Conceptos de scoring
 
 Para decidir si un alineamiento es "bueno" o "malo", necesitamos un sistema de puntuación (*scoring*).
 
@@ -269,7 +202,7 @@ En proteínas, no todas las sustituciones son iguales. Cambiar una leucina por u
 
 Para ADN en este módulo, usaremos el esquema simple de match/mismatch/gap.
 
-### 2.5 Algoritmo de Needleman-Wunsch (alineamiento global)
+### 1.5 Algoritmo de Needleman-Wunsch (alineamiento global)
 
 Este algoritmo, publicado en 1970, fue el primero en resolver el problema de alineamiento global de forma exacta usando **programación dinámica**.
 
@@ -443,7 +376,7 @@ Puntuación: +1 -2 +1 +1 -2 +1 = 0... (este da 0, no 1)
 > [!IMPORTANT]
 > Lo importante no es memorizar los números, sino entender la lógica: cada celda representa **la mejor forma de alinear esas dos subsecuencias hasta ese punto**, y el traceback reconstruye esa solución óptima paso a paso.
 
-### 2.6 Algoritmo de Smith-Waterman (alineamiento local)
+### 1.6 Algoritmo de Smith-Waterman (alineamiento local)
 
 Publicado en 1981, es una modificación del Needleman-Wunsch con dos diferencias clave:
 
@@ -593,7 +526,7 @@ SMITH-WATERMAN:   encuentra la región ATGCGATCG compartida,
 > [!NOTE]
 > La diferencia es sutil pero poderosa: ambos algoritmos procesan las secuencias completas, pero Needleman-Wunsch fuerza a alinear todo de punta a punta, mientras que Smith-Waterman extrae solo el mejor fragmento compartido. Por eso BLAST (que usa alineamiento local) puede encontrar un dominio conservado dentro de una proteína enorme, mientras que un alineamiento global forzaría a alinear también las regiones no relacionadas.
 
-### 2.7 Identidad vs. similitud
+### 1.7 Identidad vs. similitud
 
 Estos conceptos son diferentes y no deben usarse como sinónimos:
 
@@ -604,7 +537,7 @@ En **ADN**, generalmente se habla de **identidad** porque las bases no tienen pr
 
 En **proteínas**, la **similitud** puede ser más informativa que la identidad, porque dos aminoácidos diferentes pueden cumplir funciones parecidas si comparten propiedades químicas.
 
-### 2.8 De la teoría a la práctica: relación con BLAST
+### 1.8 De la teoría a la práctica: relación con BLAST
 
 Ahora puede entender por qué BLAST es rápido pero no exacto:
 
@@ -615,16 +548,16 @@ En la práctica, BLAST es suficiente para la mayoría de las búsquedas. Smith-W
 
 ---
 
-## 3. Ejemplo de código: alineamiento en Python
+## 2. Ejemplo de código: alineamiento en Python
 
-### 3.1 Objetivo del ejercicio
+### 2.1 Objetivo del ejercicio
 
 El objetivo es que usted entienda el algoritmo de alineamiento "por dentro", no como una caja negra. Para eso, en la carpeta de ejercicios del módulo encontrará un script Python que implementa tanto **Needleman-Wunsch** (global) como **Smith-Waterman** (local) desde cero usando programación dinámica.
 
 > [!NOTE]
 > El script se encuentra en: [`exercises/code/alignment_dp.py`](./exercises/code/alignment_dp.py)
 
-### 3.2 ¿Qué hace el script?
+### 2.2 ¿Qué hace el script?
 
 El script contiene:
 
@@ -644,7 +577,7 @@ El script contiene:
 4. **Bloque principal**
    - Ejecuta ambos algoritmos con dos secuencias de ejemplo y muestra los resultados.
 
-### 3.3 Cómo ejecutarlo
+### 2.3 Cómo ejecutarlo
 
 Desde la terminal de Codespaces:
 
@@ -683,7 +616,7 @@ Score: 1
 > [!NOTE]
 > El script resuelve los empates del traceback tomando un solo camino. Si usted resolvió la matriz a mano y obtuvo un alineamiento diferente (por ejemplo, con gaps), puede ser igualmente correcto. Lo importante es que la **puntuación** coincida.
 
-### 3.4 Extensiones sugeridas
+### 2.4 Extensiones sugeridas
 
 Una vez que entienda cómo funciona el script, puede intentar:
 
@@ -706,6 +639,73 @@ aligner.extend_gap_score = -2
 alignments = aligner.align("GCATG", "GATTG")
 print(alignments[0])
 ```
+
+---
+
+## 3. Búsqueda por similitud con BLAST
+
+### 3.1 ¿Qué es BLAST y por qué es tan importante?
+
+**BLAST** (*Basic Local Alignment Search Tool*) es la herramienta más utilizada en bioinformática para buscar secuencias similares en bases de datos. Fue publicada por Altschul *et al.* en 1990 y desde entonces se ha convertido en el equivalente bioinformático de un buscador web: usted le da una secuencia y BLAST le devuelve las secuencias más parecidas que existen en una base de datos.
+
+> [!NOTE]
+**Analogía:** imagine que tiene una frase en un idioma desconocido y quiere encontrar frases parecidas en una biblioteca con millones de libros. No puede leer cada libro completo, así que primero busca palabras clave coincidentes, luego extiende la comparación alrededor de esas coincidencias y finalmente evalúa cuáles son parecidos reales y cuáles son casualidades.
+
+BLAST funciona exactamente así.
+
+### 3.2 ¿Cómo funciona BLAST conceptualmente?
+
+BLAST no compara su secuencia contra todas las secuencias de la base de datos base por base (eso sería demasiado lento). En cambio, usa una **estrategia heurística** en tres fases:
+
+#### Fase 1 — Semillas (*seeding*)
+
+BLAST divide su secuencia en fragmentos cortos (llamados "palabras" o *words*) y busca coincidencias exactas o casi exactas en la base de datos. Estas coincidencias iniciales se llaman **semillas** (*seeds*).
+
+#### Fase 2 — Extensión
+
+A partir de cada semilla, BLAST **extiende el alineamiento** en ambas direcciones, calculando una puntuación. Si la puntuación sube, sigue extendiendo. Si baja demasiado, se detiene.
+
+#### Fase 3 — Evaluación estadística
+
+Los alineamientos extendidos se evalúan para determinar si son **estadísticamente significativos** o si podrían haber ocurrido por azar.
+
+> [!IMPORTANT]
+> Esta estrategia hace que BLAST sea muy rápido, pero no garantiza encontrar el alineamiento óptimo en todos los casos. Para eso existen los algoritmos exactos como Smith-Waterman, que vimos anteriormente.
+
+### 3.3 Tipos de BLAST
+
+Dependiendo de qué tipo de secuencia usted tiene (la *query*) y qué tipo de base de datos quiere buscar (el *subject*), BLAST ofrece diferentes programas:
+
+| Programa    | Query                 | Base de datos         | ¿Cuándo usarlo?                                                         |
+|:------------|:----------------------|:----------------------|:------------------------------------------------------------------------|
+| **blastn**  | Nucleótidos           | Nucleótidos           | Buscar genes similares, identificar especies por 16S rRNA               |
+| **blastp**  | Proteínas             | Proteínas             | Buscar proteínas homólogas, anotar funciones                            |
+| **blastx**  | Nucleótidos (traduce) | Proteínas             | Tiene ADN y quiere buscar en bases de datos de proteínas                |
+| **tblastn** | Proteínas             | Nucleótidos (traduce) | Buscar genes en genomas no anotados usando proteínas como query         |
+| **tblastx** | Nucleótidos (traduce) | Nucleótidos (traduce) | Comparación traducida en ambas direcciones (más lento, menos frecuente) |
+
+### 3.4 Interpretación de resultados
+
+Cuando BLAST devuelve resultados, hay cuatro valores que debe aprender a interpretar:
+
+| Parámetro             | ¿Qué mide?                                                                             | ¿Qué significa un "buen" valor?                                              |
+|:----------------------|:---------------------------------------------------------------------------------------|:-----------------------------------------------------------------------------|
+| **E-value**           | Probabilidad de encontrar ese alineamiento por azar en una base de datos de ese tamaño | Mientras más bajo, mejor. Un E-value < 1e-5 suele considerarse significativo |
+| **Score (bit score)** | Puntuación normalizada del alineamiento                                                | Mientras más alto, mejor                                                     |
+| **% Identity**        | Porcentaje de posiciones idénticas en el alineamiento                                  | Depende del contexto biológico                                               |
+| **Query coverage**    | Qué porcentaje de su secuencia se alineó                                               | Un coverage bajo puede indicar que solo una parte de su secuencia es similar |
+
+> [!WARNING]
+> **Error frecuente:** un E-value bajo con un coverage del 10% puede significar que solo un dominio pequeño es similar, no que toda la proteína sea homóloga. Siempre mire los cuatro parámetros juntos.
+
+### 3.5 BLAST en la práctica
+
+BLAST se puede usar de dos formas principales:
+
+- **BLAST web** en [https://blast.ncbi.nlm.nih.gov/](https://blast.ncbi.nlm.nih.gov/) — ideal para búsquedas rápidas y exploratorias.
+- **BLAST en línea de comandos** — ideal para búsquedas automatizadas, grandes volúmenes de datos o bases de datos locales.
+
+En este módulo trabajaremos principalmente con la versión web. La versión de línea de comandos se cubrirá cuando sea necesario en módulos posteriores.
 
 ---
 
