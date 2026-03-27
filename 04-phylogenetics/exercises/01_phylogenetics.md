@@ -1,197 +1,544 @@
-# 🧬 Práctica: Análisis de secuencias 16S rRNA y construcción de un árbol filogenético
-
-Para realizar la siguiente práctica por favor use el software **MEGA X**, disponible de forma gratuita en el siguiente enlace oficial:  
-<https://www.megasoftware.net/>  
-
-El programa se puede instalar en sistemas operativos **Windows**, **macOS** o **Linux**. Si no lo tiene instalado previamente, descárguelo e instálelo antes de comenzar la práctica.  
+# 🧬 Práctica: Identificación bacteriana por análisis filogenético del gen 16S rRNA
 
 ## Introducción
 
-El análisis del gen 16S rRNA es una de las herramientas más utilizadas en microbiología para estudiar la diversidad bacteriana y establecer relaciones evolutivas entre especies. Este gen se encuentra en todos los procariotas y contiene regiones altamente conservadas junto con otras más variables, lo que lo convierte en un marcador molecular ideal para la identificación y clasificación bacteriana.  
+En microbiología, uno de los retos más comunes es identificar un microorganismo desconocido aislado de una muestra clínica, ambiental o industrial. Aunque las pruebas bioquímicas y la morfología aportan pistas, la identificación definitiva a menudo requiere comparar marcadores moleculares — en particular, el gen **16S rRNA** — contra secuencias de referencia depositadas en bases de datos públicas.
 
-Al comparar secuencias de 16S rRNA entre diferentes microorganismos, es posible evaluar su grado de similitud y construir **árboles filogenéticos**, representaciones gráficas que muestran los niveles de parentesco y divergencia evolutiva. Entre los métodos más utilizados se encuentran:  
+En esta práctica, usted recibirá una **secuencia 16S rRNA desconocida** correspondiente a uno de tres escenarios reales. Su trabajo será:
 
-- **Neighbor-Joining (NJ)**: método basado en distancias genéticas, rápido y ampliamente usado.  
-- **Máxima Verosimilitud (ML)**: método más robusto, basado en modelos de sustitución de nucleótidos, que proporciona estimaciones más precisas.  
+1. **Buscar secuencias similares** usando BLAST en NCBI.
+2. **Seleccionar y descargar** secuencias de referencia de al menos **10 géneros/especies diferentes**.
+3. **Construir un archivo FASTA combinado** que incluya las referencias y la secuencia desconocida.
+4. **Realizar un alineamiento múltiple** y **construir un árbol filogenético** en MEGA.
+5. **Interpretar el árbol** para proponer la identidad del microorganismo.
 
-En esta práctica trabajaremos con secuencias del gen **16S rRNA** de seis bacterias de importancia clínica y biotecnológica:  
+Esta práctica integra conceptos de los Módulos [1](../../01-introduction/README.md) (bases de datos), [3](../../03-sequence_analysis/README.md) (alineamiento y BLAST) y [4](../../04-phylogenetics/README.md) (filogenética).
 
-- *Escherichia coli* (**2 secuencias distintas**)  
-- *Salmonella enterica* serovar Typhi  
-- *Klebsiella pneumoniae*  
-- *Bacillus subtilis*  
-- *Pseudomonas aeruginosa*  
+---
 
-Además, durante el proceso de su investigación, usted como investigador también recibió una **secuencia 16S rRNA de una bacteria desconocida**, cuya tinción de Gram resultó resultando se Gram negativa y que presenta morfología de bacilo. Para este ejercicio, agregaremos dicha secuencia al archivo FASTA junto con las demás y construiremos un árbol filogenético que nos permitirá evaluar si esta bacteria desconocida corresponde a alguno de los microorganismos previamente seleccionados.  
+## 🎯 Objetivos
 
-De esta manera, los estudiantes experimentarán el uso del análisis molecular para apoyar la **identificación bacteriana**, reforzando el papel del gen 16S rRNA como herramienta central en microbiología clínica y ambiental.  
-
-## 🎯 Objetivo
-- Descargar secuencias de genes 16S rRNA de bacterias seleccionadas desde **NCBI**.  
-- Alinear las secuencias utilizando **MEGA**.  
-- Construir un árbol filogenético para visualizar las relaciones evolutivas.  
-
-## 🦠 Organismos a analizar
-Trabajaremos con 7 secuencias correspondientes a 6 bacterias conocidas y una desconocida:  
-
-- *Escherichia coli* (**2 secuencias**)  
-- *Salmonella enterica* serovar Typhi  
-- *Klebsiella pneumoniae*  
-- *Bacillus subtilis*  
-- *Pseudomonas aeruginosa*  
+- Aplicar **BLAST** para buscar secuencias homólogas a una secuencia problema.
+- Evaluar críticamente los resultados de BLAST: **% Identity**, **Query Cover**, **E-value**.
+- Seleccionar secuencias de referencia de **múltiples géneros y especies** para construir un árbol informativo.
+- Crear un archivo **FASTA multisecuencia** combinando referencias y la muestra desconocida.
+- Realizar un **alineamiento múltiple de secuencias (MSA)** con ClustalW o MUSCLE en MEGA.
+- Construir un **árbol filogenético** (Neighbor-Joining y/o Maximum Likelihood) con evaluación por **bootstrap**.
+- Interpretar el árbol para proponer una **identificación taxonómica**.
 
 ---
 
 ## 📦 Requisitos previos
-- Computador con **Windows/Linux/macOS**.  
-- Software [MEGA X](https://www.megasoftware.net/) instalado.  
-- Conexión a internet para acceder a **NCBI Nucleotide**.  
+
+- Computador con **Windows**, **macOS** o **Linux**.
+- Software [**MEGA X**](https://www.megasoftware.net/) instalado.
+- Conexión a internet para acceder a [NCBI BLAST](https://blast.ncbi.nlm.nih.gov/).
+- Haber trabajado con bases de datos biológicas en el [Módulo 1](../../01-introduction/exercises/01_databases.md).
+- Haber leído las secciones sobre BLAST y alineamiento en el [Módulo 3](../../03-sequence_analysis/README.md).
+- Haber leído los conceptos de filogenética en el [Módulo 4](../../04-phylogenetics/README.md).
+
+---
+
+## 🧫 Casos de estudio
+
+Esta práctica se organiza por **casos**. El profesor indicará cuál caso trabajar. Cada caso presenta un escenario real con una secuencia 16S rRNA desconocida y un contexto biológico diferente.
+
+> [!IMPORTANT]
+> Todas las secuencias se encuentran en el archivo [`data/unknown_seqs.fasta`](data/unknown_seqs.fasta). Descargue o copie **únicamente** la secuencia del caso asignado.
+
+### Caso A — Aislado clínico (bacilo Gram negativo)
+
+**Contexto:** En el laboratorio de microbiología clínica de un hospital se aisló una bacteria de un hemocultivo. La tinción de Gram mostró **bacilos Gram negativos** y las pruebas bioquímicas iniciales indican fermentación de lactosa. Se realizó la secuenciación parcial del gen 16S rRNA para confirmar la identidad.
+
+- **Secuencia:** `>unknown clinical bacterium` en `data/unknown_seqs.fasta`
+- **Pistas:** Gram negativa, bacilo, fermentadora de lactosa, origen clínico.
+- **Familia probable:** Enterobacteriaceae.
+
+### Caso B — Aislado ambiental de corteza de árbol (bacilo Gram negativo)
+
+**Contexto:** Durante un muestreo de biodiversidad en un bosque tropical, se aisló una bacteria de la corteza de un árbol de bosques del norte de Europa. La morfología muestra **bacilos Gram negativos**, no fermentadores. Se sospecha de un organismo asociado a la rizósfera.
+
+- **Secuencia:** `>unknown environment bacterium` en `data/unknown_seqs.fasta`
+- **Pistas:** Gram negativa, bacilo, no fermentadora, asociada a planta/suelo.
+- **Familias probables:** Rhizobiaceae, Bradyrhizobiaceae o Xanthomonadaceae.
+
+### Caso C — Actinobacterias del suelo (dos aislados)
+
+**Contexto:** En un proyecto de bioprospección, se aislaron dos colonias de aspecto pulverulento y olor terroso de muestras de suelo agrícola. La microscopía reveló filamentos ramificados compatibles con **actinobacterias**. Se sospecha que pertenecen al género *Streptomyces*, un grupo de enorme importancia biotecnológica por su producción de antibióticos.
+
+- **Secuencias:** `>unknown soil bacterium_1` y `>unknown soil bacterium_2` en `data/unknown_seqs.fasta`
+- **Pistas:** Gram positiva (alto contenido GC), filamentosa, olor terroso, suelo agrícola.
+- **Familia probable:** Streptomycetaceae.
+
+> [!NOTE]
+> En el Caso C se trabaja con **dos secuencias** del mismo ambiente. Parte del análisis será determinar si ambos aislados pertenecen a la misma especie o a especies diferentes dentro del mismo género.
 
 ---
 
 ## 🔬 Procedimiento
 
-### 1. Descargar secuencias 16S rRNA
-1. Ingresar a [NCBI Nucleotide](https://www.ncbi.nlm.nih.gov/nucleotide/).  
-2. Buscar:  
-   - `"16S rRNA Escherichia coli"`  
-   - `"16S rRNA Salmonella enterica serovar typhi"`  
-   - `"16S rRNA Klebsiella pneumoniae"`  
-   - `"16S rRNA Bacillus subtilis"`  
-   - `"16S rRNA Pseudomonas aeruginosa"`  
-3. Seleccionar **dos secuencias diferentes de _E. coli_** (de distintas cepas).  
-4. Descargar cada secuencia en formato **FASTA**.  
-5. Guardar los archivos en una carpeta llamada `16S_sequences`.  
+### Parte 1: Obtener la secuencia problema
+
+#### Paso 1 — Acceder al archivo de secuencias
+
+Las secuencias están disponibles en la carpeta `data/` de esta práctica:
+
+```text
+04-phylogenetics/
+└── exercises/
+    ├── 01_phylogenetics.md   ← esta guía
+    └── data/
+        └── unknown_seqs.fasta  ← todas las secuencias problema
+```
+
+Abra el archivo `data/unknown_seqs.fasta` en un editor de texto y copie **únicamente** la secuencia correspondiente a su caso asignado.
+
+#### Paso 2 — Crear un archivo individual para su caso
+
+Cree un archivo FASTA separado para su secuencia problema. Puede hacerlo de dos formas:
+
+**Opción A — Manual:** copie la secuencia y péguela en un archivo nuevo. Guárdelo como:
+
+```text
+caso_X_unknown.fasta
+```
+
+(donde `X` es A, B, C1 o C2 según su caso).
+
+**Opción B — Desde terminal (Codespaces):**
+
+```bash
+# Crear carpeta de trabajo
+mkdir -p phylo_analysis/data phylo_analysis/results
+cd phylo_analysis
+
+# Extraer solo la secuencia de su caso (ejemplo para Caso A):
+grep -A 100 "^>Case_A" ../data/unknown_seqs.fasta | sed '/^>Case_B/,$d' > data/caso_A_unknown.fasta
+
+# Verificar
+head data/caso_A_unknown.fasta
+```
+
+> [!TIP]
+> El comando `grep -A 100` busca el encabezado y muestra las 100 líneas siguientes. El `sed '/^>Case_B/,$d'` elimina todo desde la siguiente secuencia en adelante. Si trabaja con el Caso C, ajuste los nombres:
+> ```bash
+> grep -A 100 "^>Case_C1" ../data/unknown_seqs.fasta | sed '/^>Case_C2/,$d' > data/caso_C1_unknown.fasta
+> ```
+
+#### Paso 3 — Inspección rápida de la secuencia
+
+Antes de hacer BLAST, observe su secuencia:
+
+```bash
+# Longitud aproximada (en nucleótidos)
+grep -v "^>" data/caso_A_unknown.fasta | tr -d '\n' | wc -c
+
+# Primeros 200 caracteres
+grep -v "^>" data/caso_A_unknown.fasta | tr -d '\n' | head -c 200
+echo ""
+```
+
+**Preguntas de inspección:**
+- ¿Cuántos nucleótidos tiene la secuencia?
+- ¿Contiene caracteres ambiguos (`N`, `R`, `Y`, etc.)?
+- ¿Es una longitud razonable para un gen 16S rRNA parcial (~800–1500 pb)?
+
+> [!NOTE]
+> **Recordatorio:** el gen 16S rRNA completo tiene ~1542 pb en *E. coli*. Una secuencia parcial típica obtenida por Sanger abarca 800–1000 pb. Si su secuencia es mucho más corta, el poder de resolución filogenética puede ser limitado.
 
 ---
 
-### 2. Preparar un archivo FASTA combinado
-1. Abrir un editor de texto (Notepad, VS Code, etc.).  
-2. Copiar y pegar todas las secuencias descargadas en un único archivo.  
-3. Guardar el archivo como:  
+### Parte 2: Identificación preliminar con BLAST
 
+#### Paso 1 — Ejecutar BLASTn en NCBI
+
+1. Vaya a [NCBI Nucleotide BLAST](https://blast.ncbi.nlm.nih.gov/Blast.cgi) y seleccione **Nucleotide BLAST**.
+2. Pegue su secuencia en el recuadro *Enter Query Sequence*.
+3. En **Database**, seleccione:
+   - **`16S ribosomal RNA sequences (Bacteria and Archaea)`** — esta es la base de datos más adecuada para identificación de procariotas por 16S.
+
+> [!TIP]
+> Si la base de datos `16S ribosomal RNA sequences` no aparece, seleccione **`rRNA/ITS databases`** y luego la subcategoría correspondiente. Como alternativa, puede usar `nr/nt` (nucleotide collection), pero los resultados serán más difíciles de filtrar.
+
+4. Parámetros recomendados:
+   - **Max target sequences:** `50` (queremos ver variedad de hits).
+   - **Expect threshold (E-value):** `1e-5` (valor por defecto, adecuado).
+   - Marque la casilla **"Show results in a new window"** para no perder la página.
+5. Haga clic en **BLAST** y espere los resultados (puede tardar 30 segundos a 2 minutos).
+
+#### Paso 2 — Analizar los resultados
+
+Cuando aparezcan los resultados, observe la **tabla de hits** (*Descriptions*). Registre para los **10 mejores hits**:
+
+| Dato a registrar | ¿Dónde lo encuentra?                 |
+|:-----------------|:--------------------------------------|
+| **Accession**    | Columna "Accession" en la tabla       |
+| **Organism**     | Nombre del organismo en la descripción |
+| **% Identity**   | Columna "Per. Ident"                  |
+| **Query Cover**  | Columna "Query Cover"                 |
+| **E-value**      | Columna "E value"                     |
+| **Bit Score**    | Columna "Total Score"                 |
+
+> [!WARNING]
+> **No se quede solo con el primer hit.** Es común que los primeros 5–10 hits tengan porcentajes de identidad muy similares (por ejemplo, 99.5% vs. 99.3%). Revise las descripciones para ver si pertenecen a **géneros diferentes** o son todas de la misma especie.
+
+#### Paso 3 — Interpretar la identificación preliminar
+
+Use estos criterios empíricos para 16S rRNA:
+
+```text
+┌─────────────────────────────┬──────────────────────────────────────────────────┐
+│  % Identity (16S rRNA)      │  Interpretación                                  │
+├─────────────────────────────┼──────────────────────────────────────────────────┤
+│  ≥ 99%                      │  Muy probable: misma especie                     │
+│  97 – 99%                   │  Probable: misma especie o especie muy cercana   │
+│  95 – 97%                   │  Probable: mismo género, diferente especie       │
+│  90 – 95%                   │  Probable: misma familia, diferente género       │
+│  < 90%                      │  Relación lejana; puede ser familia diferente    │
+└─────────────────────────────┴──────────────────────────────────────────────────┘
 ```
-16S_all.fasta
+
+> [!IMPORTANT]
+> **Recuerde:** BLAST es una herramienta de búsqueda por similitud, **no un método filogenético**. El % Identity de un BLAST no reemplaza un árbol filogenético. Dos secuencias pueden tener 98% de identidad y pertenecer a géneros diferentes (o tener 99.5% y ser cepas distintas de la misma especie). El árbol que construirá en las siguientes partes es la evidencia más sólida.
+
+**Preguntas para registrar en su informe:**
+1. ¿Cuál es el organismo del **mejor hit** (mayor % Identity y Query Cover)?
+2. ¿Todos los top-10 hits pertenecen al **mismo género**? ¿O hay mezcla de géneros?
+3. ¿Hay diferencia significativa entre el primer y el décimo hit en términos de % Identity?
+4. Basándose solo en BLAST, ¿a qué especie cree que pertenece su secuencia desconocida? ¿Con qué nivel de confianza?
+
+> [!TIP]
+> **Para el Caso C:** ejecute BLAST para **ambas** secuencias (C1 y C2) por separado. Compare los resultados: ¿ambas dan el mismo organismo como mejor hit? ¿O sugieren especies diferentes dentro del mismo género?
+
+---
+
+### Parte 3: Selección y descarga de secuencias de referencia
+
+Esta es la parte clave de la práctica. Un árbol filogenético es tan informativo como las **secuencias de referencia** que incluya. Si solo descarga secuencias de una sola especie, el árbol no le dirá mucho. Si incluye secuencias de múltiples géneros, podrá ver dónde se posiciona su muestra desconocida en un contexto evolutivo amplio.
+
+#### Paso 1 — Definir el conjunto de referencias
+
+A partir de los resultados de BLAST, seleccione **al menos 10 secuencias de referencia** que cumplan:
+
+| Criterio                                              | Razón                                                                           |
+|:------------------------------------------------------|:--------------------------------------------------------------------------------|
+| Al menos **3–4 géneros diferentes**                   | Para dar contexto filogenético amplio                                           |
+| Al menos **2–3 especies del género más cercano**      | Para evaluar a qué especie se acerca más su muestra                             |
+| Al menos **1 secuencia de un grupo externo (outgroup)** | Para enraizar el árbol (por ejemplo, un Firmicute si sus hits son Proteobacteria) |
+| Preferir secuencias de **cepas tipo** (*type strain*) | Son la referencia oficial de cada especie                                       |
+
+> [!TIP]
+> **¿Qué es un outgroup?** Es una secuencia de un organismo que usted sabe que es más lejano que todos los demás en su análisis. Sirve para **enraizar** el árbol (definir qué dirección es "hacia el pasado"). Por ejemplo:
+> - Si trabaja con **Enterobacteriaceae** (Caso A) → un buen outgroup podría ser *Bacillus subtilis* o *Pseudomonas aeruginosa*.
+> - Si trabaja con **Rhizobiaceae** (Caso B) → un buen outgroup podría ser *Escherichia coli*.
+> - Si trabaja con **Streptomyces** (Caso C) → un buen outgroup podría ser *Bacillus subtilis* o *Mycobacterium tuberculosis*.
+
+#### Paso 2 — Descargar las secuencias de referencia
+
+Tiene dos opciones:
+
+**Opción A — Desde la página de resultados de BLAST:**
+
+1. En los resultados de BLAST, marque las casillas de las secuencias que desea descargar.
+2. Haga clic en **Download** → **FASTA (aligned sequences)** o **FASTA (complete sequences)**.
+3. Guarde el archivo como `blast_references.fasta`.
+
+**Opción B — Búsqueda individual en NCBI Nucleotide:**
+
+1. Vaya a [NCBI Nucleotide](https://www.ncbi.nlm.nih.gov/nucleotide/).
+2. Busque por nombre: por ejemplo, `"Salmonella enterica" 16S rRNA type strain`.
+3. Seleccione un registro apropiado (secuencia parcial o completa del 16S).
+4. Descargue en formato FASTA: **Send to → File → FASTA**.
+
+**Opción C — Descarga con `wget` desde terminal:**
+
+```bash
+# Ejemplo: descargar una secuencia por su accession
+ACCESSION="NR_114042"
+wget -O data/ref_${ACCESSION}.fasta \
+  "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=${ACCESSION}&rettype=fasta&retmode=text"
 ```
-4. Ahora agregue al archivo fasta creado previamente la siguiente secuencia del microorganismo desconocido.
 
-```
->16S ribosomal RNA gene, partial sequence, unknown bacterium
-TGAACGCTGGCGGCAGGCCTAACACATGCAAGTCGAGCGGTAGCACAGAGAGCTTGCTCTCGGGTGACGA
-GCGGCGGACGGGTGAGTAATGTCTGGGAAACTGCCTGATGGAGGGGGATAACTACTGGAAACGGTAGCTA
-ATACCGCATAACGTCGCAAGACCAAAGTGGGGGACCTTCGGGCCTCATGCCATCAGATGTGCCCAGATGG
-GATTAGCTAGTAGGTGGGGTAACGGCTCACCTAGGCGACGATCCCTAGCTGGTCTGAGAGGATGACCAGC
-CACACTGGAACTGAGACACGGTCCAGACTCCTACGGGAGGCAGCAGTGGGGAATATTGCACAATGGGCGC
-AAGCCTGATGCAGCCATGCCGCGTGTGTGAAGAAGGCCTTCGGGTTGTAAAGCACTTTCAGCGGGGAGGA
-AGGCGATAAGGTTAATAACCTTGTCGATTGACGTTACCCGCAGAAGAAGCACCGGCTAACTCCGTGCCAG
-CAGCCGCGGTAATACGGAGGGTGCAAGCGTTAATCGGAATTACTGGGCGTAAAGCGCACGCAGGCGGTCT
-GTCAAGTCGGATGTGAAATCCCCGGGCTCAACCTGGGAACTGCATTCGAAACTGGCAGGCTAGAGTCTTG
-TAGAGGGGGGTAGAATTCCAGGTGTAGCGGTGAAATGCGTAGAGATCTGGAGGAATACCGGTGGCGAAGG
-CGGCCCCCTGGACAAAGACTGACGCTCAGGTGCGAAAGCGTGGGGAGCAAACAGGATTAGATACCCTGGT
-AGTCCACGCCGTAAACGATGTCGATTTGGAGGTTGTGCCCTTGAGGCGTGGCTTCCGGAGCTAACGCGTT
-AAATCGACCGCCTGGGGAGTACGGCCGCAAGGTTAAAACTCAAATGAATTGACGGGGGCCCGCACAAGCG
-GTGGAGCATGTGGTTTAATTCGATGCAACGCGAAGAACCTTACCTGGTCTTGACATCCACAGAACTTAGC
-AGAGATGCTTTGGTGCCTTCGGGAACTGTGAGACAGGTGCTGCATGGCTGTCGTCAGCTCGTGTTGTGAA
-ATGTTGGGTTAAGTCCCGCAACGAGCGCAACCCTTATCCTTTGTTGCCAGCGGTTAGGCCGGGAACTCAA
-AGGAGACTGCCAGTGATAAACTGGAGGAAGGTGGGGATGACGTCAAGTCATCATGGCCCTTACGACCAGG
-GCTACACACGTGCTACAATGGCATATACAAAGAGAAGCGACCTCGCGAGAGCAAGCGGACCTCATAAAGT
-ATGTCGTAGTCCGGATTGGAGTCTGCAACTCGACTCCATGAAGTCGGAATCGCTAGTAATCGTAGATCAG
-AATGCTACGGTGAATACGTTCCCGGGCCTTGTACACACCGCCCGTCACACCATGGGAGTGGGTTGCAAAA
-GAAGTAGGTAGCTTAACCTTCGGGAGGGCGCTTACCACTTTGTGATTCATGA
+> [!WARNING]
+> Si obtiene el error `data/ref_NR_114042.fasta: No such file or directory`, ejecute primero `mkdir -p data`.
+
+> [!TIP]
+> **Descarga en lote:** si tiene múltiples accessions, puede descargarlos todos de una vez separándolos por comas:
+> ```bash
+> ACCESSIONS="NR_114042,NR_028687,NR_113597,NR_074911"
+> wget -O data/all_references.fasta \
+>   "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=${ACCESSIONS}&rettype=fasta&retmode=text"
+> ```
+
+#### Paso 3 — Organizar las secuencias descargadas
+
+Verifique que tiene al menos 10 secuencias de referencia:
+
+```bash
+grep -c "^>" data/*.fasta
 ```
 
-### 3. Identificación de la secuencia desconocida mediante BLAST (NCBI)
+Registre en una tabla como la siguiente (ejemplo):
 
-Durante la práctica hemos añadido una secuencia 16S rRNA **desconocida** (tinción Gram negativa, bacilo) al archivo `16S_all.fasta`. Antes de construir el árbol filogenético definitivo, identifique esta secuencia usando **BLASTn** en NCBI para evaluar a qué microorganismo se parece más.
+| # | Accession  | Organismo                            | Rol en el árbol         |
+|:--|:-----------|:-------------------------------------|:------------------------|
+| 1 | NR_114042  | *Escherichia coli* (type strain)     | Referencia cercana      |
+| 2 | NR_028687  | *Salmonella enterica* serovar Typhi  | Referencia cercana      |
+| 3 | NR_113597  | *Klebsiella pneumoniae*              | Referencia del género   |
+| 4 | NR_074911  | *Pseudomonas aeruginosa*             | Otro género (γ-Proteo.) |
+| 5 | ...        | ...                                  | ...                     |
+| 10| NR_027552  | *Bacillus subtilis*                  | **Outgroup**            |
+| 11| —          | Secuencia desconocida (Caso X)       | **Query**               |
 
-#### 3.1 Preparación
-1. Copie la secuencia en FASTA (incluyendo la línea de encabezado `>`).
+---
 
-#### 3.2 Ejecutar BLASTn en NCBI
-1. Ir a: **https://blast.ncbi.nlm.nih.gov/Blast.cgi** → **Nucleotide BLAST (BLASTn)**.  
-2. Pegue la secuencia en el recuadro *Enter Query Sequence* o use *Choose file* para subir `unknown_16S.fasta`.  
-3. En **Database**, seleccionar preferentemente:  
-   - **`16S ribosomal RNA sequences (Bacteria and Archaea)`** si está disponible, **o**  
-   - **`nr/nt (nucleotide collection)`** si desea búsqueda más amplia.  
-4. Ajustar parámetros recomendados:  
-   - **Max target sequences:** 10–50 (para ver varias coincidencias).  
-   - **Expect threshold (E-value):** 1e-5 (por defecto está bien).  
-   - Mantener el resto como predeterminado.  
-   - **Truco**: Seleccione la casilla abrir en una nueva ventana para no perder la página actual.
-5. Ejecutar **BLAST** y esperar a que aparezcan los resultados.
+### Parte 4: Crear el archivo FASTA combinado
 
-#### 3.3 Interpretación de resultados
-Revise la lista de hits alineados y registre para las mejores coincidencias (ordenadas por bit score / % identidad):
+#### Paso 1 — Unir todas las secuencias en un solo archivo
 
-- **Accession / Organism** (nombre del organismo y acceso).  
-- **% Identity** (porcentaje de identidades en la alineación).  
-- **Query cover** (porcentaje de la secuencia consulta que está alineada).  
-- **Alignment length** (número de nucleótidos alineados).  
-- **E-value** y **Bit score**.  
-- **Descripción del acceso (strain/cepa)** si está disponible.
+Necesita un **único archivo FASTA** que contenga todas las secuencias de referencia + la secuencia desconocida.
 
-Criterios prácticos para interpretación (reglas empíricas comunes en 16S):  
-- **≥ 99% identidad** y **query cover alta (≥ 95%)** → Muy probable correspondencia a la **misma especie**.  
-- **97–99% identidad** → Probable correspondencia a **misma especie o especie cercana**; revisar alineamiento completo y descripciones de cepas.  
-- **< 97% identidad** → Probable correspondencia **solo a nivel de género** o posible organismo no descrito con exactitud por 16S; se requieren genes adicionales o genómica completa para identificación de especie.
+**Opción A — Manual (editor de texto):**
 
-> Nota: Estos umbrales son orientativos. La identificación definitiva puede requerir marcadores adicionales o análisis genómico.
+1. Abra un editor de texto (Notepad, VS Code, etc.).
+2. Copie y pegue todas las secuencias de referencia descargadas.
+3. Al final, agregue la secuencia de su caso.
+4. Guarde como `16S_analysis.fasta`.
 
-#### 3.4 Acciones tras BLAST
-1. Anote la **mejor coincidencia** (organismo, acceso, % identity, query cover). Incluya el enlace o accession (por ejemplo: `NR_XXXXX`) en su informe.  
-2. Si la mejor coincidencia concuerda con una de las seis especies objetivo (por ejemplo *Klebsiella pneumoniae*), anote la **probable identificación** y la evidencia (valores arriba).  
-3. Si la coincidencia es ambigua, considere:  
-   - Ejecutar BLAST contra la base `nr/nt` adicionalmente.  
-   - Comparar top-hits y sus alineamientos completos.  
-   - Construir un árbol filogenético que incluya las secuencias top-hit (descargue la referencia desde NCBI) para confirmación visual.  
+**Opción B — Desde terminal:**
 
-#### 3.5 Exportar y documentar resultados
-- Descargar y guardar la página de resultados BLAST (opción **Download** → formatos disponibles) como `unknown_blast_results.html` o `unknown_blast.tsv`.  
-- Registrar en la entrega: accession, nombre del mejor hit, % identity, query cover, E-value, y una breve conclusión (1–2 líneas) sobre la identificación probable.  
-- Incorporar la identificación (por ejemplo, `unknown -> Klebsiella pneumoniae (accession XXXXX)`) como etiqueta adicional en el árbol filogenético final o en el informe.
+```bash
+# Combinar todas las referencias y la secuencia desconocida
+cat data/all_references.fasta data/caso_A_unknown.fasta > data/16S_analysis.fasta
 
-#### 3.6 (Opcional) Re-evaluación filogenética
-Si BLAST sugiere que la secuencia desconocida pertenece a una de las especies incluidas en el experimento (p. ej. *E. coli*), vamos a construir el árbol filogenético y observar la posición de la secuencia desconocida frente a las secuencias de referencia descargadas: ¿se agrupa con la especie sugerida por BLAST? Esto proporciona una verificación filogenética visual de la llamada taxonómica.
-
-
-### 4. Alineamiento múltiple en MEGA
-1. Abrir MEGA X.
-2. Ir a: Align → Edit/Build Alignment.
-3. Crear un nuevo archivo de alineamiento seleccionando DNA como tipo de datos.
-4. Importar el archivo `16S_all.fasta`.
-5. Verificar que todas las secuencias estén cargadas.
-6. Realizar el alineamiento múltiple:
-   - Menú: Alignment → Align by ClustalW o Align by MUSCLE.
-8. Guardar el alineamiento como:
-
+# Verificar el número total de secuencias
+grep -c "^>" data/16S_analysis.fasta
 ```
+
+> [!WARNING]
+> **Verifique siempre** que:
+> - Cada secuencia tiene su encabezado (`>`) en una línea independiente.
+> - No hay líneas en blanco dentro de una secuencia.
+> - El archivo tiene al menos **11 secuencias** (10 referencias + 1 desconocida).
+> - Para el **Caso C**, incluya **ambas** secuencias desconocidas (C1 y C2), lo que da al menos **12 secuencias**.
+
+#### Paso 2 — Renombrar los encabezados (recomendado)
+
+Los encabezados de NCBI suelen ser muy largos. Para que el árbol sea legible, conviene acortarlos. En el editor de texto, renombre los encabezados de forma informativa pero breve:
+
+```text
+Antes:
+>NR_114042.1 Escherichia coli strain U 5/41 16S ribosomal RNA, partial sequence
+
+Después:
+>E_coli_U541_NR114042
+```
+
+> [!TIP]
+> Incluya siempre el **nombre del organismo** y el **accession** en el encabezado abreviado. Así puede rastrear cada secuencia si necesita verificar algo. Para la secuencia desconocida, use algo como `>UNKNOWN_CaseA`.
+
+---
+
+### Parte 5: Alineamiento múltiple en MEGA
+
+#### Paso 1 — Importar las secuencias
+
+1. Abra **MEGA X**.
+2. Vaya a **Align → Edit/Build Alignment**.
+3. Seleccione **Create a new alignment** → tipo de datos: **DNA**.
+4. En la ventana del editor, vaya a **Edit → Insert sequence from file** (o arrastre el archivo).
+5. Importe el archivo `16S_analysis.fasta`.
+6. Verifique que **todas** las secuencias aparecen en la lista (revise el número en la esquina inferior).
+
+#### Paso 2 — Realizar el alineamiento
+
+1. Seleccione **todas** las secuencias (Ctrl+A o Cmd+A).
+2. Vaya a **Alignment → Align by MUSCLE** (recomendado) o **Align by ClustalW**.
+3. Deje los parámetros por defecto y haga clic en **OK**.
+4. Espere a que termine el alineamiento (puede tardar unos segundos a un minuto).
+
+> [!TIP]
+> **MUSCLE vs. ClustalW:** ambos son algoritmos de alineamiento múltiple. MUSCLE suele ser más rápido y preciso para conjuntos medianos de secuencias. ClustalW es más clásico y ampliamente citado. Para esta práctica, cualquiera de los dos funciona bien.
+
+#### Paso 3 — Inspeccionar el alineamiento
+
+Revise visualmente el alineamiento:
+
+- ¿Hay **regiones muy conservadas** (columnas donde todas las secuencias tienen la misma base)?
+- ¿Hay **regiones variables** (columnas con muchas diferencias)?
+- ¿La secuencia desconocida tiene muchos **gaps** respecto a las demás? (esto podría indicar que es muy divergente o que la secuencia es de baja calidad).
+
+> [!WARNING]
+> Si observa que una secuencia tiene **muchos gaps** al inicio o al final mientras las demás no, puede ser que las secuencias tengan longitudes muy diferentes. Considere **recortar** (*trim*) los extremos del alineamiento para que todas las secuencias cubran la misma región.
+
+#### Paso 4 — Guardar el alineamiento
+
+Guarde el alineamiento en formato MEGA:
+
+```text
 16S_alignment.meg
 ```
 
-### 5. Construcción del árbol filogenético
-1. Abrir el archivo de alineamiento en MEGA.
-2. Ir a: Phylogeny → Construct/Test Maximum Likelihood Tree. 
-   - Alternativa rápida: Neighbor-Joining Tree.
-3. Seleccionar un modelo de sustitución (ejemplo: Tamura-Nei).
-4. Activar la opción de Bootstrap (500 repeticiones) para evaluar soporte estadístico.
-5. Generar el árbol.
+También puede exportar en formato FASTA alineado por si necesita usarlo en otro software.
 
-### 6. Visualización y exportación
-1. Explorar el árbol y verificar la agrupación:
-	- _E. coli_ debe agruparse con _Salmonella typhi_ y _K. pneumoniae_ (Proteobacterias γ).
-	- _Bacillus subtilis_ (Firmicutes) debe aparecer más distante.
-	- _Pseudomonas aeruginosa_ (Proteobacteria γ) debe estar separada de _E. coli_.
-2. Exportar el árbol en dos formatos:
+---
 
+### Parte 6: Construcción del árbol filogenético
+
+#### Paso 1 — Abrir el alineamiento para análisis
+
+1. En MEGA X, vaya a **File → Open a File/Session**.
+2. Abra el archivo `16S_alignment.meg`.
+3. MEGA le preguntará qué desea hacer → seleccione **Analyze**.
+
+#### Paso 2 — Construir el árbol por Neighbor-Joining (NJ)
+
+1. Vaya a **Phylogeny → Construct/Test Neighbor-Joining Tree**.
+2. Configure los parámetros:
+   - **Model/Method:** Tamura-Nei (para nucleótidos).
+   - **Test of Phylogeny:** Bootstrap method.
+   - **No. of Bootstrap Replications:** **500** (mínimo recomendado; 1000 es mejor si tiene tiempo).
+   - **Gaps/Missing Data Treatment:** Pairwise deletion o Complete deletion.
+3. Haga clic en **Compute**.
+
+> [!NOTE]
+> **¿Por qué Neighbor-Joining?** Es rápido, intuitivo y produce resultados razonables para conjuntos pequeños de secuencias con divergencia moderada. Es un buen punto de partida antes de usar métodos más complejos.
+
+#### Paso 3 — (Opcional) Construir el árbol por Maximum Likelihood (ML)
+
+Si el tiempo lo permite, construya también un árbol ML para comparar:
+
+1. Vaya a **Phylogeny → Construct/Test Maximum Likelihood Tree**.
+2. Use el mismo modelo (Tamura-Nei) y bootstrap (**500** réplicas).
+3. Haga clic en **Compute** (este método tarda más que NJ).
+
+> [!TIP]
+> **NJ vs. ML:**
+> | Característica | Neighbor-Joining | Maximum Likelihood |
+> |:---------------|:-----------------|:-------------------|
+> | Velocidad | Rápido | Más lento |
+> | Base teórica | Distancias | Modelo probabilístico |
+> | Precisión | Buena para datos simples | Más robusto con datos complejos |
+> | Bootstrap | Rápido | Puede ser lento con muchas réplicas |
+
+---
+
+### Parte 7: Interpretación del árbol
+
+#### Paso 1 — Visualización
+
+1. En la ventana del árbol, explore las opciones de visualización:
+   - **Topology only** vs. **Branch lengths** (con longitudes de rama proporcionales a la distancia).
+   - Active la opción de mostrar **valores de bootstrap** en los nodos.
+
+2. Identifique en el árbol:
+   - ¿Dónde se posiciona su **secuencia desconocida**?
+   - ¿Con qué especie(s) de referencia se agrupa?
+   - ¿El valor de bootstrap del nodo que la une a su grupo más cercano es **alto** (≥ 70%) o **bajo**?
+
+```text
+Ejemplo de lectura de un árbol (esquemático):
+
+  ┌──── E. coli cepa 1
+  ├──── E. coli cepa 2
+──┤ 95%
+  ├──── UNKNOWN_CaseA         ← ¿Se agrupa con E. coli? ¿Bootstrap alto?
+  │
+  ├──── Salmonella enterica
+  │ 88%
+  ├──── Klebsiella pneumoniae
+  │
+  └──── Bacillus subtilis     ← outgroup (la rama más lejana)
 ```
-tree.png     # Imagen del árbol
-tree.nwk     # Archivo del árbol en formato Newick
-```
+
+#### Paso 2 — Preguntas de interpretación
+
+Responda las siguientes preguntas en su informe:
+
+1. **¿Con qué especie se agrupa su secuencia desconocida?** ¿Es consistente con lo que predijo BLAST?
+2. **¿El soporte de bootstrap es alto?** Un valor ≥ 70% generalmente se considera un soporte moderado-alto. Si es < 50%, la agrupación no es confiable.
+3. **¿El outgroup se posiciona correctamente?** Debería estar en la rama más lejana del árbol.
+4. **¿Las especies del mismo género se agrupan juntas?** Por ejemplo, si incluyó dos cepas de *E. coli*, ¿están en la misma rama?
+5. **¿Hay alguna agrupación inesperada?** ¿Alguna especie que esperaba ver lejos aparece cerca, o viceversa?
+
+> [!TIP]
+> **Para el Caso C:** preste especial atención a la relación entre C1 y C2:
+> - ¿Se agrupan juntas en la misma rama?
+> - ¿Están más cerca entre sí que de cualquier referencia de *Streptomyces*?
+> - ¿Podrían ser la misma especie o son especies diferentes del mismo género?
+
+#### Paso 3 — Exportar el árbol
+
+Guarde el árbol en dos formatos:
+
+1. **Imagen:** haga clic derecho sobre el árbol → **Image → Save as PNG/PDF**.
+   ```text
+   tree_NJ.png
+   ```
+2. **Formato Newick:** **File → Export Current Tree (Newick)**.
+   ```text
+   tree_NJ.nwk
+   ```
+
+> [!NOTE]
+> El formato **Newick** es un estándar de texto plano para representar árboles filogenéticos. Es útil para compartir árboles, importarlos en otros programas (como iTOL, FigTree, o R) o incluirlos en publicaciones.
+>
+> Ejemplo de un árbol en formato Newick:
+> ```text
+> ((E_coli_1:0.002,E_coli_2:0.003):0.01,S_enterica:0.015,B_subtilis:0.2);
+> ```
+
+---
+
+### Parte 8: Informe final
+
+Prepare un informe breve (1–2 páginas) que incluya:
+
+| Sección                          | Contenido                                                                                                                  |
+|:---------------------------------|:---------------------------------------------------------------------------------------------------------------------------|
+| **Caso asignado**                | Indique cuál caso trabajó (A, B o C) y el contexto biológico                                                               |
+| **Resultados de BLAST**          | Tabla con los 10 mejores hits (accession, organismo, % Identity, Query Cover, E-value)                                     |
+| **Identificación preliminar**    | ¿A qué organismo apuntan los resultados de BLAST? ¿Con qué confianza?                                                     |
+| **Tabla de secuencias de referencia** | Lista de las secuencias incluidas en el árbol (accession, organismo, rol)                                             |
+| **Árbol filogenético**           | Imagen del árbol con valores de bootstrap (incluya NJ y ML si hizo ambos)                                                  |
+| **Interpretación del árbol**     | ¿Dónde se posiciona la secuencia desconocida? ¿Es consistente con BLAST? ¿El bootstrap lo respalda?                        |
+| **Conclusión**                   | Identidad propuesta del organismo desconocido + nivel de confianza + evidencia que la respalda                              |
+
+---
 
 ## ❓ Preguntas para reflexionar
-1. ¿Las secuencias de _E. coli_ se agruparon juntas como se esperaba?
-2. ¿Qué tan diferentes son _E. coli_ y _Salmonella enterica serovar Typhi_ en el árbol?
-3. ¿Por qué _Bacillus subtilis_ aparece en una rama más alejada?
-4. ¿Qué representan los valores de bootstrap en el árbol?
-5. ¿Qué aplicaciones prácticas tiene el análisis de 16S rRNA en microbiología clínica y ambiental?
-6. ¿Cúal es el microorganismo desconocido?
+
+1. Si BLAST sugiere que su secuencia tiene 99.5% de identidad con *Especie X*, pero en el árbol filogenético se agrupa con *Especie Y* (con alto bootstrap), ¿en cuál resultado confía más? ¿Por qué?
+2. ¿Por qué es importante incluir un **outgroup** en el árbol? ¿Qué pasaría si no lo incluyera?
+3. Si los primeros 10 hits de BLAST tienen entre 98.5% y 99.2% de identidad con **3 géneros diferentes**, ¿puede afirmar con certeza a qué género pertenece su secuencia? ¿Qué haría para resolver la ambigüedad?
+4. ¿Por qué el gen **16S rRNA** es útil pero **no suficiente** para distinguir entre todas las especies bacterianas? ¿Qué otros marcadores o aproximaciones complementarias existen? (Revise la [sección 1.4 del README del Módulo 4](../README.md)).
+5. **Para el Caso C:** si ambas secuencias (C1 y C2) se agrupan juntas pero lejos de cualquier especie descrita de *Streptomyces*, ¿qué podría significar esto desde el punto de vista taxonómico?
+6. ¿Qué representan los **valores de bootstrap** en cada nodo del árbol? ¿Un nodo con bootstrap de 45% es confiable?
+7. ¿Cómo podría afectar la **calidad del alineamiento** al resultado del árbol filogenético?
+
+---
+
+## 🏆 Reto adicional (opcional)
+
+Si terminó la práctica y quiere profundizar:
+
+- **Reto 1:** Descargue **20 secuencias** (en lugar de 10) de referencia, incluyendo más especies de la familia más cercana a su secuencia desconocida. Reconstruya el árbol y compare: ¿cambia la posición de su secuencia desconocida?
+
+- **Reto 2:** Exporte el árbol en formato Newick y visualícelo en [**iTOL** (Interactive Tree of Life)](https://itol.embl.de/). Explore las opciones de visualización y coloreado.
+
+- **Reto 3 (Caso C):** Calcule la **distancia genética** (en MEGA: **Distance → Compute Pairwise Distances**) entre C1 y C2. Compare ese valor con la distancia entre especies conocidas de *Streptomyces* en su árbol. ¿Están C1 y C2 más cerca entre sí que entre dos especies conocidas?
+
+- **Reto 4:** Repita el BLAST usando la base de datos `nr/nt` en lugar de `16S ribosomal RNA sequences`. ¿Cambian los resultados? ¿Aparecen hits adicionales de organismos no cultivados (*uncultured bacterium*)?
+
+---
+
+## 📚 Recursos adicionales
+
+- [NCBI BLAST](https://blast.ncbi.nlm.nih.gov/) — búsqueda por similitud.
+- [MEGA Software](https://www.megasoftware.net/) — alineamiento y filogenética.
+- [iTOL](https://itol.embl.de/) — visualización interactiva de árboles.
+- [FigTree](http://tree.bio.ed.ac.uk/software/figtree/) — visualización de árboles en escritorio.
+- [SILVA Database](https://www.arb-silva.de/) — base de datos curada de secuencias rRNA.
+- [EzBioCloud](https://www.ezbiocloud.net/) — identificación de procariotas por 16S con cepas tipo.
+- [README del Módulo 4](../README.md) — conceptos de filogenética, MSA, modelos de sustitución y métodos de construcción de árboles.
+

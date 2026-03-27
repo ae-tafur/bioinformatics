@@ -744,7 +744,7 @@ En el **Módulo 5** (Secuenciación) entenderá cómo se generan los datos con l
 
 ## Prácticas del módulo
 
-| Práctica                                                              | Descripción                                                                                                           |
-|:----------------------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------|
-| [Análisis filogenético con 16S rRNA](exercises/01_phylogenetics.md) | Alineamiento de secuencias 16S, construcción de árboles NJ y ML en MEGA, e identificación de una bacteria desconocida |
+| Práctica                                                                                          | Descripción                                                                                                                                                              |
+|:--------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [Identificación bacteriana por análisis filogenético del 16S rRNA](exercises/01_phylogenetics.md) | Práctica por casos (clínico, ambiental, Streptomyces): BLAST, selección de referencias, alineamiento múltiple, construcción de árboles NJ/ML en MEGA e identificación |
 
