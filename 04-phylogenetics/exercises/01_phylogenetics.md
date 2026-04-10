@@ -348,12 +348,27 @@ Después:
 
 #### Paso 1 — Importar las secuencias
 
+En este punto existen dos formas de hacerlo: 
+
+En el primer caso, cargando el archivo FASTA directamente (es el más sencillo):
+
+1. Abra **MEGA X**.
+2. Vaya a **Align → Edit/Build Alignment**.
+3. Seleccione **Retrieve Sequences From a File**
+4. Importe el archivo `16S_analysis.fasta`.
+5. Verifique que **todas** las secuencias aparecen en la lista.
+
+En el segundo caso, pasando el archivo FASTA al editor de alineamiento:
+
 1. Abra **MEGA X**.
 2. Vaya a **Align → Edit/Build Alignment**.
 3. Seleccione **Create a new alignment** → tipo de datos: **DNA**.
 4. En la ventana del editor, vaya a **Edit → Insert sequence from file** (o arrastre el archivo).
 5. Importe el archivo `16S_analysis.fasta`.
-6. Verifique que **todas** las secuencias aparecen en la lista (revise el número en la esquina inferior).
+6. Verifique que **todas** las secuencias aparecen en la lista (revise el número en la esquina inferior y elimínela si está en blanco).
+
+> [!TIP]
+> Note que se usa el encabezado abreviado de cada secuencia para identificarla. Una buena estrategia es usar el nombre del organismo y el accession usando guiones bajos (`_`) para evitar espacios, lo que facilita la lectura del árbol posteriormente.
 
 #### Paso 2 — Realizar el alineamiento
 
@@ -380,11 +395,15 @@ Revise visualmente el alineamiento:
 
 Guarde el alineamiento en formato MEGA:
 
+1. Vaya a **Data** (el que esta en la parte superior, no el icono verde) → **Export Alignment** → **MEGA format**.
+
 ```text
 16S_alignment.meg
 ```
 
 También puede exportar en formato FASTA alineado por si necesita usarlo en otro software.
+
+2. Cierre la ventana del editor de alineamiento.
 
 ---
 
@@ -394,7 +413,7 @@ También puede exportar en formato FASTA alineado por si necesita usarlo en otro
 
 1. En MEGA X, vaya a **File → Open a File/Session**.
 2. Abra el archivo `16S_alignment.meg`.
-3. MEGA le preguntará qué desea hacer → seleccione **Analyze**.
+3. MEGA puede que le pregunte qué desea hacer → seleccione **Analyze**.
 
 #### Paso 2 — Construir el árbol por Neighbor-Joining (NJ)
 
@@ -433,6 +452,7 @@ Si el tiempo lo permite, construya también un árbol ML para comparar:
 #### Paso 1 — Visualización
 
 1. En la ventana del árbol, explore las opciones de visualización:
+   - Dando doble clic en el nombre de la secuencia puede editar su nombre para facilitar su lectura.
    - **Topology only** vs. **Branch lengths** (con longitudes de rama proporcionales a la distancia).
    - Active la opción de mostrar **valores de bootstrap** en los nodos.
 
@@ -480,6 +500,10 @@ Guarde el árbol en dos formatos:
    ```text
    tree_NJ.png
    ```
+   
+> [!TIP]
+> Debido a calidad de la imagen, es recomendable usar formato **PDF** para que no pierda resolución al ampliarla ya que es un formato vectorial y puede ser editado posteriormente.
+
 2. **Formato Newick:** **File → Export Current Tree (Newick)**.
    ```text
    tree_NJ.nwk
@@ -499,15 +523,15 @@ Guarde el árbol en dos formatos:
 
 Prepare un informe breve (1–2 páginas) que incluya:
 
-| Sección                          | Contenido                                                                                                                  |
-|:---------------------------------|:---------------------------------------------------------------------------------------------------------------------------|
-| **Caso asignado**                | Indique cuál caso trabajó (A, B o C) y el contexto biológico                                                               |
-| **Resultados de BLAST**          | Tabla con los 10 mejores hits (accession, organismo, % Identity, Query Cover, E-value)                                     |
-| **Identificación preliminar**    | ¿A qué organismo apuntan los resultados de BLAST? ¿Con qué confianza?                                                     |
-| **Tabla de secuencias de referencia** | Lista de las secuencias incluidas en el árbol (accession, organismo, rol)                                             |
-| **Árbol filogenético**           | Imagen del árbol con valores de bootstrap (incluya NJ y ML si hizo ambos)                                                  |
-| **Interpretación del árbol**     | ¿Dónde se posiciona la secuencia desconocida? ¿Es consistente con BLAST? ¿El bootstrap lo respalda?                        |
-| **Conclusión**                   | Identidad propuesta del organismo desconocido + nivel de confianza + evidencia que la respalda                              |
+| Sección                               | Contenido                                                                                           |
+|:--------------------------------------|:----------------------------------------------------------------------------------------------------|
+| **Caso asignado**                     | Indique cuál caso trabajó (A, B o C) y el contexto biológico                                        |
+| **Resultados de BLAST**               | Tabla con los 10 mejores hits (accession, organismo, % Identity, Query Cover, E-value)              |
+| **Identificación preliminar**         | ¿A qué organismo apuntan los resultados de BLAST? ¿Con qué confianza?                               |
+| **Tabla de secuencias de referencia** | Lista de las secuencias incluidas en el árbol (accession, organismo, rol)                           |
+| **Árbol filogenético**                | Imagen del árbol con valores de bootstrap (incluya NJ y ML si hizo ambos)                           |
+| **Interpretación del árbol**          | ¿Dónde se posiciona la secuencia desconocida? ¿Es consistente con BLAST? ¿El bootstrap lo respalda? |
+| **Conclusión**                        | Identidad propuesta del organismo desconocido + nivel de confianza + evidencia que la respalda      |
 
 ---
 
