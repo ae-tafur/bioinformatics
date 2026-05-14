@@ -273,6 +273,16 @@ donde `P` es la probabilidad de que la base sea incorrecta.
 | 30 | 1 en 1,000            | 99.9%     | Estándar de alta calidad |
 | 40 | 1 en 10,000           | 99.99%    | Calidad Sanger           |
 
+> [!NOTE]
+> La escala Phred es **logarítmica**, no lineal. La diferencia entre Q20 y Q30 no es "un poco mejor": a Q30 hay **10 veces menos errores** que a Q20. En términos prácticos, la mayoría de los flujos de trabajo de ensamblaje piden Q ≥ 20 como mínimo y Q ≥ 30 como estándar deseable.
+
+**🧠 Preguntas de comprensión**
+
+1. Una base con Q=20 tiene una probabilidad de error de 1 en 100 (1%). Si su lectura tiene 150 bases todas con Q=20, ¿cuántas bases esperaría que fueran incorrectas?
+2. ¿Por qué la escala Phred usa logaritmos en lugar de simplemente reportar el porcentaje de error?
+3. Un secuenciador Nanopore moderno en modo "simplex" produce lecturas con Q12–Q15 en promedio. ¿Esto hace que los datos sean inútiles? ¿Por qué o por qué no?
+4. ¿Qué diferencia hay entre la **calidad de una base** individual y la **calidad media de una lectura**?
+
 ### 3.3 Perfil de calidad a lo largo de una lectura
 
 En lecturas Illumina, la calidad **suele degradarse hacia el final** de la lectura. Esto es normal y se debe al desfase progresivo de las señales fluorescentes (*phasing*):
@@ -295,6 +305,25 @@ Calidad
 ```
 
 Herramientas como **FastQC** y **Falco** generan este tipo de gráfico automáticamente.
+
+**🔍 ¿Qué buscar en el gráfico de calidad por posición?**
+
+| Lo que ve                                       | Qué significa                                                         | Qué hacer                                                |
+|:------------------------------------------------|:----------------------------------------------------------------------|:---------------------------------------------------------|
+| Caída gradual al final de la lectura            | Normal en Illumina por *phasing*                                      | Recortar el extremo 3' con Trimmomatic o Fastp           |
+| Caída abrupta en la primera base (base 1)       | Señal inestable al inicio del ciclo                                   | Normal; algunos pipelines ignoran la primera base        |
+| Caída severa desde la mitad de la lectura       | Problema con la corrida de secuenciación                              | Evaluar si los datos son usables; contactar al proveedor |
+| Calidad uniformemente baja en toda la lectura   | Muestra degradada, concentración inadecuada o problema en la librería | Repetir la extracción o la secuenciación                 |
+| Pico de baja calidad en una posición específica | Posible burbuja o artefacto puntual                                   | Usualmente inofensivo si es aislado                      |
+
+> [!TIP]
+> Si la calidad cae por debajo de Q20 **antes de la posición 100** en lecturas de 150 pb, es señal de alerta. Si cae antes de la posición 50, los datos probablemente no son suficientes para un ensamblaje confiable.
+
+**🧠 Preguntas de comprensión**
+
+5. Al ver el gráfico de calidad, ¿cómo distingue un problema de la corrida de un comportamiento normal de Illumina?
+6. ¿Por qué es importante que las lecturas R1 y R2 de un experimento paired-end tengan perfiles de calidad similares?
+7. Dado un gráfico con calidad media >Q30 hasta la posición 120 y luego caída a Q15 en las últimas 30 bases de una lectura de 150 pb, ¿cuántas bases cortaría con SLIDINGWINDOW:4:20?
 
 ### 3.4 Cobertura y profundidad
 
@@ -334,6 +363,31 @@ Una cobertura de **30×** significa que, en promedio, cada posición fue leída 
 > [!NOTE]
 > Alta cobertura no corrige problemas como contaminación, sesgos de GC o errores sistemáticos. Pero sí aumenta la confianza en el ensamblaje y la detección de variantes.
 
+**🔍 ¿Cuánta cobertura necesito?**
+
+| Objetivo                                                 | Cobertura mínima recomendada   |
+|:---------------------------------------------------------|:-------------------------------|
+| Ensamblaje de novo bacteriano (Illumina)                 | 30–50×                         |
+| Detección de SNPs con alta confianza                     | ≥ 20×                          |
+| Metagenómica (organismos minoritarios)                   | 100× o más                     |
+| Ensamblaje de novo con lecturas largas (Nanopore/PacBio) | 20–30×                         |
+| Genomas complejos con regiones repetitivas               | 50–100×                        |
+
+> [!TIP]
+> **Estimación rápida de cobertura:**
+> ```
+> Cobertura = (N° lecturas × longitud media de lectura) / tamaño del genoma
+>
+> Ejemplo: 2,000,000 lecturas × 150 pb / 2,800,000 pb (genoma MRSA) ≈ 107×
+> ```
+> Si la cobertura estimada es menor a 20×, evalúe si los datos son suficientes antes de ensamblar.
+
+**🧠 Preguntas de comprensión**
+
+8. Tiene 500,000 lecturas de 150 pb de un genoma de *E. coli* (~4.6 Mb). ¿Cuál es la cobertura estimada? ¿Es suficiente para un ensamblaje de novo?
+9. ¿Por qué la **profundidad** en los extremos de los contigs suele ser menor que en el centro?
+10. Si la cobertura promedio es 60× pero algunas regiones tienen solo 2×, ¿qué podría causar esto? ¿Cómo afectaría al ensamblaje?
+
 ### 3.5 Trimming y filtrado de lecturas
 
 Antes de ensamblar o alinear, suele ser necesario limpiar los datos:
@@ -364,6 +418,25 @@ ATGCGTACGTTAGCAATCGATCGATCG
 
 > [!WARNING]
 > No siempre se debe hacer trimming agresivo. El objetivo es mejorar la calidad sin eliminar información útil. Para algunos ensambladores modernos (como SPAdes), el trimming excesivo puede ser contraproducente.
+
+**🔍 Casos frecuentes al analizar el reporte de QC y cómo responder**
+
+| Situación en el reporte (FastQC/Falco)                 | Diagnóstico probable                     | Acción recomendada                                                    |
+|:-------------------------------------------------------|:-----------------------------------------|:----------------------------------------------------------------------|
+| ⚠️ "Overrepresented sequences" con match a adaptadores | Adaptadores residuales                   | Activar el recorte de adaptadores en Fastp/Trimmomatic                |
+| ⚠️ "Per base sequence quality" en rojo al final        | Degradación normal de señal Illumina     | Recortar extremos con `SLIDINGWINDOW:4:20` o `--cut_right` en Fastp   |
+| ⚠️ "Per sequence GC content" con dos picos             | Posible contaminación con otro organismo | Verificar pureza del cultivo; revisar contigs post-ensamblaje por %GC |
+| ⚠️ "Per base N content" elevado                        | Bases indeterminadas (señal ambigua)     | Recortar con `LEADING:3 TRAILING:3`                                   |
+| ⚠️ Baja cobertura estimada (<15×)                      | Poca cantidad de ADN secuenciado         | Evaluar si el ensamblaje será de calidad; considerar resecuenciar     |
+| ✅ Todo "verde" en FastQC                               | Datos de buena calidad                   | Puede proceder directamente al ensamblaje con trimming mínimo         |
+| ⚠️ Cobertura muy alta (>200×) para bacteria            | Normal si se usó mucho material          | El ensamblaje puede ser más lento pero generalmente mejor             |
+
+**🧠 Preguntas de comprensión**
+
+11. Después del trimming, la cobertura de sus datos bajó de 107× a 89×. ¿Es esto esperado? ¿Es motivo de preocupación?
+12. Fastp reporta que eliminó el 8% de las lecturas. ¿Qué tipo de lecturas fueron descartadas probablemente?
+13. ¿Por qué es importante que el trimming conserve el **emparejamiento** de las lecturas paired-end?
+14. Si aplica un `MINLEN:30` en Trimmomatic a lecturas de 150 pb, ¿qué tipo de lectura sería descartada por este filtro?
 
 ---
 
@@ -740,9 +813,11 @@ En el **Módulo 6** (Genómica) tomará estos genomas ensamblados y les dará si
 
 ## Prácticas del módulo
 
-| Práctica                                                                                        | Descripción                                                                 |
-|:------------------------------------------------------------------------------------------------|:----------------------------------------------------------------------------|
-| [Ensamblaje con FastQC + Velvet](exercises/01_2_genome_assembly_fastqc_velvet.md)               | Control de calidad con FastQC y ensamblaje *de novo* con Velvet             |
-| [Ensamblaje con Falco + fastp + Shovill](exercises/01_1_genome_assembly_falco_fastp_shovill.md) | Pipeline moderno: QC con Falco, trimming con fastp y ensamblaje con Shovill |
-| [Diseño de primers](../03-sequence_analysis/exercises/01_primer_design.md)                      | Alineamiento, complementariedad y especificidad de secuencias               |
-| [Anotación genómica](../06-genomics/exercises/01_genome_annotation.md)                          | Predicción de genes y asignación de funciones en genomas bacterianos        |
+| Práctica                                                                                      |  Plataforma    | Descripción                                                                                                                  |
+|:----------------------------------------------------------------------------------------------|:--------------:|:-----------------------------------------------------------------------------------------------------------------------------|
+| [Guía de prácticas: introducción y casos de estudio](exercises/00_genome_assembly_common.md)  |       —        | Punto de entrada: flujo de trabajo, plataformas y datos de los tres casos (MRSA, *K. pneumoniae*, *Streptomyces venezuelae*) |
+| [Práctica A — Falco + Fastp + Shovill](exercises/01_1_genome_assembly_falco_fastp_shovill.md) |     Galaxy     | QC con Falco, limpieza con Fastp y ensamblaje con Shovill (SPAdes)                                                           |
+| [Práctica B — FastQC + Trimmomatic + Velvet](exercises/01_2_genome_assembly_fastqc_velvet.md) |     Galaxy     | QC con FastQC/MultiQC, limpieza con Trimmomatic y ensamblaje con Velvet                                                      |
+| [Práctica C — Python + conda en Google Colab](exercises/01_3_genome_assembly_colab.ipynb)     |  Google Colab  | Instalación de herramientas via conda, ensamblaje con SPAdes y análisis con Python                                           |
+| [Diseño de primers](../03-sequence_analysis/exercises/01_primer_design.md)                    | Web / terminal | Alineamiento, complementariedad y especificidad de secuencias                                                                |
+| [Anotación genómica](../06-genomics/exercises/01_genome_annotation.md)                        |     Galaxy     | Predicción de genes y asignación de funciones en genomas bacterianos                                                         |

@@ -1,424 +1,312 @@
-# 🧬 Práctica: Ensamblaje de genomas
-
-Para realizar la siguiente practica por favor use el servidor Galaxy en
-el servidor de la union europea, disponible en el siguiente link,
-<https://usegalaxy.eu> (por favor no use <https://usegalaxy.org>, porque
-puede presentar incovenientes durante la practica al usar algunas
-herramientas), el sistema pedirá que se registre nuevamente si no se
-habia registrado antes.
-
-## Introducción
-
-El ensamblaje de genomas es el proceso mediante el cual se reconstruye
-un genoma completo a partir de fragmentos de ADN obtenidos a través de
-técnicas de secuenciación. En términos más sencillos, se trata de
-ensamblar pequeñas piezas de información genética (lecturas de
-secuencias de ADN) en un genoma completo.
-
-La secuenciación (determinación de la secuencia de nucleótidos del 
-ADN/ARN) se utiliza en todo el mundo para todo tipo de análisis. El 
-producto de estos secuenciadores son lecturas, que son secuencias de 
-nucleótidos detectados. Dependiendo de la técnica, estas tienen 
-longitudes específicas (30-500 pb) o, si se utiliza la secuenciación de
-Oxford Nanopore Technologies o PacBio, tienen longitudes variables mucho más 
-largas.
-
-Cuando se realiza la secuenciación de un genoma, la tecnología moderna
-divide el ADN en fragmentos más pequeños, que se leen y generan
-secuencias de bases (A, T, C, G). Estas lecturas deben ser organizadas y
-alineadas correctamente para crear una representación precisa y continua
-del genoma original. El proceso de ensamblaje puede llevarse a cabo con
-diferentes enfoques, como:
-
-- **Ensamblaje de novo**: Se realiza cuando no se tiene un genoma de
-referencia, y el objetivo es reconstruir el genoma desde cero a partir
-de las lecturas sin ninguna guía externa. 
-
-- **Ensamblaje de referencia**: Se realiza cuando se tiene un genoma de 
-referencia conocido, y las lecturas se alinean y ensamblan sobre este 
-genoma para obtener la secuencia específica del organismo en estudio.
-
-### Fundamentos de secuenciación con illumina.
-
-La secuenciación Illumina MiSeq se basa en la secuenciación por síntesis. 
-Como su nombre indica, se miden las etiquetas fluorescentes de cada base 
-que se une en un momento específico y en un lugar específico de una celda de 
-flujo. Estas celdas de flujo están cubiertas con oligonucleótidos (pequeñas 
-cadenas de ADN monocatenario). En la preparación de la biblioteca, las 
-cadenas de ADN se cortan en pequeños fragmentos de ADN (varía según el kit 
-o dispositivo) y se añaden piezas específicas de ADN (adaptadores) que son 
-complementarias a los oligonucleótidos. Mediante la amplificación en puente
-se crean grandes cantidades de grupos de estos fragmentos de ADN. La cadena 
-inversa se elimina, lo que hace que los grupos sean monocatenarios. Se 
-añaden bases fluorescentes una por una, que emiten una luz específica para 
-las diferentes bases cuando se añaden. Esto ocurre en todos los grupos, por 
-lo que esta luz puede detectarse y estos datos se traducen (traducción de 
-la luz a un nucleótido) a una secuencia de nucleótidos (lectura). Para cada 
-base se determina una puntuación de calidad y también se guarda por lectura. 
-Este proceso se repite para la cadena inversa en el mismo lugar de la celda 
-de flujo, de modo que las lecturas directas e inversas proceden de la misma 
-cadena de ADN. Las lecturas directas e inversas están vinculadas entre sí 
-y siempre deben procesarse juntas.
-
-## Sobre esta practica
-
-En esta práctica construiremos un ensamblaje de un genoma bacteriano a partir
-de los datos producidos en 
-
-1. «Complete Genome Sequences of Eight Methicillin-Resistant _Staphylococcus 
-aureus_ Strains Isolated from Patients in Japan». [Hikichi et al. 2019](https://journals.asm.org/doi/10.1128/mra.01212-19):
-
-`
-Methicillin-resistant _Staphylococcus aureus_ (MRSA) is a major pathogen 
-causing nosocomial infections, and the clinical manifestations of MRSA 
-range from asymptomatic colonization of the nasal mucosa to soft tissue 
-infection to fulminant invasive disease. Here, we report the complete 
-genome sequences of eight MRSA strains isolated from patients in Japan.
-`
-
-2. «Epidemiological Genomics of _Klebsiella pneumoniae_ isolates from 
-hospitals across Colombia». [Medina et al. 2025](https://www.nature.com/articles/s44259-025-00127-x):
-
-`
-_Klebsiella pneumoniae_ is one of the most important nosocomial pathogens 
-worldwide. In Colombia, _K. pneumoniae_ has been identified as the second 
-most frequent microbial etiologic agent of healthcare-associated 
-infections. We conducted a prospective local study of 335  _K. 
-pneumoniae_ isolates in 26 nationwide hospitals from 2020 to 2021. 
-We found that the spread of carbapenem resistance was mediated by 
-successful clones belonging to sequence types (ST) such as ST11, ST1082, 
-and ST307, related to intra-hospital infections.
-`
-Nuestro conjunto de lecturas de la cepa mutante se secuenció con el
-método de escopeta de genoma completo, utilizando un instrumento de
-secuenciación de ADN Illumina. A partir de estas lecturas, nos gustaría
-reconstruir el genoma de *Staphylococcus aureus* o de *Klebsiella 
-pneuomoniae* mediante un ensamblaje de novo de un conjunto de lecturas 
-cortas utilizando el ensamblador Velvet. Velvet es uno de los numerosos 
-ensambladores de novo que utilizan conjuntos de lecturas cortas como 
-entrada (por ejemplo, Illumina Reads). El método de ensamblaje se basa 
-en la manipulación de gráficos de de Bruijn, mediante la eliminación de 
-errores y la simplificación de regiones repetidas.
-
-## Procedimiento
-
-### Cargar los reads
-
-Las lecturas han sido secuenciadas utilizando un instrumento de 
-secuenciación de ADN Illumina. Obtuvimos los 2 archivos que importamos 
-que finalizan en `_1` y `_2`
-
-1.  Cree y nombre un nuevo historial para este tutorial. En la parte
-    superior derecha de sus pantallas encontraran un simbolo (+) donde
-    podrán crear una nueva historia y dando click en el simbolo de lapiz
-    podrá editar el nombre
-
-Importa desde Zenodo o desde la biblioteca de datos los archivos, solo 
-seleccione un set de datos para esta practicas. Para
-esto de click en `Upload` en la parte superior izquierda de las
-pantallas. Alli luego mantenga la pestaña `regular` y en la parte
-inferior del lado derecho de click en `Paste/Fecth data`. Luego copie
-los link de abajo y continuar. Cierre la ventana y luego en la parte
-derecha podrá ver que se estan cargando los archivos, espere a que este
-en verde. Esto indica que ya esta listo. Naranja indica que esta en
-proceso y rojo que no se pudo realizar y debe repetir el cargue.
-
-Para importar los archivos de *Staphylococcus aureus* desde Zenodo, copie y
-pegue los siguientes enlaces en la ventana de carga:
-```         
-https://zenodo.org/records/17156735/files/DRR187559_1.fastq.gz
-https://zenodo.org/records/17156735/files/DRR187559_2.fastq.gz
-https://zenodo.org/records/17156735/files/GCF_000013425.1_ASM1342v1_genomic.fna
-```
+# 🧬 Práctica B: Ensamblaje de Genomas con FastQC + Trimmomatic + Velvet
 
-Para importar los archivos de *Klebsiella pneumoniae* desde Zenodo, copie y
-pegue los siguientes enlaces en la ventana de carga:
-```  
-https://zenodo.org/records/17156735/files/ERR14828471_1.fastq.gz
-https://zenodo.org/records/17156735/files/ERR14828471_2.fastq.gz
-https://zenodo.org/records/17156735/files/GCF_000240185.1_ASM24018v2_genomic.fna
-```  
+> [!NOTE]
+> Esta es la **Práctica B** del módulo de ensamblaje. Antes de continuar:
+> 1. Lea el [README del Módulo 5](../README.md) §§ 3–6 para los conceptos de calidad, cobertura, ensamblaje y métricas de evaluación.
+> 2. Lea la [guía de prácticas compartida](00_genome_assembly_common.md) para el flujo de trabajo, las plataformas y los datos de su caso.
 
-Nota: Los archivos tambien estan disponibles en la biblioteca de datos para ser descargados via linea de comandos.
+---
 
-Para descargar los archivos de *Staphylococcus aureus* desde la 
-biblioteca de datos, ejecute los siguientes comandos:
+## 🎯 Objetivos
 
-``` 
-cd
-mkdir GenomeAssembly
-cd GenomeAssembly
-wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/DRR187/DRR187559/DRR187559_1.fastq.gz
-wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/DRR187/DRR187559/DRR187559_2.fastq.gz
-``` 
+- Evaluar la calidad de las lecturas crudas con **FastQC** y **MultiQC**.
+- Limpiar y recortar lecturas usando **Trimmomatic**.
+- Comparar la calidad antes y después de la limpieza.
+- Ensamblar un genoma bacteriano de novo con **Velvet**.
+- Explorar el efecto del tamaño de k-mer en la calidad del ensamblaje.
+- Calcular y evaluar métricas de calidad del ensamblaje con **QUAST**.
 
-Para descargar los archivos de *Klebsiella pneumoniae* desde la 
-biblioteca de datos, ejecute los siguientes comandos:
+---
 
-``` 
-cd
-mkdir GenomeAssembly
-cd GenomeAssembly
-wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR148/071/ERR14828471/ERR14828471_1.fastq.gz
-wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR148/071/ERR14828471/ERR14828471_2.fastq.gz
-``` 
+## 📦 Requisitos previos
 
-2. Inspeccione el contenido de un conjunto de datos
+- Haber leído el [README del Módulo 5](../README.md), especialmente las secciones de calidad de lecturas, cobertura, paired-end y ensamblaje.
+- Haber leído la [introducción general a las prácticas de ensamblaje](00_genome_assembly_common.md).
+- Tener cuenta activa en [Galaxy Europe](https://usegalaxy.eu).
 
-    **Pregunta**
+---
 
-    a\. ¿Cuáles son las cuatro características principales de un archivo
-    FASTQ?
+## 🖥️ Herramientas utilizadas
 
-    b\. ¿Cuál es la principal diferencia entre un archivo FASTQ y un
-    archivo FASTA?
+| Herramienta          | Versión Galaxy   | Función                                  |
+|:---------------------|:-----------------|:-----------------------------------------|
+| **FastQC**           | 0.73+galaxy0     | Evaluación de calidad de lecturas        |
+| **MultiQC**          | 1.11+galaxy1     | Consolidación de reportes FastQC         |
+| **Trimmomatic**      | 0.39+galaxy2     | Limpieza y recorte de lecturas           |
+| **FASTQ interlacer** | 1.2.0.1+galaxy0  | Entrelazado de lecturas paired-end       |
+| **velveth**          | 1.2.10.3         | Construcción del grafo de De Bruijn      |
+| **velvetg**          | 1.2.10.2         | Ensamblaje a partir del grafo            |
+| **QUAST**            | 5.2.0+galaxy1    | Estadísticas y evaluación del ensamblaje |
 
-### Evaluar las lecturas de entrada
+---
 
-Antes de realizar cualquier ensamblaje, las primeras preguntas que debe
-plantearse sobre las lecturas de entrada son:
+## 🧫 Caso asignado
 
--   ¿Cuál es la cobertura de mi genoma?
--   ¿Qué calidad tiene mi conjunto de lecturas?
--   ¿Necesito solicitar una nueva secuencia?
--   ¿Es adecuada para el análisis que necesito hacer?
+Consulte el documento de [casos de estudio](00_genome_assembly_common.md#-casos-de-estudio) y cargue los datos del caso que le indique el profesor (**A**, **B** o **C**).
 
-Evaluaremos las lecturas de entrada con la herramienta **FastQC**. Esta
-herramienta ejecuta una serie de pruebas estándar en su conjunto de
-lecturas y devuelve un informe relativamente fácil de interpretar. La
-utilizaremos para evaluar la calidad de nuestros archivos FASTQ y
-combinar los resultados con MultiQC.
+> [!IMPORTANT]
+> Cargue **solo los archivos del caso asignado**. Si ya tiene un historial de una práctica anterior en Galaxy, cree uno nuevo para esta práctica haciendo clic en `+` (esquina superior derecha).
 
-1. **FastQC** (Galaxy version 0.73+galaxy0) con los siguientes
-    parametros:
+---
 
-    -   “Raw read data from your current history”: `*_1.fastq`
-        and `*_2.fastq`
+## 🔬 Procedimiento
 
-2. **MultiQC** (Galaxy version 1.11+galaxy1) con los siguientes
-    parametros:
+### Paso 1 — Crear un nuevo historial y cargar los datos
 
-    -   “Results: Which tool was used to generate logs?”: `FastQC`
-    -   Click “Insert FastQC output”
-        -   “Type of FastQC
-            output?”:`multiple datasets, select the raw data files from FastQC`
+1. En Galaxy, haga clic en `+` en la esquina superior derecha para crear un nuevo historial.
+2. Renómbrelo, por ejemplo: `Ensamblaje_CasoA_Velvet`.
+3. Cargue los datos de su caso usando la sección correspondiente del [documento de casos](00_genome_assembly_common.md#-casos-de-estudio) (haga clic en el bloque desplegable del caso asignado).
+4. Haga clic en `Upload` → `Paste/Fetch data`, pegue los enlaces y haga clic en `Start`.
+5. Espere a que todos los archivos estén en **verde** ✅ antes de continuar.
 
-```
-MultiQC genera una página web que combina informes para FastQC en ambos
-conjuntos de datos. Incluye estos gráficos y tablas:
+> [!TIP]
+> **Naranja** = en proceso. **Rojo** = falló (repita la carga). **Verde** = listo.
 
- - Estadísticas generales
+#### Inspección inicial
 
-Necesitamos conocer los datos para nuestro análisis. En
-particular, necesitamos conocer las longitudes de lectura, ya
-que es importante para establecer el tamaño máximo de k-mer para
-un ensamblaje. Para obtener la longitud de las secuencias:
+Haga clic en el ícono del ojo 👁 para revisar uno de los archivos `.fastq.gz`.
 
-a. Busque la salida MultiQC que es una página web y haga clic
-para verla
+**Preguntas:**
 
-b. La primera tabla muestra las estadísticas generales de los
-archivos de lectura de entrada.
+a. ¿Cuáles son las cuatro líneas que forman cada entrada en un archivo FASTQ?
 
-c. En la parte superior de esta tabla, haga clic en Configurar
-columnas
+b. ¿Cuál es la principal diferencia entre un archivo FASTQ y un archivo FASTA?
 
-d. Asegúrese de que la casilla junto a Longitud está marcada
+c. ¿Cómo interpreta la cadena de caracteres en la cuarta línea de cada lectura?
 
-e. Cierre la ventana
+---
 
-f. Esta tabla debería mostrar ahora una columna para las
-longitudes de lectura
+### Paso 2 — Evaluar la calidad con FastQC y MultiQC
 
-Pregunta
+1. En Galaxy, busque **FastQC** y configure:
+   - `Raw read data from your current history`: seleccione **ambos** archivos FASTQ (`*_1` y `*_2`).
+2. Haga clic en `Run Tool`.
 
-¿Qué longitud tienen las secuencias?
+3. Luego busque **MultiQC** y configure:
+   - `Results: Which tool was used to generate logs?`: `FastQC`
+   - Haga clic en `Insert FastQC output`
+     - `Type of FastQC output?`: seleccione los archivos de resultados crudos de FastQC (múltiples datasets)
+4. Haga clic en `Run Tool`.
 
-¿Cuál es la cobertura media del genoma, teniendo en cuenta que
-nuestra bacteria imaginaria \*Staphylococcus aureus\* tiene un
-genoma de 197.394 pb?
+#### Interpretación del reporte MultiQC
 
- - Histogramas de calidad de la secuencia
+MultiQC combina los reportes de ambos archivos FASTQ en una sola página web interactiva.
 
-Las caídas en la calidad cerca del principio, el medio o el
-final de las lecturas pueden determinar los métodos y parámetros
-de recorte/limpieza que deben utilizarse, o pueden indicar
-problemas técnicos con el proceso de secuenciación/la ejecución
-de la máquina.
+> [!NOTE]
+> Antes de continuar, asegúrese de haber leído las secciones **3.2 Calidad Phred**, **3.3 Perfil de calidad** y **3.5 Trimming** del [README del Módulo 5](../README.md). Allí encontrará la explicación de los Q-scores, la tabla de interpretación de situaciones frecuentes y las preguntas de comprensión asociadas.
 
-Pregunta
+**Estadísticas generales (General Statistics):**
 
-¿Qué representa el eje y?
+Para ver la longitud de las lecturas:
+- Abra la tabla `General Statistics`.
+- Haga clic en `Configure Columns` y active la columna `Length`.
 
-¿Por qué disminuye la puntuación de calidad a lo largo de las
-lecturas?
+Al revisar el reporte, evalúe estas secciones clave:
 
- - Contenido GC por secuencia
+| Sección del reporte             | Qué evalúa                                                                                                             |
+|:--------------------------------|:-----------------------------------------------------------------------------------------------------------------------|
+| **Per Base Sequence Quality**   | Calidad (Phred) en cada posición — use la [tabla de casos frecuentes](../README.md#35-trimming-y-filtrado-de-lecturas) |
+| **Per Sequence Quality Scores** | Distribución general de calidad por lectura                                                                            |
+| **Per Base N Content**          | Bases indeterminadas (N) por posición                                                                                  |
+| **Overrepresented Sequences**   | Posibles adaptadores u otros contaminantes                                                                             |
+| **Per Sequence GC Content**     | Distribución del %GC — dos picos sugieren contaminación                                                                |
 
-Los organismos con alto GC tienden a no ensamblarse bien y
-pueden tener una distribución desigual de la cobertura de
-lectura.
+**Preguntas:**
 
- - Contenido de N por base
+1. ¿Qué longitud tienen las lecturas?
+2. ¿Cuál es la cobertura estimada? Use la fórmula del [README § 3.4](../README.md#34-cobertura-y-profundidad) y el tamaño del genoma en el [documento de casos](00_genome_assembly_common.md#-casos-de-estudio).
+3. ¿En qué posiciones decae la calidad por debajo de Q28? ¿Es el patrón esperado para Illumina?
+4. ¿Qué representa el eje Y en el gráfico de calidad por posición?
+5. Con base en la [tabla de situaciones frecuentes](../README.md#35-trimming-y-filtrado-de-lecturas), ¿qué problemas identifica y qué acciones tomará?
 
-La presencia de un gran número de Ns en las lecturas puede
-indicar un proceso de secuenciación de baja calidad. Deberá
-recortar estas lecturas para eliminar los Ns.
+---
 
- - Contenido de k-mer
+### Paso 3 — Limpiar las lecturas con Trimmomatic
 
-La presencia de k-mers muy recurrentes puede indicar
-contaminación de las lecturas con códigos de barras o secuencias
-adaptadoras.
-```
+Trimmomatic recorta lecturas de baja calidad y elimina adaptadores con varios algoritmos:
 
-### Ensamblar lecturas con Velvet
+- **LEADING / TRAILING:** recorta bases desde el inicio o el final de la lectura si tienen calidad menor al umbral.
+- **SLIDINGWINDOW:** recorre la lectura en ventanas de 4 bases; si la calidad media de la ventana cae por debajo del umbral, recorta desde ese punto.
+- **MINLEN:** descarta lecturas más cortas que la longitud mínima especificada.
 
-Ahora queremos ensamblar nuestras lecturas para encontrar la secuencia
-de nuestra bacteria imaginaria *Staphylococcus aureus*. Realizaremos un
-ensamblaje de novo de las lecturas en secuencias largas contiguas
-utilizando el ensamblador de lecturas cortas Velvet.
+1. En Galaxy, busque **Trimmomatic** y configure:
+   - `Single-end or paired reads`: `Paired-end (two separate input files)`
+   - `Input FASTQ file (R1/first of pair)`: `*_1.fastq.gz`
+   - `Input FASTQ file (R2/second of pair)`: `*_2.fastq.gz`
+   - En `Trimmomatic Operation`:
+     - Agregue operación: `SLIDINGWINDOW` → Window: `4`, Quality: `20`
+     - Agregue operación: `MINLEN` → Length: `30`
+   - Deje los demás parámetros por defecto.
+2. Haga clic en `Run Tool`.
 
-El primer paso del ensamblador es construir un grafo de Bruijn. Para
-ello, dividirá nuestras lecturas en k-mers, es decir, fragmentos de
-longitud k. Velvet requiere que el usuario introduzca un valor de k
-(tamaño k-mer) para el proceso de ensamblaje. Los k-mers pequeños darán
-mayor conectividad, pero los k-mers grandes darán mayor especificidad.
+> [!NOTE]
+> Trimmomatic genera **cuatro archivos** de salida para datos paired-end:
+> - **R1-paired / R2-paired:** lecturas donde **ambas** superaron el filtro. ✅ Úselas para el ensamblaje.
+> - **R1-unpaired / R2-unpaired:** lecturas donde solo una del par superó el filtro. Se pueden usar en ensambladores que lo soporten.
 
-1. **FASTQ interlacer** ( Galaxy version 1.2.0.1+galaxy0) con los
-    siguientes parametros:
+---
 
-    -   “Type of paired-end datasets”: `2 separate datasets`
+### Paso 4 — Re-evaluar la calidad con FastQC + MultiQC (post-limpieza)
 
-    -   “Left-hand mates”: `*_1.fastq`
+Repita los pasos 2 usando los archivos **paired** de Trimmomatic para verificar que la limpieza mejoró la calidad.
 
-    -   “Right-hand mates”: `*_2.fastq`
+**Preguntas:**
 
-Actualmente, nuestras lecturas emparejadas están en 2 archivos (uno con
-las lecturas hacia delante y otro con las lecturas hacia atrás), pero
-Velvet sólo necesita un archivo, en el que cada lectura esté junto a su
-lectura emparejada. En otras palabras, si las lecturas están indexadas
-desde 0, entonces las lecturas 0 y 1 están emparejadas, 2 y 3, 4 y 5,
-etc. Antes de hacer el ensamblaje propiamente dicho, tenemos que
-preparar los archivos combinándolos.
+1. ¿Mejoró la calidad media por posición respecto al análisis inicial?
+2. ¿Cambió la longitud media de las lecturas?
+3. ¿La cobertura estimada sigue siendo suficiente para el ensamblaje?
+4. ¿El trimming afectó el contenido de GC?
 
-2. **velveth** ( Galaxy version 1.2.10.3) con los siguientes
-    parametros:
+---
 
-    -   “Hash Length”: `29`
-    -   “Input Files”
-        -   Click on + “Input Files”
-            -   In “1: Input Files”
-                -   “Choose the input type”: `interleaved paired end`
-                -   “read type”: `shortPaired reads param-files`
-                -   “Dataset”: `pairs output of *FASTQ interlacer*`
+### Paso 5 — Preparar las lecturas para Velvet: FASTQ Interlacer
 
-La herramienta toma nuestras lecturas y las descompone en k-mers.
+Velvet requiere un único archivo FASTQ donde cada lectura esté junto a su pareja. Las lecturas 0 y 1 son pares, 2 y 3 son pares, etc. Debemos entrelazar los archivos R1 y R2.
 
-3. **velvetg** ( Galaxy version 1.2.10.2) con los siguientes
-    parametros:
+1. En Galaxy, busque **FASTQ interlacer** y configure:
+   - `Type of paired-end datasets`: `2 separate datasets`
+   - `Left-hand mates`: archivo R1-paired de Trimmomatic
+   - `Right-hand mates`: archivo R2-paired de Trimmomatic
+2. Haga clic en `Run Tool`.
 
-    -   param-files “Velvet Dataset”: `outputs of velveth`
-    -   “Using Paired Reads”: `Yes`
+---
 
-Esta última herramienta realiza realmente el ensamblaje.
+### Paso 6 — Construir el grafo de De Bruijn con velveth
 
-Se generan cinco archivos. Veremos el archivo **contigs** y el archivo
-**stats**:
+velveth toma las lecturas entrelazadas y construye el grafo de k-mers que Velvet usará para el ensamblaje.
 
--   El archivo **contigs**
+> [!NOTE]
+> El parámetro **k** (Hash Length) define el tamaño de los k-mers. Es el parámetro más importante en Velvet y debe ser menor a la longitud de las lecturas. Para lecturas de 150 pb, valores entre 29 y 101 son razonables.
+>
+> - **k pequeño** → mayor conectividad, pero más ambigüedad en regiones repetitivas.
+> - **k grande** → mayor especificidad, pero necesita mayor cobertura.
 
-Este archivo contiene las secuencias de los contigs. En la cabecera de
-cada contig, se añade un poco de información:
+1. En Galaxy, busque **velveth** y configure:
+   - `Hash Length`: `29`
+   - En `Input Files`, haga clic en `+ Input Files`:
+     - `Choose the input type`: `interleaved paired end`
+     - `read type`: `shortPaired reads`
+     - `Dataset`: salida del FASTQ interlacer
+2. Haga clic en `Run Tool`.
 
-la longitud k-mer (llamada «length»): Para el valor de k elegido en el
-ensamblaje, una medida de cuántos k-mers se solapan (en 1 pb cada
-solapamiento) para dar esta longitud la cobertura de k-mers (denominada
-«cobertura»): Para el valor de k elegido en el ensamblaje, una medida de
-cuántos k-mers se solapan cada posición de base (en el ensamblaje).
+---
 
--   El archivo de **stats**
+### Paso 7 — Ensamblar con velvetg
 
-Se trata de un archivo tabular que proporciona para cada contig las
-longitudes de k-mer, las coberturas de k-mer y otras medidas. Tenga en
-cuenta que sus resultados pueden diferir del ejemplo de la imagen
-siguiente.
+velvetg toma el grafo construido por velveth y genera los contigs finales.
 
-### Recopilar algunas estadísticas sobre los contigs
+1. En Galaxy, busque **velvetg** y configure:
+   - `Velvet Dataset`: salida de velveth
+   - `Using Paired Reads`: `Yes`
+2. Haga clic en `Run Tool`.
 
-Esta tabla es limitada, pero ahora recopilaremos estadísticas más
-básicas sobre nuestro ensamblaje.
+#### Resultados de Velvet
 
-1. **Quast** (Galaxy version 5.2.0+galaxy1) con los siquientes
-    parametros:
+| Salida         | Descripción                                   |
+|:---------------|:----------------------------------------------|
+| **contigs.fa** | FASTA con los contigs ensamblados.            |
+| **stats.txt**  | Tabla con longitudes y coberturas por contig. |
+| **Log**        | Registro del proceso.                         |
 
-    -   “Assembly mode”:
-        `Individual assembly (1 contig file per sample)`
-    -   “Use customized names?”: `No`
-    -   “Contigs/scaffolds file”: `contigs output of velvetg`
-    -   “Type of assembly”: `Genome`
-    -   “Use a reference genome?”: `Yes`
-    -   “Reference genome”: `GCF*.fna`
-    -   “Type of organism”: `Prokaryotes`
-    -   “Lower Threshold”: `500`
-    -   “Advanced options: Comma-separated list of contig length
-        thresholds”: `0,1000`
+En el encabezado de cada contig verá:
+- `length` = longitud en k-mers
+- `coverage` = cobertura media de k-mers en ese contig
 
-### Trabajo para analizar
+---
 
-Corran nuevamente pero en el paso 6
+### Paso 8 — Evaluar el ensamblaje con QUAST
 
-1. *velveth* ( Galaxy version 1.2.10.3) con los mismos parametros de
-    antes pero prueben
+1. En Galaxy, busque **QUAST** y configure:
+   - `Assembly mode`: `Individual assembly (1 contig file per sample)`
+   - `Use customized names?`: `No`
+   - `Contigs/scaffolds file`: salida `contigs.fa` de velvetg
+   - `Type of assembly`: `Genome`
+   - `Use a reference genome?`: `Yes`
+   - `Reference genome`: el archivo `.fna` cargado al inicio
+   - `Type of organism`: `Prokaryotes`
+   - `Lower Threshold`: `500`
+   - `Advanced options – Comma-separated list of contig length thresholds`: `0,1000`
+2. Haga clic en `Run Tool`.
 
--   “Hash Length”: un valor entre 31 y 101
+#### Interpretación del reporte QUAST
 
+| Métrica                    | ¿Qué significa?                                                                                 |
+|:---------------------------|:------------------------------------------------------------------------------------------------|
+| `# contigs (≥ 0 bp)`       | Total de contigs ensamblados                                                                    |
+| `# contigs (≥ 500 bp)`     | Contigs de tamaño significativo                                                                 |
+| `Total length`             | Tamaño total del ensamblaje                                                                     |
+| `N50` | Ver [definición en README § 6](../README.md#métricas-de-evaluación-del-ensamblaje) |
+| `L50`                      | Número mínimo de contigs que suman el N50                                                       |
+| `Genome fraction (%)`      | % del genoma de referencia cubierto                                                             |
+| `# mismatches per 100 kbp` | Errores de base respecto a la referencia                                                        |
+| `# indels per 100 kbp`     | Inserciones/deleciones respecto a la referencia                                                 |
+
+---
+
+### Paso 9 — Experimento: efecto del k-mer en el ensamblaje
+
+Una de las ventajas pedagógicas de Velvet es que el usuario controla el k-mer directamente, lo que permite explorar cómo afecta al ensamblaje.
+
+1. Repita los **Pasos 6, 7 y 8** con **al menos dos valores de k diferentes**:
+   - Un valor más pequeño (ej. `k = 21`)
+   - Un valor más grande (ej. `k = 51` o `k = 71`)
+
+2. Compare las métricas QUAST entre los tres ensamblajes:
+
+| k-mer | # contigs | Total length | N50 | L50 | Genome fraction (%) |
+|:------|:---------:|:------------:|:---:|:---:|:-------------------:|
+| 21    |           |              |     |     |                     |
+| 29    |           |              |     |     |                     |
+| 51    |           |              |     |     |                     |
+
+**Preguntas:**
+
+1. ¿Qué k-mer produjo el mejor N50?
+2. ¿Qué k-mer produjo la mayor cobertura del genoma de referencia?
+3. ¿Qué pasa cuando el k-mer es demasiado pequeño o demasiado grande?
+4. ¿Preferiría usar Velvet o Shovill para un ensamblaje de rutina? ¿Por qué?
+
+---
 
 ## ❓ Preguntas para reflexionar
 
-1. ¿Cuál es la cobertura del genoma?
-2. ¿Qué calidad tiene el conjunto de lecturas?
-3. ¿Necesito solicitar una nueva secuencia?
-4. ¿Es adecuada para el análisis que necesito hacer?
-5. ¿Cuántos contigs se han construido?
+### Sobre el control de calidad
+
+1. ¿Cuál fue la cobertura estimada antes y después del trimming con Trimmomatic?
+2. ¿Cómo cambió la longitud media de lectura después del filtrado?
+3. ¿El trimming mejoró las puntuaciones medias de calidad?
+4. ¿Los datos son adecuados para el ensamblaje? ¿Sería necesario volver a secuenciar?
+
+### Sobre el ensamblaje
+
+5. ¿Cuántos contigs se ensamblaron con Velvet (k=29)?
 6. ¿Cuál es la longitud media, mínima y máxima de los contigs?
 7. ¿Qué proporción del genoma de referencia representan?
-8. ¿Cuántos montajes erróneos se han encontrado?
-9. ¿Ha introducido el ensamblaje desajustes e indels?
-10. ¿Qué son N50 y L50?
-11. ¿Existe un sesgo en el porcentaje de GC inducido por el ensamblaje?
+8. ¿Cuántos mismatches e indels se encontraron?
+9. ¿Se introdujo sesgo en el porcentaje de GC durante el ensamblaje?
+10. ¿Cuál es el N50 y L50? ¿Cómo cambian con diferentes valores de k?
+11. **Para el Caso C** (*Streptomyces*): ¿Cómo cree que afecta el alto contenido GC (~72%) al ensamblaje con Velvet?
 
+### Comparación entre prácticas (si realizó ambas)
 
-## Bibliografia
+12. ¿Qué diferencias observa entre el ensamblaje de Shovill (Práctica A) y Velvet (Práctica B)?
+13. ¿Cuál herramienta es más fácil de usar? ¿Cuál ofrece más control al usuario?
 
-Seemann, T., 2014 Prokka: rapid prokaryotic genome annotation.
-Bioinformatics 30: 2068–2069. 10.1093/bioinformatics/btu153
+---
 
-Xie, Z., and H. Tang, 2017 ISEScan: automated identification of
-insertion sequence elements in prokaryotic genomes. Bioinformatics 33:
-3340–3347. 10.1093/bioinformatics/btx433
+## 🏆 Reto adicional (opcional)
 
-Hikichi, M., M. Nagao, K. Murase, C. Aikawa, T. Nozawa et al., 2019
-Complete Genome Sequences of Eight Methicillin-Resistant Staphylococcus
-aureus Strains Isolated from Patients in Japan (I. L. G. Newton, Ed.).
-Microbiology Resource Announcements 8: 10.1128/mra.01212-19
+1. **Optimización de k:** explore valores de k entre 31 y 101 en pasos de 10. Grafique N50 vs. k-mer y determine el valor óptimo para su caso.
+2. **Comparación con Shovill:** si tiene acceso a la Práctica A, compare las métricas QUAST entre ambos ensambladores para el mismo caso. ¿Cuál produce un mejor ensamblaje?
+3. **BUSCO:** si Galaxy lo tiene disponible, evalúe la completitud del ensamblaje con la base de datos `bacteria_odb10`.
 
-Carattoli, A., and H. Hasman, 2020 PlasmidFinder and in silico pMLST:
-identification and typing of plasmid replicons in whole-genome
-sequencing (WGS). Horizontal gene transfer: methods and protocols
-285–294. 10.1007/978-1-4939-9877-7_20
+---
 
-Schwengers, O., L. Jelonek, M. A. Dieckmann, S. Beyvers, J. Blom et al.,
-2021 Bakta: rapid and standardized annotation of bacterial genomes via
-alignment-free sequence identification. Microbial genomics 7: 000685.
-10.1099/mgen.0.000685
+## 📚 Bibliografía
 
-Néron, B., E. Littner, M. Haudiquet, A. Perrin, J. Cury et al., 2022
-IntegronFinder 2.0: identification and analysis of integrons across
-bacteria, with a focus on antibiotic resistance in Klebsiella.
-Microorganisms 10: 700. 10.3390/microorganisms10040700
+Ver la [bibliografía completa en el documento de introducción general](00_genome_assembly_common.md#-bibliografía).
 
-Diesh, C., G. J. Stevens, P. Xie, T. De Jesus Martinez, E. A. Hershberg
-et al., 2023 JBrowse 2: a modular genome browser with views of synteny
-and structural variation. Genome biology 24: 1–21.
-10.1186/s13059-023-02914-z
+- Zerbino, D.R. & Birney, E., 2008. Velvet: Algorithms for de novo short read assembly using de Bruijn graphs. *Genome Research* 18:821–829.
+- Bolger, A.M., et al., 2014. Trimmomatic: a flexible trimmer for Illumina sequence data. *Bioinformatics* 30:2114–2120.
+- Andrews, S. (FastQC): <https://www.bioinformatics.babraham.ac.uk/projects/fastqc/>
+- Gurevich, A., et al., 2013. QUAST. *Bioinformatics* 29:1072–1075.
