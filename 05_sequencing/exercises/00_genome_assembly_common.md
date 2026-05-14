@@ -15,9 +15,9 @@
 
 El **ensamblaje de genomas** es el proceso mediante el cual se reconstruye la secuencia completa de un genoma a partir de millones de fragmentos cortos de ADN generados por secuenciadores modernos. Es, en esencia, como intentar reconstruir el texto de un libro del que solo se tienen tiras de papel con fragmentos de líneas desordenadas.
 
-En estas prácticas trabajará con datos reales de secuenciación Illumina (lecturas paired-end de 150 pb) y realizará un **ensamblaje de novo** seguido de una **evaluación comparando contra un genoma de referencia**. Esto significa que:
+En estas prácticas trabajará con datos reales de secuenciación Illumina (lecturas paired-end de 150 pb) y realizará un **ensamblaje de novo y/o con referencia** seguido de una **evaluación comparando contra un genoma de referencia**. Esto significa que:
 
-- El ensamblaje se construye **sin usar la referencia como guía** — el ensamblador une las lecturas por solapamiento, sin saber cómo es el genoma final.
+- El ensamblaje *de novo* se construye **sin usar la referencia como guía** — el ensamblador une las lecturas por solapamiento, sin saber cómo es el genoma final.
 - La referencia se usa **solo al final**, en QUAST, para medir qué tan bien quedó el ensamblaje: qué porcentaje del genoma se cubrió, cuántos errores tiene, etc.
 
 > [!TIP]
