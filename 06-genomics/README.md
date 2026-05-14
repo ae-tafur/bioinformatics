@@ -419,6 +419,8 @@ En este módulo ha aprendido:
 
 ## Prácticas del módulo
 
-| Práctica                                               | Descripción                                                          |
-|:-------------------------------------------------------|:---------------------------------------------------------------------|
-| [Anotación genómica](exercises/01_genome_annotation.md) | Predicción de genes y asignación de funciones en genomas bacterianos |
+| Práctica | Plataforma | Descripción |
+|:---------|:----------:|:------------|
+| [Guía de prácticas: introducción y casos de estudio](exercises/00_genome_annotation_common.md) | — | Punto de entrada: flujo, conceptos clave, plataformas y datos de los tres casos (*S. aureus* MRSA, *K. pneumoniae*, *S. venezuelae*) |
+| [Práctica A — Galaxy](exercises/01_1_genome_annotation_galaxy.md) | Galaxy | Bakta, AMRFinderPlus, PlasmidFinder, IntegronFinder, ISEScan + antiSMASH (Caso C) |
+| [Práctica B — Google Colab](exercises/01_2_genome_annotattion_colab.ipynb) | Google Colab | Mismo flujo via conda + análisis con Python/pandas + antiSMASH (Caso C) |

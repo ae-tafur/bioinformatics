@@ -159,7 +159,7 @@ You give biological meaning to assembled genomes: annotation, variants, and comp
 - Comparative genomics: ANI, pan-genome (core/accessory), AMR/virulence gene detection, synteny
 
 **Practices:**
-- [Genome annotation](06-genomics/exercises/01_genome_annotation.md)
+- [Genome annotation](06-genomics/exercises/01_1_genome_annotation_galaxy.md)
 
 ---
 
