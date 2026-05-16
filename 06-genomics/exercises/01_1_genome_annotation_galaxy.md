@@ -41,7 +41,7 @@
 
 ## 🧫 Caso asignado
 
-Consulte la sección de [casos de estudio](00_genome_annotation_common.md#-casos-de-estudio) en la guía compartida para el contexto biológico, y cargue los datos del caso que le indique el profesor (**A** o **B**).
+Consulte la sección de [casos de estudio](00_genome_annotation_common.md#-casos-de-estudio) en la guía compartida para el contexto biológico, y cargue los datos del caso que le indique el profesor (**A**, **B**, **C** o **D**).
 
 ---
 
@@ -128,6 +128,7 @@ AMRFinderPlus usa BLAST + perfiles HMM para identificar genes de resistencia a a
      - Caso A → `Staphylococcus aureus`
      - Caso B → `Klebsiella pneumoniae`
      - Caso C → deje en blanco (no existe grupo taxonómico específico para *Streptomyces* en AMRFinderPlus)
+     - Caso D → `Pseudomonas aeruginosa` (el más cercano disponible para *P. abieticivorans*)
 
 2. Haga clic en `Run Tool`.
 
@@ -217,14 +218,15 @@ ISEScan usa modelos de Markov ocultos (HMM) construidos a partir de IS curados m
 
 ---
 
-### Paso 7 — (Solo Caso C) Predicción de clústeres de genes biosintéticos con antiSMASH
+### Paso 7 — (Casos C y D) Predicción de clústeres de genes biosintéticos con antiSMASH
 
 > [!NOTE]
-> Este paso es **exclusivo para el Caso C** (*Streptomyces venezuelae*). Los Casos A y B pueden omitirlo y pasar directamente a las preguntas integradoras.
+> Este paso es para los **Casos C y D**. Los Casos A y B pueden omitirlo y pasar directamente a las preguntas integradoras.
 
-Los clústeres de genes biosintéticos (BGC, *Biosynthetic Gene Clusters*) son grupos de genes contiguos en el cromosoma que codifican de forma coordinada la síntesis de un metabolito secundario: antibióticos, antifúngicos, inmunosupresores, sideróforos, pigmentos, etc. *Streptomyces venezuelae* es conocido por producir cloranfenicol, pero su genoma contiene muchos más BGC potencialmente silenciosos.
+Los clústeres de genes biosintéticos (BGC, *Biosynthetic Gene Clusters*) son grupos de genes contiguos que codifican coordinadamente la síntesis de un metabolito secundario. **antiSMASH** es el estándar para su detección.
 
-**antiSMASH** (*antibiotic and Secondary Metabolite Analysis SHell*) es el estándar de facto para la detección de BGC en genomas procarióticos y eucarióticos.
+- **Caso C** (*S. venezuelae*): género con la mayor diversidad de BGC conocida — antibióticos, antifúngicos, sideróforos.
+- **Caso D** (*P. abieticivorans*): BGC para sideróforos (pioverdina), lipopéptidos y compuestos de degradación de diterpenos.
 
 **Opción 1 — antiSMASH web server (más rápido):**
 
@@ -259,13 +261,20 @@ antiSMASH genera un **reporte HTML interactivo** con un mapa del genoma coloread
 | **Gene functions**     | Función predicha de cada gen dentro del BGC                        |
 | **Cluster chemistry**  | Estructura química predicha del producto (si está disponible)      |
 
-**Preguntas:**
+**Preguntas — Caso C (*S. venezuelae*):**
 
-31. ¿Cuántos BGC predijo antiSMASH en el genoma de *S. venezuelae*?
-32. ¿Qué tipos de BGC están presentes? (NRPS, PKS-I, PKS-II, terpeno, bacteriocina, etc.)
-33. ¿Cuál BGC corresponde al clúster del **cloranfenicol**? ¿Con qué % de similitud aparece en KnownClusterBlast?
-34. ¿Hay BGC sin homología conocida en MIBiG ("unknown")? ¿Qué implicaría descubrir y caracterizar uno de esos?
-35. Elija un BGC que le llame la atención y describa brevemente: tipo, tamaño (en pb), genes principales y metabolito predicho.
+31. ¿Cuántos BGC predijo antiSMASH?
+32. ¿Qué tipos de BGC están presentes? ¿Qué tipo es el más frecuente?
+33. ¿Cuál BGC corresponde al clúster del **cloranfenicol** según KnownClusterBlast?
+34. ¿Hay BGC sin homología conocida en MIBiG ("unknown")? ¿Qué implicaría caracterizar uno de ellos?
+35. Elija un BGC que le llame la atención y describa: tipo, tamaño (pb), genes principales y metabolito predicho.
+
+**Preguntas — Caso D (*P. abieticivorans*):**
+
+36. ¿Cuántos BGC predijo antiSMASH? ¿Cuántos tipos diferentes hay?
+37. ¿Detectó antiSMASH algún clúster relacionado con **sideróforos** (ej. pioverdina)? ¿En qué posición del cromosoma?
+38. Compare el número y diversidad de BGC entre *P. abieticivorans* y *S. venezuelae* (si realizó ambos casos o tiene acceso a los resultados del Caso C). ¿Cuál tiene mayor potencial biosintético?
+39. ¿Qué relación podría haber entre la capacidad de degradar diterpenos y la presencia de ciertos BGC?
 
 ---
 
@@ -278,7 +287,9 @@ Responda estas preguntas integrando los resultados de todas las herramientas:
 29. ¿Todos los contigs que contienen secuencias plasmídicas pertenecen claramente al organismo en estudio? ¿Cómo lo verifica?
 30. Para el **Caso B** (*K. pneumoniae*): el artículo menciona resistencia a carbapenemes mediada por los clones ST11, ST307 y ST1082. ¿Los resultados de AMRFinderPlus son consistentes con este perfil?
 31. Para el **Caso C** (*S. venezuelae*): ¿cuántos BGC identificó Bakta en su anotación estándar? ¿El número coincide con los predichos por antiSMASH? ¿Por qué podrían diferir?
-32. Para el **Caso C**: compare el número de BGC predichos con lo reportado en la literatura para *Streptomyces venezuelae*. ¿Cuántos de ellos tienen producto conocido y cuántos son "silenciosos" o sin homología en MIBiG?
+32. Para el **Caso C**: compare el número de BGC predichos con lo reportado en la literatura para *Streptomyces venezuelae*. ¿Cuántos tienen producto conocido y cuántos son "silenciosos" o sin homología en MIBiG?
+33. Para el **Caso D** (*P. abieticivorans*): ¿los genes de degradación de diterpenos están anotados como CDS con función asignada en Bakta, o aparecen como "hypothetical protein"? ¿Qué implica esto sobre la cobertura de la base de datos de Bakta para este tipo de metabolismo?
+34. Comparando los Casos C y D: ambos son organismos de suelo. ¿Qué diferencias observa en el número de BGC, genes de resistencia y movilidad genómica entre una actinobacteria (*Streptomyces*) y una proteobacteria (*Pseudomonas*)?
 
 ---
 

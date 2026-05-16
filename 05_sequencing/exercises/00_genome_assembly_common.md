@@ -8,6 +8,8 @@
 > | [Práctica A — Falco + Fastp + Shovill](01_1_genome_assembly_falco_fastp_shovill.md) | Galaxy       | Falco, Fastp, Shovill, QUAST                |
 > | [Práctica B — FastQC + Trimmomatic + Velvet](01_2_genome_assembly_fastqc_velvet.md) | Galaxy       | FastQC, MultiQC, Trimmomatic, Velvet, QUAST |
 > | [Práctica C — Python + conda en Google Colab](01_3_genome_assembly_colab.ipynb)     | Google Colab | fastp, SPAdes, QUAST (via conda)            |
+>
+> **Casos:** A (*S. aureus* MRSA) y B (*K. pneumoniae*) → clínico · C (*S. venezuelae*) → biotecnológico · D (*P. abieticivorans*) → ambiental/bioprospección
 
 ---
 
@@ -270,6 +272,61 @@ gunzip data/GCF_000253235.1_genomic.fna.gz
 
 ---
 
+### 🟣 Caso D — *Pseudomonas abieticivorans* (bacteria degradadora de diterpenos del suelo)
+
+**Contexto ambiental y biotecnológico:**
+
+> *"Pseudomonas abieticivorans* is a soil bacterium capable of degrading abietic acid and other diterpenoid resin acids derived from conifer trees — compounds that are major components of forest litter and paper-mill effluents. Its genomic repertoire reveals an extensive capacity for aromatic compound catabolism."*
+> — [Ristinmaa, A.S. et al. 2023, *Nature Communications*](https://doi.org/10.1038/s41467-023-43867-y)
+
+|                         |                                            |
+|:------------------------|:-------------------------------------------|
+| **Organismo**           | *Pseudomonas abieticivorans*               |
+| **Tamaño del genoma**   | ~6.7 Mb (cromosoma único, genoma completo) |
+| **Contenido GC**        | ~63%                                       |
+| **Secuenciación**       | Illumina paired-end                        |
+| **Accesión lecturas**   | SRR24684300                                |
+| **Accesión referencia** | GCF_023509015.1                            |
+| **Cobertura estimada**  | ~60×                                       |
+
+> [!NOTE]
+> A diferencia de los casos A y B (patógenos clínicos) y del Caso C (*Streptomyces*), este caso tiene un enfoque **ambiental y de bioprospección**: el análisis se orienta a identificar genes de degradación de compuestos aromáticos y diterpenos. Es un buen ejemplo de genómica aplicada a la biotecnología blanca y la biorremediación.
+
+<details>
+<summary>📥 Cargar datos en Galaxy (haga clic para expandir)</summary>
+
+En Galaxy, haga clic en `Upload` → `Paste/Fetch data` y pegue los siguientes enlaces:
+
+```
+ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR246/000/SRR24684300/SRR24684300_1.fastq.gz
+ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR246/000/SRR24684300/SRR24684300_2.fastq.gz
+https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/023/509/015/GCF_023509015.1_ASM2350901v1/GCF_023509015.1_ASM2350901v1_genomic.fna.gz
+```
+
+Haga clic en `Start` y espere a que los archivos estén en **verde** antes de continuar.
+
+</details>
+
+<details>
+<summary>💻 Descargar datos desde terminal o Colab (haga clic para expandir)</summary>
+
+```bash
+mkdir -p GenomeAssembly/caso_D/data && cd GenomeAssembly/caso_D
+
+# Lecturas
+wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR246/000/SRR24684300/SRR24684300_1.fastq.gz -O data/SRR24684300_1.fastq.gz
+wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR246/000/SRR24684300/SRR24684300_2.fastq.gz -O data/SRR24684300_2.fastq.gz
+
+# Genoma de referencia
+wget "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/023/509/015/GCF_023509015.1_ASM2350901v1/GCF_023509015.1_ASM2350901v1_genomic.fna.gz" \
+     -O data/GCF_023509015.1_genomic.fna.gz
+gunzip data/GCF_023509015.1_genomic.fna.gz
+```
+
+</details>
+
+---
+
 ## ❓ Preguntas de contexto (antes de empezar)
 
 Responda estas preguntas con base en el [README del Módulo 5](../README.md) antes de iniciar el procedimiento:
@@ -293,6 +350,8 @@ Medina et al., 2025. *npj Antimicrobials and Resistance*. [10.1038/s44259-025-00
 Pullan et al., 2011. *BMC Genomics*. [10.1186/1471-2164-12-175](https://doi.org/10.1186/1471-2164-12-175)
 
 Prjibelski, A., et al., 2020. *Current Protocols in Bioinformatics* 70:e102. [10.1002/cpbi.102](https://doi.org/10.1002/cpbi.102)
+
+Ristinmaa, A.S. et al., 2023. *Nature Communications* 14. [10.1038/s41467-023-43867-y](https://doi.org/10.1038/s41467-023-43867-y)
 
 Zerbino, D.R. & Birney, E., 2008. *Genome Research* 18:821–829.
 

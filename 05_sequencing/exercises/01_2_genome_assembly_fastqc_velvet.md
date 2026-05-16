@@ -42,7 +42,7 @@
 
 ## 🧫 Caso asignado
 
-Consulte el documento de [casos de estudio](00_genome_assembly_common.md#-casos-de-estudio) y cargue los datos del caso que le indique el profesor (**A**, **B** o **C**).
+Consulte el documento de [casos de estudio](00_genome_assembly_common.md#-casos-de-estudio) y cargue los datos del caso que le indique el profesor (**A**, **B**, **C**, o **D**).
 
 > [!IMPORTANT]
 > Cargue **solo los archivos del caso asignado**. Si ya tiene un historial de una práctica anterior en Galaxy, cree uno nuevo para esta práctica haciendo clic en `+` (esquina superior derecha).
@@ -230,16 +230,16 @@ En el encabezado de cada contig verá:
 
 #### Interpretación del reporte QUAST
 
-| Métrica                    | ¿Qué significa?                                                                                 |
-|:---------------------------|:------------------------------------------------------------------------------------------------|
-| `# contigs (≥ 0 bp)`       | Total de contigs ensamblados                                                                    |
-| `# contigs (≥ 500 bp)`     | Contigs de tamaño significativo                                                                 |
-| `Total length`             | Tamaño total del ensamblaje                                                                     |
-| `N50` | Ver [definición en README § 6](../README.md#métricas-de-evaluación-del-ensamblaje) |
-| `L50`                      | Número mínimo de contigs que suman el N50                                                       |
-| `Genome fraction (%)`      | % del genoma de referencia cubierto                                                             |
-| `# mismatches per 100 kbp` | Errores de base respecto a la referencia                                                        |
-| `# indels per 100 kbp`     | Inserciones/deleciones respecto a la referencia                                                 |
+| Métrica                    | ¿Qué significa?                                                                    |
+|:---------------------------|:-----------------------------------------------------------------------------------|
+| `# contigs (≥ 0 bp)`       | Total de contigs ensamblados                                                       |
+| `# contigs (≥ 500 bp)`     | Contigs de tamaño significativo                                                    |
+| `Total length`             | Tamaño total del ensamblaje                                                        |
+| `N50`                      | Ver [definición en README § 6](../README.md#métricas-de-evaluación-del-ensamblaje) |
+| `L50`                      | Número mínimo de contigs que suman el N50                                          |
+| `Genome fraction (%)`      | % del genoma de referencia cubierto                                                |
+| `# mismatches per 100 kbp` | Errores de base respecto a la referencia                                           |
+| `# indels per 100 kbp`     | Inserciones/deleciones respecto a la referencia                                    |
 
 ---
 

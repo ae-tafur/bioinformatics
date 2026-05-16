@@ -8,7 +8,7 @@
 > | [Práctica A — Galaxy](01_1_genome_annotation_galaxy.md)          | Galaxy Europe | Bakta, AMRFinderPlus, PlasmidFinder, IntegronFinder, ISEScan            |
 > | [Práctica B — Google Colab](01_2_genome_annotattion_colab.ipynb) | Google Colab  | Bakta, AMRFinderPlus, PlasmidFinder, **antiSMASH** (via conda) + Python |
 >
-> Los **Casos A y B** tienen enfoque clínico (resistencia, virulencia, plásmidos). El **Caso C** tiene enfoque biotecnológico (*Streptomyces venezuelae*: clústeres de genes biosintéticos) e incluye **antiSMASH** como herramienta adicional.
+> Los **Casos A y B** tienen enfoque clínico. El **Caso C** (*Streptomyces venezuelae*) y el **Caso D** (*Pseudomonas abieticivorans*) tienen enfoque biotecnológico/ambiental e incluyen **antiSMASH** como herramienta adicional.
 
 ---
 
@@ -252,6 +252,61 @@ echo "✅ Genoma Caso C descargado: $(grep -c '>' GCF_000253235.1_genomic.fna) s
 
 ---
 
+### 🟣 Caso D — *Pseudomonas abieticivorans* (bacteria degradadora de diterpenos del suelo)
+
+**Contexto ambiental y biotecnológico:**
+
+> *"Pseudomonas abieticivorans* is a soil bacterium with the remarkable ability to degrade abietic acid and other diterpenoid resin acids — major components of conifer forest litter and paper-mill effluents. Its genome encodes an extensive repertoire for aromatic and terpenoid compound catabolism, positioning it as a promising candidate for bioremediation and biotransformation applications."*
+> — [Ristinmaa, A.S. et al. et al. 2023, *Nature Communications*](https://doi.org/10.1038/s41467-023-43867-y)
+
+A diferencia de los casos A y B (patógenos clínicos) y del Caso C (*Streptomyces*), este caso tiene un enfoque **ambiental y de biorremediación**: el análisis se orienta a identificar rutas de degradación de compuestos aromáticos y diterpenos, y a explorar el potencial biotecnológico del organismo.
+
+|                                       |                                                          |
+|:--------------------------------------|:---------------------------------------------------------|
+| **Organismo**                         | *Pseudomonas abieticivorans*                             |
+| **Accesión del genoma de referencia** | GCF_023509015.1                                          |
+| **Tamaño del genoma**                 | ~6.7 Mb (cromosoma único, genoma completo)               |
+| **Contenido GC**                      | ~63%                                                     |
+| **Gram**                              | Negativa — bacilo                                        |
+| **Importancia**                       | Biorremediación, degradación de diterpenos, biocatálisis |
+
+> [!NOTE]
+> Al igual que en el Caso C, se usa el **genoma de referencia completo** (GCF_023509015.1) — un cromosoma único sin gaps. Esto permite observar la diferencia en calidad de anotación entre un genoma *finished* y un borrador fragmentado.
+>
+> Para AMRFinderPlus, use el grupo taxonómico `Pseudomonas aeruginosa` como el más cercano disponible.
+
+> [!TIP]
+> **antiSMASH también es relevante para este caso.** Aunque *Pseudomonas* es menos conocido que *Streptomyces* por producción de metabolitos secundarios, los genomas de *P. abieticivorans* contienen BGC para sideróforos, lipopéptidos y otros compuestos bioactivos. Úselo en la **Práctica B (Colab)** o en el servidor web.
+
+<details>
+<summary>📥 Cargar genoma en Galaxy (haga clic para expandir)</summary>
+
+En Galaxy, haga clic en `Upload` → `Paste/Fetch data` y pegue el siguiente enlace:
+
+```
+https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/023/509/015/GCF_023509015.1_ASM2350901v1/GCF_023509015.1_ASM2350901v1_genomic.fna.gz
+```
+
+Haga clic en `Start`. Galaxy descomprimirá el archivo automáticamente.
+
+</details>
+
+<details>
+<summary>💻 Descargar genoma desde terminal o Colab (haga clic para expandir)</summary>
+
+```bash
+mkdir -p annotation/caso_D/data && cd annotation/caso_D
+wget "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/023/509/015/GCF_023509015.1_ASM2350901v1/GCF_023509015.1_ASM2350901v1_genomic.fna.gz" \
+     -O data/GCF_023509015.1_genomic.fna.gz
+gunzip data/GCF_023509015.1_genomic.fna.gz
+mv data/GCF_023509015.1_genomic.fna data/contigs.fasta
+echo "✅ Genoma Caso D descargado: $(grep -c '>' data/contigs.fasta) secuencias"
+```
+
+</details>
+
+---
+
 ## 🧠 Conceptos clave antes de empezar
 
 ### ¿Qué hace Bakta y por qué es el estándar actual?
@@ -332,6 +387,8 @@ Xie, Z., & Tang, H., 2017. ISEScan: automated identification of insertion sequen
 Hikichi, M., et al., 2019. *Microbiology Resource Announcements* 8. [10.1128/mra.01212-19](https://doi.org/10.1128/mra.01212-19)
 
 Medina et al., 2025. *npj Antimicrobials and Resistance*. [10.1038/s44259-025-00127-x](https://doi.org/10.1038/s44259-025-00127-x)
+
+Ristinmaa, A.S. et al., et al., 2023. *Nature Communications* 14. [10.1038/s41467-023-43867-y](https://doi.org/10.1038/s41467-023-43867-y)
 
 Blin, K., et al., 2023. antiSMASH 7.0: new and improved predictions for detection, regulation and visualisation. *Nucleic Acids Research* 51:W46–W50. [10.1093/nar/gkad344](https://doi.org/10.1093/nar/gkad344)
 
