@@ -126,13 +126,14 @@ Esta práctica se organiza por **casos**. El profesor indicará cuál caso traba
 > *"Methicillin-resistant Staphylococcus aureus (MRSA) is a major pathogen causing nosocomial infections, and the clinical manifestations of MRSA range from asymptomatic colonization of the nasal mucosa to soft tissue infection to fulminant invasive disease."*
 > — [Hikichi et al. 2019](https://journals.asm.org/doi/10.1128/mra.01212-19)
 
-|                     |                              |
-|:--------------------|:-----------------------------|
-| **Organismo**       | *Staphylococcus aureus* MRSA |
-| **Tamaño esperado** | ~2.8 Mb                      |
-| **Contenido GC**    | ~33%                         |
-| **Secuenciación**   | Illumina paired-end          |
-| **Accesión**        | DRR187559                    |
+|                         |                              |
+|:------------------------|:-----------------------------|
+| **Organismo**           | *Staphylococcus aureus* MRSA |
+| **Tamaño esperado**     | ~2.8 Mb                      |
+| **Contenido GC**        | ~33%                         |
+| **Secuenciación**       | Illumina paired-end          |
+| **Accesión**            | DRR187559                    |
+| **Accesión referencia** | GCF_00001342.1               |
 
 <details>
 <summary>📥 Cargar datos en Galaxy (haga clic para expandir)</summary>
@@ -176,13 +177,14 @@ gunzip data/GCF_000013425.1_genomic.fna.gz
 > *"Klebsiella pneumoniae is one of the most important nosocomial pathogens worldwide. In Colombia, K. pneumoniae has been identified as the second most frequent microbial etiologic agent of healthcare-associated infections."*
 > — [Medina et al. 2025](https://www.nature.com/articles/s44259-025-00127-x)
 
-|                     |                         |
-|:--------------------|:------------------------|
-| **Organismo**       | *Klebsiella pneumoniae* |
-| **Tamaño esperado** | ~5.5 Mb                 |
-| **Contenido GC**    | ~57%                    |
-| **Secuenciación**   | Illumina paired-end     |
-| **Accesión**        | ERR14828471             |
+|                         |                           |
+|:------------------------|:--------------------------|
+| **Organismo**           | *Klebsiella pneumoniae*   |
+| **Tamaño esperado**     | ~5.5 Mb                   |
+| **Contenido GC**        | ~57%                      |
+| **Secuenciación**       | Illumina paired-end       |
+| **Accesión**            | ERR14828471               |
+| **Accesión referencia** | GCF_000240185.1           |
 
 <details>
 <summary>📥 Cargar datos en Galaxy (haga clic para expandir)</summary>
@@ -224,15 +226,16 @@ gunzip data/GCF_000240185.1_genomic.fna.gz
 **Contexto biotecnológico:**
 
 *Streptomyces venezuelae* es una actinobacteria Gram positiva del suelo, conocida por ser productora natural del antibiótico **cloranfenicol** y de numerosos compuestos bioactivos. Es uno de los organismos modelo para el estudio de biosíntesis de productos naturales y sporulación en bacterias filamentosas.
-> — [Pullan et al. 2011](https://link.springer.com/article/10.1186/1471-2164-12-175)
+> — [Gomez-Escribano JP et al., 2021](https://doi.org/10.1093/jimb/kuab035)
 
-|                     |                                      |
-|:--------------------|:-------------------------------------|
-| **Organismo**       | *Streptomyces venezuelae* ATCC 10712 |
-| **Tamaño esperado** | ~8.2 Mb                              |
-| **Contenido GC**    | ~72%                                 |
-| **Secuenciación**   | Illumina paired-end                  |
-| **Accesión**        | SRR2589046                           |
+|                         |                                           |
+|:------------------------|:------------------------------------------|
+| **Organismo**           | *Streptomyces venezuelae* ATCC 10712      |
+| **Tamaño esperado**     | ~8.2 Mb                                   |
+| **Contenido GC**        | ~72%                                      |
+| **Secuenciación**       | Illumina paired-end                       |
+| **Accesión**            | SRR11960410                               |
+| **Accesión referencia** | GCF_000253235.1                           |
 
 > [!NOTE]
 > Este caso es el más complejo por el tamaño del genoma y su alto contenido GC (~72%). En el reporte de FastQC/Falco, el gráfico "Per Sequence GC Content" mostrará una distribución desplazada hacia la derecha — esto es **completamente normal** para *Streptomyces* y no indica contaminación.
@@ -243,9 +246,9 @@ gunzip data/GCF_000240185.1_genomic.fna.gz
 En Galaxy, haga clic en `Upload` → `Paste/Fetch data` y pegue los siguientes enlaces:
 
 ```
-https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR258/006/SRR2589046/SRR2589046_1.fastq.gz
-https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR258/006/SRR2589046/SRR2589046_2.fastq.gz
-https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/240/185/GCF_000240185.1_ASM24018v2/GCF_000240185.1_ASM24018v2_genomic.fna.gz
+https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR119/010/SRR11960410/SRR11960410_1.fastq.gz
+https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR119/010/SRR11960410/SRR11960410_2.fastq.gz
+https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/253/235/GCF_000253235.1_ASM25323v1/GCF_000253235.1_ASM25323v1_genomic.fna.gz
 ```
 
 Haga clic en `Start` y espere a que los archivos estén en **verde** antes de continuar.
@@ -259,8 +262,8 @@ Haga clic en `Start` y espere a que los archivos estén en **verde** antes de co
 mkdir -p GenomeAssembly/caso_C/data && cd GenomeAssembly/caso_C
 
 # Lecturas
-wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR258/006/SRR2589046/SRR2589046_1.fastq.gz -O data/SRR2589046_1.fastq.gz
-wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR258/006/SRR2589046/SRR2589046_2.fastq.gz -O data/SRR2589046_2.fastq.gz
+wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR119/010/SRR11960410/SRR11960410_1.fastq.gz -O data/SRR11960410_1.fastq.gz
+wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR119/010/SRR11960410/SRR11960410_2.fastq.gz -O data/SRR11960410_2.fastq.gz
 
 # Genoma de referencia
 wget "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/253/235/GCF_000253235.1_ASM25323v1/GCF_000253235.1_ASM25323v1_genomic.fna.gz" \
@@ -347,7 +350,7 @@ Hikichi, M., et al., 2019. *Microbiology Resource Announcements* 8. [10.1128/mra
 
 Medina et al., 2025. *npj Antimicrobials and Resistance*. [10.1038/s44259-025-00127-x](https://doi.org/10.1038/s44259-025-00127-x)
 
-Pullan et al., 2011. *BMC Genomics*. [10.1186/1471-2164-12-175](https://doi.org/10.1186/1471-2164-12-175)
+Gomez-Escribano JP et al., 2021 *Journal of Industrial Microbiology and Biotechnology*. [10.1093/jimb/kuab035](https://doi.org/10.1093/jimb/kuab035)
 
 Prjibelski, A., et al., 2020. *Current Protocols in Bioinformatics* 70:e102. [10.1002/cpbi.102](https://doi.org/10.1002/cpbi.102)
 

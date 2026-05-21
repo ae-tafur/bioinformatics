@@ -203,8 +203,9 @@ echo "✅ Contigs Caso B descargados"
 
 **Contexto biotecnológico:**
 
-*Streptomyces venezuelae* ATCC 10712 es una actinobacteria Gram positiva del suelo, productora natural del antibiótico **cloranfenicol** y de numerosos compuestos bioactivos. Es uno de los organismos modelo más estudiados para la biosíntesis de productos naturales, sporulación y regulación génica en bacterias filamentosas.
-
+> *Streptomyces venezuelae* ATCC 10712 es una actinobacteria Gram positiva del suelo, productora natural del antibiótico **cloranfenicol** y de numerosos compuestos bioactivos. Es uno de los organismos modelo más estudiados para la biosíntesis de productos naturales, sporulación y regulación génica en bacterias filamentosas.
+> — [Pullan,S.T. et al. 2011](https://doi.org/10.1186/1471-2164-12-175)
+> 
 A diferencia de los casos A y B (patógenos clínicos), este caso tiene un enfoque **biotecnológico**: en lugar de buscar resistencias y virulencia, el análisis se orienta a **identificar clústeres de genes biosintéticos (BGC)** — las "fábricas moleculares" que producen antibióticos y otros metabolitos secundarios de valor industrial y farmacéutico.
 
 |                                       |                                                                        |
@@ -387,6 +388,8 @@ Xie, Z., & Tang, H., 2017. ISEScan: automated identification of insertion sequen
 Hikichi, M., et al., 2019. *Microbiology Resource Announcements* 8. [10.1128/mra.01212-19](https://doi.org/10.1128/mra.01212-19)
 
 Medina et al., 2025. *npj Antimicrobials and Resistance*. [10.1038/s44259-025-00127-x](https://doi.org/10.1038/s44259-025-00127-x)
+
+Pullan, S.T.. et al., et al., 2011. *BMC Genomics* 12. [10.1186/1471-2164-12-175](https://doi.org/10.1186/1471-2164-12-175)
 
 Ristinmaa, A.S. et al., et al., 2023. *Nature Communications* 14. [10.1038/s41467-023-43867-y](https://doi.org/10.1038/s41467-023-43867-y)
 
