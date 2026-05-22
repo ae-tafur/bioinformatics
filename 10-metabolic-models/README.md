@@ -549,28 +549,98 @@ Ejemplo: FBA con knockout del gen pgi (fosfoglucosa isomerasa)
   aromáticos).
 ```
 
-### 7.4 Limitaciones del FBA estándar
+### 7.4 Limitaciones del FBA estándar y variantes que las abordan
 
-FBA es una herramienta poderosa, pero tiene limitaciones importantes:
+FBA es una herramienta poderosa, pero tiene limitaciones importantes. En la tabla se indican también las variantes que existen para resolverlas:
 
-```text
-Suposición de FBA          │  Limitación
-───────────────────────────┼────────────────────────────────────────
-Estado estacionario        │  No captura dinámicas temporales
-                           │
-Todas las reacciones       │  No refleja diferencias en capacidad
-tienen la misma            │  catalítica real de cada proteína/enzima
-"disponibilidad"           │
-                           │
-Objetivo = maximizar μ     │  En estrés o condiciones industriales,
-                           │  la célula no siempre maximiza crecimiento
-                           │
-Sin regulación génica      │  No captura inducción/represión
-explícita                  │  de genes según el ambiente
-```
+| Suposición de FBA                        | Limitación                                                                     | Variante que la aborda  |
+|:-----------------------------------------|:-------------------------------------------------------------------------------|:------------------------|
+| Estado estacionario                      | No captura dinámicas temporales                                                | **dFBA** (FBA dinámico) |
+| Todas las enzimas igualmente disponibles | No refleja diferencias en capacidad catalítica real                            | **GECKO / ecGEM**       |
+| Objetivo = maximizar $\mu$               | En estrés o condiciones industriales la célula no siempre maximiza crecimiento | **MOMA**, **ROOM**      |
+| Sin regulación génica explícita          | No captura inducción / represión de genes según el ambiente                    | **rFBA**, **iFBA**      |
 
 > [!WARNING]
 > La limitación más crítica para el diseño de biofábricas es que FBA trata todas las enzimas como igualmente disponibles dentro de sus límites de flujo. En la realidad, cada enzima tiene una cantidad finita de proteína y una capacidad catalítica específica (kcat). Ignorar esto puede llevar a predicciones de producción irrealmente optimistas.
+
+---
+
+### 7.5 FBA dinámico (dFBA): combinando ODEs con FBA
+
+Hasta ahora todo lo descrito corresponde al **FBA de estado estacionario (ssFBA)**: el modelo resuelve la distribución de flujos en un instante dado, asumiendo que las concentraciones extracelulares (glucosa, oxígeno, productos excretados) no cambian. Esto es razonable para cultivos en quimiostato, pero en un **cultivo batch** la glucosa se agota, el pH cambia y la biomasa crece: el sistema *sí* evoluciona en el tiempo.
+
+El **FBA dinámico (dFBA)** combina lo mejor de ambos mundos: usa un sistema de ODEs para seguir las concentraciones extracelulares a lo largo del tiempo, y en cada paso de tiempo resuelve un FBA para obtener los flujos intracelulares óptimos bajo esas condiciones.
+
+#### El principio del dFBA
+
+```text
+           t = 0           t = Δt          t = 2Δt        ...
+              │               │               │
+  [Glc]₀ ─────┤               │               │
+  [Biom]₀     │               │               │
+  [EtOH]₀     │               │               │
+              │               │               │
+  ┌───────────▼───────────────▼───────────────▼──────────────┐
+  │  CAPA EXTERIOR (ODEs extracelulares)                     │
+  │  d[Glc]/dt = −v_uptake · X                               │
+  │  d[X]/dt   =  μ · X                                      │
+  │  d[EtOH]/dt =  v_etoh · X                                │
+  └────────────┬───────────────┬───────────────┬─────────────┘
+               │               │               │
+               ▼               ▼               ▼
+  ┌────────────────────────────────────────────────────────────┐
+  │  CAPA INTERIOR (FBA intracelular — en cada paso de tiempo) │
+  │  max  cᵀv   s.a.  Sv = 0,  lb ≤ v ≤ ub(t)                  │
+  │  → devuelve: μ(t), v_uptake(t), v_etoh(t), ...             │
+  └────────────────────────────────────────────────────────────┘
+```
+
+Los límites de flujo $\mathbf{ub}(t)$ cambian en cada paso porque dependen de las concentraciones extracelulares actuales. Por ejemplo, el uptake de glucosa está limitado por la concentración de glucosa disponible:
+
+$$v_{uptake}(t) \leq \frac{v_{uptake}^{max} \cdot [Glc](t)}{K_s + [Glc](t)}$$
+
+#### Las ecuaciones del dFBA
+
+La capa exterior integra las concentraciones en el tiempo usando los flujos que devuelve FBA en cada instante $t$:
+
+$$\frac{d[Glc]}{dt} = -v_{glc}(t) \cdot X(t)$$
+
+$$\frac{d[X]}{dt} = \mu(t) \cdot X(t)$$
+
+$$\frac{d[P]}{dt} = v_{prod}(t) \cdot X(t)$$
+
+donde $X(t)$ es la concentración de biomasa (g/L), $v_{glc}(t)$ es el flujo de uptake de glucosa devuelto por FBA en el tiempo $t$ (mmol·gDW⁻¹·h⁻¹), y $v_{prod}(t)$ es el flujo de producción del compuesto de interés.
+
+#### Ejemplo: simulación de un batch de *E. coli* en glucosa
+
+```text
+ t (h) │ [Glc] (g/L) │ [X] (g/L) │  [EtOH] (mmol/L) │  μ(t) (h⁻¹)
+───────┼─────────────┼───────────┼──────────────────┼──────────────
+   0.0 │    10.0     │   0.10    │       0.0        │    0.87
+   1.0 │     8.1     │   0.24    │       1.8        │    0.87
+   2.0 │     5.6     │   0.57    │       5.2        │    0.85
+   3.0 │     2.2     │   1.31    │      11.3        │    0.74
+   4.0 │     0.4     │   2.71    │      18.6        │    0.41
+   4.5 │     0.0     │   3.10    │      20.1        │    0.00   ← glucosa agotada
+   5.0 │     0.0     │   3.10    │      20.1        │    0.00
+```
+
+> [!NOTE]
+> Observe que $\mu(t)$ disminuye al final **no porque cambie la red metabólica**, sino porque el FBA recibe como entrada $[Glc] \to 0$, lo que reduce el límite de uptake y por tanto la tasa de crecimiento predicha. Esta es la elegancia del dFBA: la dinámica temporal emerge del acoplamiento entre ODEs y FBA, sin necesidad de parámetros cinéticos intracelulares.
+
+#### Comparación: ssFBA vs. dFBA vs. ODEs cinéticas
+
+| Característica                                   | ssFBA  |          dFBA                                  | ODEs cinéticas   |
+|:-------------------------------------------------|:------:|:----------------------------------------------:|:----------------:|
+| Predice flujos intracelulares                    |   ✅    |                       ✅                        |        ✅         |
+| Captura dinámica temporal                        |   ❌    |                       ✅                        |        ✅         |
+| Requiere parámetros cinéticos ($K_m$, $V_{max}$) |   ❌    |                  Solo extrac.                  |    ✅ (todos)     |
+| Escala a nivel genómico (miles de reacciones)    |   ✅    |                       ✅                        |        ❌         |
+| Costo computacional                              |  Bajo  |                     Medio                      |       Alto       |
+| Implementación en COBRApy / COBRA Toolbox        |   ✅    | ✅ (`cobra.flux_analysis.pfba`, `dfba` package) | Librería `scipy` |
+
+> [!TIP]
+> En Python existe el paquete **`dfba`** ([github.com/biosustain/dfba](https://github.com/biosustain/dfba)) desarrollado por el Novo Nordisk Foundation Center for Biosustainability, que integra COBRApy con `scipy.integrate` para resolver simulaciones dFBA directamente sobre cualquier modelo GEM.
 
 ---
 
