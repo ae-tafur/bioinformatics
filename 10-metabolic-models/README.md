@@ -607,7 +607,7 @@ $$\max_{\mathbf{v}} \quad \mathbf{c}^\top \mathbf{v} \qquad \text{s.a.} \quad \m
 
 Los límites de flujo $\mathbf{ub}(t)$ cambian en cada paso porque dependen de las concentraciones extracelulares actuales. Por ejemplo, el uptake de glucosa está acotado por la concentración disponible mediante una cinética de Michaelis-Menten:
 
-$$v_{uptake}(t) \leq \frac{v_\text{max uptake} \cdot [Glc](t)}{K_s + [Glc](t)}$$
+$$v_{uptake}(t) \leq \frac{v_{max,uptake} \cdot [Glc](t)}{K_s + [Glc](t)}$$
 
 donde $v_{uptake}^{max}$ es el uptake máximo permitido (parámetro del modelo), $K_s$ es la constante de semisaturación para glucosa, y $X(t)$, $v_{glc}(t)$, $v_{prod}(t)$ son la biomasa, el flujo de uptake y el flujo de producción devueltos por el FBA en el instante $t$.
 
