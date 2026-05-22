@@ -202,11 +202,9 @@ Así como en el Transmilenio existen múltiples rutas para llegar de un punto A 
 
 Una **ecuación diferencial ordinaria (ODE)** describe cómo cambia una cantidad con respecto al tiempo. En biología, se usan para modelar cómo cambia la concentración de un metabolito:
 
-```text
-d[X]/dt = (suma de tasas de producción) − (suma de tasas de consumo)
-```
+$$\frac{d[X]}{dt} = \sum \text{tasas de producción} - \sum \text{tasas de consumo}$$
 
-Donde `[X]` es la concentración del metabolito X y `t` es el tiempo.
+Donde $[X]$ es la concentración del metabolito X y $t$ es el tiempo.
 
 ### 5.2 Un ejemplo simple: glucosa → etanol
 
@@ -216,26 +214,23 @@ Considere una célula de levadura que consume glucosa (G) y produce etanol (E):
 Reacciones simplificadas:
   1. Glucosa (G)  ──(v₁)──▶  2 Piruvato (P)
   2. Piruvato (P) ──(v₂)──▶  Etanol (E) + CO₂
-
-Sistema de ODEs:
-  d[G]/dt  = −v₁
-  d[P]/dt  =  2·v₁ − v₂
-  d[E]/dt  =  v₂
-
-Donde v₁ y v₂ son tasas de reacción (mmol/gDW/h)
 ```
 
-Cada tasa `v` puede modelarse con cinética de **Michaelis-Menten**:
+**Sistema de ODEs:**
 
-```text
-        Vmax · [S]
-v  =  ─────────────
-        Km + [S]
+$$\frac{d[G]}{dt} = -v_1$$
 
-  Vmax = velocidad máxima de la enzima
-  Km   = concentración de sustrato en la mitad de Vmax
-  [S]  = concentración del sustrato
-```
+$$\frac{d[P]}{dt} = 2v_1 - v_2$$
+
+$$\frac{d[E]}{dt} = v_2$$
+
+donde $v_1$ y $v_2$ son tasas de reacción en $\text{mmol} \cdot \text{gDW}^{-1} \cdot \text{h}^{-1}$.
+
+Cada tasa $v$ se modela con cinética de **Michaelis-Menten**:
+
+$$v = \frac{V_{max} \cdot [S]}{K_m + [S]}$$
+
+donde $V_{max}$ es la velocidad máxima de la enzima, $K_m$ es la concentración de sustrato a la que $v = V_{max}/2$, y $[S]$ es la concentración del sustrato.
 
 Integrando el sistema en el tiempo obtenemos curvas de crecimiento y producción comparables a las que se miden experimentalmente en un biorreactor.
 
@@ -262,26 +257,21 @@ Condiciones iniciales (t = 0):
 
 **Paso 1 — Calcular las tasas en t = 0:**
 
-```text
-        Vmax₁ · [G]₀          2.5 × 10.0
-v₁(0) = ──────────────── = ─────────────── = 2.381 mmol/gDW/h
-         Km₁  + [G]₀          0.5 + 10.0
-                                              ↑ alta saturación: enzima casi a Vmax
+$$v_1(0) = \frac{V_{max,1} \cdot [G]_0}{K_{m,1} + [G]_0} = \frac{2.5 \times 10.0}{0.5 + 10.0} = \frac{25.0}{10.5} = 2.381 \ \text{mmol/gDW/h}$$
 
+> Alta saturación: la enzima opera casi a $V_{max}$ porque $[G]_0 \gg K_{m,1}$.
 
-        Vmax₂ · [P]₀          5.0 × 0.0
-v₂(0) = ──────────────── = ─────────────── = 0.000 mmol/gDW/h
-         Km₂  + [P]₀          0.2 + 0.0
-                                              ↑ sin piruvato: la R2 no puede ocurrir
-```
+$$v_2(0) = \frac{V_{max,2} \cdot [P]_0}{K_{m,2} + [P]_0} = \frac{5.0 \times 0.0}{0.2 + 0.0} = 0.000 \ \text{mmol/gDW/h}$$
+
+> Sin piruvato disponible, la reacción 2 no puede ocurrir.
 
 **Paso 2 — Calcular las derivadas en t = 0:**
 
-```text
-d[G]/dt │t=0 = −v₁                 = −2.381  mmol/L/h   → glucosa disminuye
-d[P]/dt │t=0 =  2·v₁ − v₂         = +4.762  mmol/L/h   → piruvato se acumula
-d[E]/dt │t=0 =  v₂                 =  0.000  mmol/L/h   → etanol aún no se produce
-```
+$$\left.\frac{d[G]}{dt}\right|_{t=0} = -v_1 = -2.381 \ \text{mmol/L/h} \quad \rightarrow \text{glucosa disminuye}$$
+
+$$\left.\frac{d[P]}{dt}\right|_{t=0} = 2v_1 - v_2 = +4.762 \ \text{mmol/L/h} \quad \rightarrow \text{piruvato se acumula}$$
+
+$$\left.\frac{d[E]}{dt}\right|_{t=0} = v_2 = 0.000 \ \text{mmol/L/h} \quad \rightarrow \text{etanol aún no se produce}$$
 
 **Paso 3 — Integración numérica (pasos de Δt = 0.5 h, método de Euler explícito):**
 
@@ -353,24 +343,15 @@ En lugar de requerir parámetros cinéticos, los modelos COBRA (*COnstraints-Bas
 
 El estado estacionario implica que las concentraciones intracelulares de metabolitos no cambian en el tiempo:
 
-```text
-d[X]/dt = 0  para todos los metabolitos internos
+$$\frac{d[X]}{dt} = 0 \quad \text{para todos los metabolitos internos}$$
 
-Esto es equivalente a decir:
-  "Lo que entra = lo que sale"
-  para cada metabolito en la red.
-```
+Esto es equivalente a decir que **lo que entra a cada nodo de la red es igual a lo que sale**: el flujo neto sobre cada metabolito es cero.
 
 Bajo esta suposición, el sistema de ODEs se reduce a un problema de **álgebra lineal**:
 
-```text
-S · v = 0
+$$\mathbf{S} \cdot \mathbf{v} = \mathbf{0}$$
 
-Donde:
-  S = Matriz estequiométrica (m metabolitos × n reacciones)
-  v = Vector de flujos (n reacciones)
-  0 = Vector cero (condición de estado estacionario)
-```
+donde $\mathbf{S}$ es la matriz estequiométrica de dimensión $m \times n$ ($m$ metabolitos, $n$ reacciones), $\mathbf{v}$ es el vector de flujos de las $n$ reacciones, y $\mathbf{0}$ es el vector cero que impone la condición de estado estacionario.
 
 ### 6.2 La matriz estequiométrica S
 
@@ -391,17 +372,20 @@ Reacciones:          R1        R2        R3        R4
   • Valor  1: el metabolito es PRODUCIDO por esa reacción
   • Valor -1: el metabolito es CONSUMIDO por esa reacción
   • Valor  0: el metabolito no participa en esa reacción
-
-Relación con ODEs:
-  La fila de G6P en la matriz dice:
-  d[G6P]/dt = 1·v₁ + (−1)·v₂ = v₁ − v₂
-  
-  En estado estacionario:  v₁ − v₂ = 0  →  v₁ = v₂
-  (lo que se produce de G6P debe ser igual a lo que se consume)
 ```
 
+**Relación con las ODEs** — la fila de G6P en la matriz dice directamente:
+
+$$\frac{d[\text{G6P}]}{dt} = 1 \cdot v_1 + (-1) \cdot v_2 = v_1 - v_2$$
+
+En estado estacionario ($d[\text{G6P}]/dt = 0$):
+
+$$v_1 - v_2 = 0 \implies v_1 = v_2$$
+
+lo que se produce de G6P debe ser exactamente igual a lo que se consume.
+
 > [!IMPORTANT]
-> Cada **fila** de la matriz S corresponde exactamente a una **ecuación diferencial** del sistema de ODEs. Asumir estado estacionario (d[X]/dt = 0) convierte el problema dinámico en estático: **S · v = 0**. Esto elimina la necesidad de parámetros cinéticos y permite trabajar a escala genómica.
+> Cada **fila** de la matriz $\mathbf{S}$ corresponde exactamente a una **ecuación diferencial** del sistema de ODEs. Asumir estado estacionario ($d[X]/dt = 0$) convierte el problema dinámico en estático: $\mathbf{S} \cdot \mathbf{v} = \mathbf{0}$. Esto elimina la necesidad de parámetros cinéticos y permite trabajar a escala genómica.
 
 ### 6.3 Del genoma al modelo: el proceso de reconstrucción
 
@@ -514,20 +498,15 @@ Dado que S · v = 0 tiene infinitas soluciones posibles (el sistema está subdet
 1. **Restricciones de desigualdad**: los flujos no pueden exceder ciertos límites (`lb ≤ v ≤ ub`).
 2. **Función objetivo**: maximizar o minimizar una reacción específica (generalmente la tasa de crecimiento).
 
-```text
-FBA como problema de programación lineal (LP):
+El problema de optimización de FBA se formula como un **programa lineal (LP)**:
 
-  Maximizar:    cᵀ · v          (ej. maximizar flujo de biomasa)
-  
-  Sujeto a:     S · v  =  0     (estado estacionario)
-                lb ≤ v ≤ ub     (límites de flujo)
+$$\max_{\mathbf{v}} \quad \mathbf{c}^\top \mathbf{v}$$
 
-  Donde:
-    c = vector de coeficientes de la función objetivo
-    S = matriz estequiométrica
-    v = vector de flujos (la incógnita a resolver)
-    lb, ub = límites inferior y superior de cada reacción
-```
+$$\text{sujeto a:} \quad \mathbf{S} \cdot \mathbf{v} = \mathbf{0}$$
+
+$$\mathbf{lb} \leq \mathbf{v} \leq \mathbf{ub}$$
+
+donde $\mathbf{c}$ es el vector de coeficientes de la función objetivo (generalmente 1 para la reacción de biomasa y 0 para el resto), $\mathbf{v}$ es el vector de flujos incógnita, y $\mathbf{lb}$, $\mathbf{ub}$ son los vectores de límites inferior y superior de cada reacción.
 
 ### 7.2 ¿Qué nos dice FBA?
 
@@ -604,24 +583,17 @@ En FBA clásico, la única restricción sobre un flujo es el límite numérico `
 - **cuánta proteína enzimática hay** en la célula (nivel de expresión);
 - **qué tan rápido trabaja** esa enzima (kcat: número de recambio catalítico).
 
-```text
-Relación fundamental entre flujo, proteína y kcat:
+La relación fundamental que introduce GECKO es:
 
-     v_i  ≤  kcat_i · [E_i]
+$$v_i \leq k_{cat,i} \cdot [E_i]$$
 
-  Donde:
-    v_i    = flujo de la reacción i  (mmol/gDW/h)
-    kcat_i = número de recambio de la enzima i  (1/s → convertido a 1/h)
-    [E_i]  = cantidad de enzima i  (mmol/gDW)
+donde $v_i$ es el flujo de la reacción $i$ (mmol·gDW⁻¹·h⁻¹), $k_{cat,i}$ es el número de recambio catalítico de la enzima $i$ (convertido a h⁻¹), y $[E_i]$ es la cantidad de enzima $i$ disponible (mmol·gDW⁻¹).
 
-Adicionalmente, la suma de toda la proteína enzimática
-no puede exceder la capacidad proteómica total de la célula:
+Adicionalmente, la suma de toda la proteína enzimática no puede exceder la capacidad proteómica total de la célula:
 
-  Σ (MW_i · [E_i])  ≤  P_total
+$$\sum_i MW_i \cdot [E_i] \leq P_{total}$$
 
-  Donde MW_i es la masa molecular de la enzima i (g/mol)
-  y P_total es la fracción proteómica disponible (g/gDW, típicamente ~0.5)
-```
+donde $MW_i$ es la masa molecular de la enzima $i$ (g·mol⁻¹) y $P_{total}$ es la fracción proteómica disponible (g·gDW⁻¹, típicamente ≈ 0.5).
 
 ### 8.2 ¿Qué es GECKO?
 
@@ -631,18 +603,16 @@ no puede exceder la capacidad proteómica total de la célula:
 2. **Restricción del presupuesto proteómico** (la célula tiene un límite de cuánta proteína puede sintetizar).
 3. **Variables de proteína explícitas** en el modelo, permitiendo simular sobreexpresión, downregulation y datos proteómicos cuantitativos.
 
-```text
-FBA estándar vs. ecGEM (GECKO):
+El problema de optimización de un ecGEM (GECKO) extiende el LP de FBA con las nuevas restricciones:
 
-FBA clásico:                    ecGEM con GECKO:
-────────────────────────────    ────────────────────────────────────────
-S · v = 0                       S_ext · v_ext = 0    (S extendida)
-lb ≤ v ≤ ub                     lb ≤ v ≤ ub
-Maximizar: cᵀ·v                 v_i ≤ kcat_i · [E_i]  ← restricción enzimática
-                                Σ MW_i · [E_i] ≤ P_total  ← presupuesto
-                                [E_i] ≥ 0
-                                Maximizar: cᵀ·v
-```
+|                            | FBA clásico                                    | ecGEM (GECKO)                                          |
+|:---------------------------|:-----------------------------------------------|:-------------------------------------------------------|
+| **Estado estacionario**    | $\mathbf{S} \cdot \mathbf{v} = \mathbf{0}$     | $\mathbf{S}_{ext} \cdot \mathbf{v}_{ext} = \mathbf{0}$ |
+| **Límites de flujo**       | $\mathbf{lb} \leq \mathbf{v} \leq \mathbf{ub}$ | $\mathbf{lb} \leq \mathbf{v} \leq \mathbf{ub}$         |
+| **Restricción enzimática** | —                                              | $v_i \leq k_{cat,i} \cdot [E_i]$                       |
+| **Presupuesto proteómico** | —                                              | $\sum_i MW_i \cdot [E_i] \leq P_{total}$               |
+| **No negatividad**         | —                                              | $[E_i] \geq 0$                                         |
+| **Objetivo**               | $\max \ \mathbf{c}^\top \mathbf{v}$            | $\max \ \mathbf{c}^\top \mathbf{v}$                    |
 
 ### 8.3 ¿Por qué importa GECKO?
 
