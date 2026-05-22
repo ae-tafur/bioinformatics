@@ -574,25 +574,25 @@ El **FBA dinámico (dFBA)** combina lo mejor de ambos mundos: usa un sistema de 
 #### El principio del dFBA
 
 ```text
-           t = 0           t = Δt          t = 2Δt        ...
-              │               │               │
-  [Glc]₀ ─────┤               │               │
-  [Biom]₀     │               │               │
-  [EtOH]₀     │               │               │
-              │               │               │
-  ┌───────────▼───────────────▼───────────────▼──────────────┐
-  │  CAPA EXTERIOR (ODEs extracelulares)                     │
-  │  d[Glc]/dt = −v_uptake · X                               │
-  │  d[X]/dt   =  μ · X                                      │
-  │  d[EtOH]/dt =  v_etoh · X                                │
-  └────────────┬───────────────┬───────────────┬─────────────┘
-               │               │               │
-               ▼               ▼               ▼
-  ┌────────────────────────────────────────────────────────────┐
-  │  CAPA INTERIOR (FBA intracelular — en cada paso de tiempo) │
-  │  max  cᵀv   s.a.  Sv = 0,  lb ≤ v ≤ ub(t)                  │
-  │  → devuelve: μ(t), v_uptake(t), v_etoh(t), ...             │
-  └────────────────────────────────────────────────────────────┘
+           t = 0          t = dt         t = 2*dt       ...
+              |               |               |
+  [Glc]_0 ----|               |               |
+  [Biom]_0    |               |               |
+  [EtOH]_0    |               |               |
+              |               |               |
+  +-----------v---------------v---------------v-----------+
+  |  CAPA EXTERIOR (ODEs extracelulares)                  |
+  |  d[Glc]/dt  = -v_uptake * X                           |
+  |  d[X]/dt    =  mu * X                                 |
+  |  d[EtOH]/dt =  v_etoh * X                             |
+  +-----------+---------------+---------------+-----------+
+              |               |               |
+              v               v               v
+  +-----------------------------------------------------------+
+  |  CAPA INTERIOR (FBA intracelular - en cada paso de tiempo)|
+  |  max  c'v   s.a.  Sv = 0,  lb <= v <= ub(t)              |
+  |  -> devuelve: mu(t), v_uptake(t), v_etoh(t), ...         |
+  +-----------------------------------------------------------+
 ```
 
 Los límites de flujo $\mathbf{ub}(t)$ cambian en cada paso porque dependen de las concentraciones extracelulares actuales. Por ejemplo, el uptake de glucosa está limitado por la concentración de glucosa disponible:
