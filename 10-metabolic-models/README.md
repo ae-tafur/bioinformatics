@@ -581,35 +581,35 @@ El **FBA dinámico (dFBA)** combina lo mejor de ambos mundos: usa un sistema de 
   [EtOH]_0    |               |               |
               |               |               |
   +-----------v---------------v---------------v-----------+
-  |  CAPA EXTERIOR (ODEs extracelulares)                  |
-  |  d[Glc]/dt  = -v_uptake * X                           |
-  |  d[X]/dt    =  mu * X                                 |
-  |  d[EtOH]/dt =  v_etoh * X                             |
+  |         CAPA EXTERIOR  (ODEs extracelulares)          |
+  |    concentraciones en el medio: Glc, X, EtOH, ...     |
   +-----------+---------------+---------------+-----------+
-              |               |               |
+              |  flujos v(t)  |               |
               v               v               v
   +-----------------------------------------------------------+
-  |  CAPA INTERIOR (FBA intracelular - en cada paso de tiempo)|
-  |  max  c'v   s.a.  Sv = 0,  lb <= v <= ub(t)              |
-  |  -> devuelve: mu(t), v_uptake(t), v_etoh(t), ...         |
+  |     CAPA INTERIOR  (FBA intracelular, cada paso dt)       |
+  |     resuelve el LP con los limites ub(t) del paso actual  |
+  |     devuelve: mu(t), v_uptake(t), v_prod(t), ...          |
   +-----------------------------------------------------------+
 ```
 
-Los límites de flujo $\mathbf{ub}(t)$ cambian en cada paso porque dependen de las concentraciones extracelulares actuales. Por ejemplo, el uptake de glucosa está limitado por la concentración de glucosa disponible:
+**Capa exterior — ODEs extracelulares** (integradas en el tiempo):
 
-$$v_{uptake}(t) \leq \frac{v_{uptake}^{max} \cdot [Glc](t)}{K_s + [Glc](t)}$$
-
-#### Las ecuaciones del dFBA
-
-La capa exterior integra las concentraciones en el tiempo usando los flujos que devuelve FBA en cada instante $t$:
-
-$$\frac{d[Glc]}{dt} = -v_{glc}(t) \cdot X(t)$$
+$$\frac{d[\text{Glc}]}{dt} = -v_{uptake}(t) \cdot X(t)$$
 
 $$\frac{d[X]}{dt} = \mu(t) \cdot X(t)$$
 
-$$\frac{d[P]}{dt} = v_{prod}(t) \cdot X(t)$$
+$$\frac{d[\text{EtOH}]}{dt} = v_{etoh}(t) \cdot X(t)$$
 
-donde $X(t)$ es la concentración de biomasa (g/L), $v_{glc}(t)$ es el flujo de uptake de glucosa devuelto por FBA en el tiempo $t$ (mmol·gDW⁻¹·h⁻¹), y $v_{prod}(t)$ es el flujo de producción del compuesto de interés.
+**Capa interior — FBA intracelular** (resuelto en cada instante $t$):
+
+$$\max_{\mathbf{v}} \quad \mathbf{c}^\top \mathbf{v} \qquad \text{s.a.} \quad \mathbf{S}\cdot\mathbf{v} = \mathbf{0}, \quad \mathbf{lb} \leq \mathbf{v} \leq \mathbf{ub}(t)$$
+
+Los límites de flujo $\mathbf{ub}(t)$ cambian en cada paso porque dependen de las concentraciones extracelulares actuales. Por ejemplo, el uptake de glucosa está acotado por la concentración disponible mediante una cinética de Michaelis-Menten:
+
+$$v_{uptake}(t) \leq \frac{v_{uptake}^{max} \cdot [\text{Glc}](t)}{K_s + [\text{Glc}](t)}$$
+
+donde $v_{uptake}^{max}$ es el uptake máximo permitido (parámetro del modelo), $K_s$ es la constante de semisaturación para glucosa, y $X(t)$, $v_{glc}(t)$, $v_{prod}(t)$ son la biomasa, el flujo de uptake y el flujo de producción devueltos por el FBA en el instante $t$.
 
 #### Ejemplo: simulación de un batch de *E. coli* en glucosa
 
@@ -746,7 +746,7 @@ La ingeniería metabólica moderna sigue un ciclo iterativo:
 
 ```text
         ┌─────────────────────────────────────────────┐
-        │       Ciclo DBTL (Design-Build-Test-Learn)   │
+        │       Ciclo DBTL (Design-Build-Test-Learn)  │
         └─────────────────────────────────────────────┘
 
    ┌──────────────┐     ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
