@@ -1,0 +1,1101 @@
+# Módulo 10: Modelación de Redes Metabólicas — Del Genoma al Diseño de Biofábricas
+
+## Introducción
+
+A lo largo de los módulos anteriores, usted aprendió a obtener secuencias de bases de datos, alinearlas, reconstruir genomas, anotarlos y compararlos. Pero hay una pregunta que todavía no hemos respondido: **¿cómo le decimos a una célula qué producir?**
+
+Los microorganismos no son simplemente portadores de genes: son máquinas bioquímicas que transforman nutrientes en energía, biomasa y productos de valor. La ingeniería metabólica busca reprogramar esas máquinas para que produzcan compuestos de interés: antibióticos, enzimas industriales, biocombustibles, plásticos biodegradables, alimentos funcionales.
+
+Para hacerlo de forma racional —sin ensayo y error ciego— necesitamos una representación matemática del metabolismo. Eso es exactamente lo que son los **modelos metabólicos a escala genómica (GEM)**: traducciones del genoma en ecuaciones que nos permiten simular, predecir y diseñar el comportamiento celular.
+
+Este módulo conecta todo lo que ha aprendido:
+
+1. **El dogma central y más allá** — de la secuencia al fenotipo metabólico.
+2. **Biología en tiempo y espacio** — por qué la célula es un sistema dinámico.
+3. **Abstracciones matemáticas** — cómo simplificamos la complejidad para poder modelarla.
+4. **Redes metabólicas como grafos** — nodos, aristas y flujos.
+5. **Ecuaciones diferenciales ordinarias (ODEs)** — simular tasas de reacción.
+6. **Modelos COBRA a escala genómica** — del genoma a la matriz estequiométrica.
+7. **Flux Balance Analysis (FBA)** — optimizar flujos a estado estacionario.
+8. **Modelos con restricciones enzimáticas: GECKO** — incorporar la capacidad catalítica real.
+
+> [!NOTE]
+> Este módulo requiere que usted haya trabajado con los conceptos de anotación genómica (Módulo 6) y tenga familiaridad básica con Python (Módulo 2), ya que la práctica usa **COBRApy** en Google Colab.
+
+---
+
+## Prerrequisitos y conexión con módulos previos
+
+### Del Módulo 1 y 3
+- Búsqueda de secuencias y genes en NCBI, formato FASTA y GenBank.
+- Concepto de gen, ORF, producto génico.
+
+### Del Módulo 2
+- Python básico: variables, listas, funciones, lectura de archivos.
+
+### Del Módulo 6
+- Anotación genómica: genes, productos, EC numbers, rutas metabólicas (KEGG, COG).
+- Concepto de reacción bioquímica representada como feature en un archivo GBK/GFF.
+
+> [!NOTE]
+> Si necesita repasar:
+> - Módulo 2 → [README Módulo 2](../02-coding-basics/README.md)
+> - Módulo 6 → [README Módulo 6](../06-genomics/README.md)
+
+---
+
+## 1. El dogma central de la biología molecular — y más allá
+
+### 1.1 Lo que ya conoce
+
+El dogma central de la biología molecular describe el flujo de información genética:
+
+```text
+ADN  ──replicación──▶  ADN
+ADN  ──transcripción──▶  ARN  ──traducción──▶  Proteína
+```
+
+Los genes codifican proteínas, y las proteínas ejecutan funciones bioquímicas. Hasta aquí, el dogma clásico.
+
+### 1.2 El panorama completo
+
+Pero la información genética no termina en la proteína. Las proteínas catalizan **reacciones químicas** que transforman metabolitos, generan energía y producen la biomasa necesaria para crecer. El flujo completo es:
+
+```text
+                   ┌──────────────────────────────────────────────────────┐
+                   │               Dogma Central Extendido                │
+                   └──────────────────────────────────────────────────────┘
+
+    ADN ──▶ ARNm ──▶ Proteína ──▶ Enzima ──▶ Reacción bioquímica
+                        │                         │
+               rRNA, tRNA, miRNA,            Metabolitos
+               snRNA (regulación,           (glucosa, ATP,
+               procesamiento,              aminoácidos,
+               síntesis proteica)          lípidos, etc.)
+                                                  │
+                                          Fenotipo celular:
+                                        crecimiento, producción,
+                                       respuesta al ambiente
+```
+
+> [!IMPORTANT]
+> 🔑 La imagen clave aquí es que el genoma no solo "guarda información": es la **receta operacional** de la maquinaria metabólica de la célula. Cada gen anotado con un número EC (Enzyme Commission) es, potencialmente, un nodo en la red metabólica.
+
+---
+
+## 2. Biología en tiempo y espacio
+
+Una célula no es una fotografía estática: es un sistema **dinámico**. Las concentraciones de metabolitos cambian segundo a segundo dependiendo de:
+
+- los **nutrientes disponibles** en el medio (glucosa, oxígeno, nitrógeno);
+- la **expresión génica** en ese momento (qué enzimas están activas);
+- las **condiciones físicas** (temperatura, pH, osmolaridad);
+- la **historia del cultivo** (fase lag, exponencial, estacionaria).
+
+Esto significa que para entender o predecir el comportamiento de una célula, no basta con conocer su genoma. Necesitamos un modelo que capture **cómo cambian las concentraciones en el tiempo** bajo distintas condiciones. Eso nos lleva a las matemáticas.
+
+---
+
+## 3. Abstracciones matemáticas para entender una célula
+
+Para modelar sistemas biológicos complejos se utilizan diferentes niveles de abstracción:
+
+| Nivel de abstracción  | Descripción                                           | Ejemplo                   |
+|:----------------------|:------------------------------------------------------|:--------------------------|
+| **Estequiométrico**   | Qué reacciones existen y cómo se conectan             | Matriz S                  |
+| **Cinético**          | A qué velocidad ocurre cada reacción                  | ODEs con Michaelis-Menten |
+| **Termodinámico**     | Qué tan favorables son las reacciones                 | ΔG de reacciones          |
+| **Regulatorio**       | Qué genes están activos según las condiciones         | Redes de regulación (GRN) |
+| **A escala genómica** | Todos los genes y reacciones del organismo integrados | GEM (Genome-Scale Model)  |
+
+La clave de la modelación es que **no necesitamos conocer todo perfectamente**: usando el nivel de abstracción correcto podemos obtener predicciones útiles con información razonable.
+
+---
+
+## 4. Redes metabólicas: grafos, nodos y aristas
+
+### 4.1 El metabolismo como grafo
+
+Un **grafo** es una estructura matemática formada por **nodos** (vértices) y **aristas** (conexiones). El metabolismo se puede representar naturalmente como un grafo:
+
+```text
+Representación del metabolismo como grafo:
+
+        Glucosa
+           │
+    (reacción: hexoquinasa)
+           │
+     Glucosa-6-P ──────────────────────────────────────┐
+           │                                            │
+   (fosfoglucosa                             (glucosa-6-P
+    isomerasa)                               deshidrogenasa)
+           │                                            │
+     Fructosa-6-P                             6-P-gluconolactona
+           │                                  (vía pentosa fosfato)
+           ...
+
+     ○ = Metabolito (nodo)
+     ─ = Reacción (arista)
+     → = Dirección del flujo
+```
+
+Cada **nodo** representa un metabolito o compuesto químico. Cada **arista** representa una reacción catalizada por una enzima. El **flujo** a través de esas aristas representa la tasa a la que ocurre cada reacción.
+
+### 4.2 El mapa de KEGG: la complejidad real
+
+Si alguna vez ha visto el mapa metabólico completo de KEGG (*Kyoto Encyclopedia of Genes and Genomes*), habrá notado su aparente caos:
+
+```text
+╔═══════════════════════════════════════════════════════════════╗
+║     Mapa metabólico (representación esquemática tipo KEGG)    ║
+║                                                               ║
+║   ○──○    ○──○──○       ○       ○──○──○──○──○                 ║
+║   │  │    │        ╲   / \     / │                            ║
+║   ○  ○──○─○         ○─○   ○──○  ○──○                          ║
+║   │     │  \        │     │        │                          ║
+║   ○──○──○   ○──○──○─○─────○──○──○──○──○──○                    ║
+║       │    /                   │       │                      ║
+║       ○──○                     ○──○──○─○──○──○──○             ║
+║                                                               ║
+║  Cada nodo (○) = metabolito   Cada línea (─) = reacción       ║
+╚═══════════════════════════════════════════════════════════════╝
+```
+
+> [!TIP]
+> Puede explorar el mapa metabólico real en: https://www.kegg.jp/kegg/pathway.html
+
+Lo que parece una telaraña infinita es, en realidad, un grafo muy denso donde cada nodo es un compuesto químico y cada arista es una reacción enzimática. Un modelo metabólico a escala genómica es una **representación matemática formal** de ese mismo grafo.
+
+### 4.3 La analogía del Transmilenio
+
+Una forma intuitiva de entender una red metabólica es comparándola con el sistema de transporte público de una ciudad:
+
+```text
+╔═══════════════════════════════════════════════════════╗
+║          Red de Transmilenio vs. Red Metabólica       ║
+╠═══════════════════╦═══════════════════════════════════╣
+║ Transmilenio      ║ Red Metabólica                    ║
+╠═══════════════════╬═══════════════════════════════════╣
+║ Estaciones        ║ Metabolitos                       ║
+║ Rutas de bus      ║ Reacciones enzimáticas            ║
+║ Pasajeros         ║ Flujo de carbono / electrones     ║
+║ Capacidad del bus ║ Actividad máxima de la enzima     ║
+║ Nodo de Portal    ║ Metabolito hub (ej. ATP, NADH)    ║
+║ Destino final     ║ Biomasa o producto de interés     ║
+║ Rutas bloqueadas  ║ Genes deletados / inhibición      ║
+╚═══════════════════╩═══════════════════════════════════╝
+```
+
+Así como en el Transmilenio existen múltiples rutas para llegar de un punto A a uno B, en el metabolismo existen múltiples caminos para transformar glucosa en un producto de interés. La tarea de la modelación es encontrar la **ruta óptima** dado el estado actual de la red.
+
+---
+
+> *"La modelación matemática ha emergido como una poderosa herramienta para entender y predecir el comportamiento de complejos sistemas biológicos."*
+>
+> — Hyunjae Woo, 2024 · [https://doi.org/10.1038/s44320-024-00017-w](https://doi.org/10.1038/s44320-024-00017-w)
+
+---
+
+## 5. Ecuaciones diferenciales ordinarias (ODEs) para simular el metabolismo
+
+### 5.1 ¿Qué son las ODEs en este contexto?
+
+Una **ecuación diferencial ordinaria (ODE)** describe cómo cambia una cantidad con respecto al tiempo. En biología, se usan para modelar cómo cambia la concentración de un metabolito:
+
+```text
+d[X]/dt = (suma de tasas de producción) − (suma de tasas de consumo)
+```
+
+Donde `[X]` es la concentración del metabolito X y `t` es el tiempo.
+
+### 5.2 Un ejemplo simple: glucosa → etanol
+
+Considere una célula de levadura que consume glucosa (G) y produce etanol (E):
+
+```text
+Reacciones simplificadas:
+  1. Glucosa (G)  ──(v₁)──▶  2 Piruvato (P)
+  2. Piruvato (P) ──(v₂)──▶  Etanol (E) + CO₂
+
+Sistema de ODEs:
+  d[G]/dt  = −v₁
+  d[P]/dt  =  2·v₁ − v₂
+  d[E]/dt  =  v₂
+
+Donde v₁ y v₂ son tasas de reacción (mmol/gDW/h)
+```
+
+Cada tasa `v` puede modelarse con cinética de **Michaelis-Menten**:
+
+```text
+        Vmax · [S]
+v  =  ─────────────
+        Km + [S]
+
+  Vmax = velocidad máxima de la enzima
+  Km   = concentración de sustrato en la mitad de Vmax
+  [S]  = concentración del sustrato
+```
+
+Integrando el sistema en el tiempo obtenemos curvas de crecimiento y producción comparables a las que se miden experimentalmente en un biorreactor.
+
+### 5.2.1 Ejemplo numérico resuelto
+
+Usemos valores reales de parámetros para las dos reacciones y resolvamos el sistema paso a paso:
+
+**Parámetros cinéticos:**
+
+```text
+Reacción 1 — Glucosa → 2 Piruvato  (complejo glucolítico simplificado)
+  Vmax₁ = 2.5  mmol/gDW/h
+  Km₁   = 0.5  mmol/L      (concentración media de saturación para glucosa)
+
+Reacción 2 — Piruvato → Etanol + CO₂  (piruvato descarboxilasa + alcohol deshidrogenasa)
+  Vmax₂ = 5.0  mmol/gDW/h
+  Km₂   = 0.2  mmol/L      (concentración media de saturación para piruvato)
+
+Condiciones iniciales (t = 0):
+  [G]₀  = 10.0  mmol/L     (glucosa disponible en el medio)
+  [P]₀  =  0.0  mmol/L     (sin piruvato acumulado al inicio)
+  [E]₀  =  0.0  mmol/L     (sin etanol al inicio)
+```
+
+**Paso 1 — Calcular las tasas en t = 0:**
+
+```text
+        Vmax₁ · [G]₀          2.5 × 10.0
+v₁(0) = ──────────────── = ─────────────── = 2.381 mmol/gDW/h
+         Km₁  + [G]₀          0.5 + 10.0
+                                              ↑ alta saturación: enzima casi a Vmax
+
+
+        Vmax₂ · [P]₀          5.0 × 0.0
+v₂(0) = ──────────────── = ─────────────── = 0.000 mmol/gDW/h
+         Km₂  + [P]₀          0.2 + 0.0
+                                              ↑ sin piruvato: la R2 no puede ocurrir
+```
+
+**Paso 2 — Calcular las derivadas en t = 0:**
+
+```text
+d[G]/dt │t=0 = −v₁                 = −2.381  mmol/L/h   → glucosa disminuye
+d[P]/dt │t=0 =  2·v₁ − v₂         = +4.762  mmol/L/h   → piruvato se acumula
+d[E]/dt │t=0 =  v₂                 =  0.000  mmol/L/h   → etanol aún no se produce
+```
+
+**Paso 3 — Integración numérica (pasos de Δt = 0.5 h, método de Euler explícito):**
+
+```text
+ t (h) │  [G] (mmol/L) │  [P] (mmol/L) │  [E] (mmol/L) │  v₁     │  v₂
+───────┼───────────────┼───────────────┼───────────────┼─────────┼─────────
+   0.0 │    10.000     │     0.000     │     0.000     │  2.381  │  0.000
+   0.5 │     8.810     │     2.381     │     0.000     │  2.291  │  4.297
+   1.0 │     7.665     │     0.537     │     2.149     │  2.185  │  3.302
+   1.5 │     6.572     │     0.213     │     3.800     │  2.065  │  2.760
+   2.0 │     5.539     │     0.139     │     5.180     │  1.929  │  2.545
+   3.0 │     3.595     │     0.104     │     7.853     │  1.608  │  2.282
+   4.0 │     1.864     │     0.090     │     9.970     │  1.201  │  2.121
+   5.0 │     0.500     │     0.080     │    11.482     │  0.625  │  2.000
+   6.0 │     0.032     │     0.030     │    12.710     │  0.140  │  1.429
+   7.0 │     0.001     │     0.003     │    13.066     │  0.005  │  0.067
+   8.0 │     0.000     │     0.000     │    13.070     │  0.000  │  0.000
+```
+
+> [!NOTE]
+> 📌 Lectura de la tabla:
+> - **t = 0 → 0.5 h:** `v₁ ≫ v₂` porque hay mucha glucosa pero aún no hay piruvato. El piruvato se acumula rápidamente hasta ~2.38 mmol/L.
+> - **t = 0.5 → 1.5 h:** Ahora `v₂` se dispara (piruvato disponible, alta concentración). El piruvato cae velozmente y el etanol empieza a acumularse.
+> - **t > 1.5 h:** El piruvato se estabiliza en un nivel bajo (~0.1 mmol/L): lo que produce R1 es casi igual a lo que consume R2. **Este es el estado cuasi-estacionario que FBA asume desde t = 0.**
+> - **t ≈ 8 h:** Toda la glucosa se agotó. El etanol final es ~13.07 mmol/L (el rendimiento no es exactamente 2:1 por las cinéticas de saturación a bajas concentraciones).
+
+**Representación gráfica de la dinámica:**
+
+```text
+[mmol/L]
+  10 ┤
+     │  G ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░
+   8 ┤
+     │
+   6 ┤                         E  ░░░░░░░░░░░░░░░░▓▓▓▓▓▓▓▓▓▓▓▓
+     │
+   4 ┤
+     │
+   2 ┤          P ▲ (pico ~t=0.5h)
+     │              ╲_______________ ≈ 0.1 mmol/L (cuasi-estacionario)
+   0 ┤─────┬─────────┬─────────┬──────────┬─────────▶ t (h)
+     0    0.5       2.0       4.0        6.0       8.0
+
+  ▓▓ Glucosa [G] — decrece suavemente al inicio (alta saturación), luego se agota
+  ░░ Etanol  [E] — sigue a [G] con retraso; se acumula mientras hay glucosa
+     Piruvato [P] — pico transitorio al inicio, luego nivel bajo cuasi-estacionario
+```
+
+> [!TIP]
+> El piruvato acumulándose transitoriamente antes de ser consumido es un ejemplo clásico de **metabolito intermediario con dinámica no obvia**. Los sistemas cinéticos (ODEs) capturan este transitorio; FBA asume que [P] ya está en estado estacionario desde t = 0. Ambas aproximaciones son útiles: las ODEs para entender **cómo cambia** el sistema en el tiempo, y FBA para predecir el **estado final óptimo** a escala genómica sin necesidad de conocer los parámetros cinéticos de cada enzima.
+
+### 5.3 El problema de escalar: de 3 a 3.000 reacciones
+
+Una bacteria modelo como *E. coli* tiene aproximadamente **2.500 reacciones metabólicas** anotadas. Resolver un sistema de 2.500 ODEs simultáneas requiere:
+
+- conocer los parámetros cinéticos (Vmax, Km) de **cada** enzima;
+- medir las concentraciones iniciales de **todos** los metabolitos;
+- integrar numéricamente el sistema en cada paso de tiempo.
+
+En la práctica, los parámetros cinéticos son **extremadamente difíciles de medir** para la mayoría de las enzimas. Aquí es donde entran los modelos a escala genómica con una aproximación diferente.
+
+---
+
+## 6. Modelos metabólicos a escala genómica (GEM) y reconstrucción COBRA
+
+### 6.1 La idea central: del genoma a la matriz
+
+En lugar de requerir parámetros cinéticos, los modelos COBRA (*COnstraints-Based Reconstruction and Analysis*) trabajan con una simplificación poderosa: en lugar de simular la dinámica completa, asumen **estado estacionario**.
+
+El estado estacionario implica que las concentraciones intracelulares de metabolitos no cambian en el tiempo:
+
+```text
+d[X]/dt = 0  para todos los metabolitos internos
+
+Esto es equivalente a decir:
+  "Lo que entra = lo que sale"
+  para cada metabolito en la red.
+```
+
+Bajo esta suposición, el sistema de ODEs se reduce a un problema de **álgebra lineal**:
+
+```text
+S · v = 0
+
+Donde:
+  S = Matriz estequiométrica (m metabolitos × n reacciones)
+  v = Vector de flujos (n reacciones)
+  0 = Vector cero (condición de estado estacionario)
+```
+
+### 6.2 La matriz estequiométrica S
+
+La matriz estequiométrica codifica toda la información de la red metabólica. Su relación directa con el sistema de ODEs es:
+
+```text
+Ejemplo con 4 metabolitos y 4 reacciones:
+
+Reacciones:          R1        R2        R3        R4
+                  Glc→G6P   G6P→F6P   F6P→Pyr   Pyr→ATP
+
+     Glc   │   -1        0         0         0   │
+     G6P   │    1       -1         0         0   │   =  S
+     F6P   │    0        1        -1         0   │
+     Pyr   │    0        0         1        -1   │
+
+  Convención:
+  • Valor  1: el metabolito es PRODUCIDO por esa reacción
+  • Valor -1: el metabolito es CONSUMIDO por esa reacción
+  • Valor  0: el metabolito no participa en esa reacción
+
+Relación con ODEs:
+  La fila de G6P en la matriz dice:
+  d[G6P]/dt = 1·v₁ + (−1)·v₂ = v₁ − v₂
+  
+  En estado estacionario:  v₁ − v₂ = 0  →  v₁ = v₂
+  (lo que se produce de G6P debe ser igual a lo que se consume)
+```
+
+> [!IMPORTANT]
+> Cada **fila** de la matriz S corresponde exactamente a una **ecuación diferencial** del sistema de ODEs. Asumir estado estacionario (d[X]/dt = 0) convierte el problema dinámico en estático: **S · v = 0**. Esto elimina la necesidad de parámetros cinéticos y permite trabajar a escala genómica.
+
+### 6.3 Del genoma al modelo: el proceso de reconstrucción
+
+Construir un GEM es un proceso iterativo que integra información genómica, bioquímica y de literatura:
+
+```text
+PASO 1: Anotación genómica
+  Genoma (.fasta) → Prokka/Bakta → Genes con número EC
+  Ej.: gen b0001 → EC 2.7.1.1 = hexoquinasa
+
+PASO 2: Asignación de reacciones
+  EC number → Reacción en BiGG/KEGG/MetaCyc
+  HEX1: Glc + ATP → G6P + ADP
+
+PASO 3: Reglas GPR (Gene–Protein–Reaction)
+  (b0001 OR b0002)  → reacción activa si al menos un gen está presente
+  (b0003 AND b0004) → reacción activa solo si ambos genes están presentes
+                      (enzimas con múltiples subunidades)
+
+PASO 4: Límites de flujo
+  Reversibles:    -1000 ≤ v ≤ 1000  mmol/gDW/h
+  Irreversibles:      0 ≤ v ≤ 1000  mmol/gDW/h
+  Uptake ajustado según condición experimental
+
+PASO 5: Reacciones de intercambio (Exchange reactions)
+  EX_glc_e: Glucosa_ext ⇌ Glucosa_interna
+  (representan la frontera entre la célula y el medio)
+
+PASO 6: Función objetivo — reacción de biomasa
+  aATP + bNADPH + cGly + dAla + ... → Biomasa
+  (pseudoreacción que representa la síntesis de todos los
+  componentes celulares necesarios para crecer)
+
+PASO 7: Curación manual y validación
+  → Verificar balance de masa y carga
+  → Comparar predicciones vs. datos experimentales publicados
+```
+
+> [!TIP]
+> Los modelos GEM curados están disponibles en **BiGG Models** (http://bigg.ucsd.edu/) para cientos de organismos, incluyendo *E. coli* iJO1366, *S. cerevisiae* iMM904, *P. putida* iJN1463, entre muchos más.
+
+### 6.4 Estructura de un archivo de modelo COBRA
+
+Los modelos se guardan en formatos estándar como **SBML** (`.xml`) o **JSON**:
+
+```text
+Componentes de un modelo COBRA:
+  ├── metabolites   → ID, nombre, fórmula química, carga, compartimento
+  ├── reactions     → estequiometría, límites [lb, ub], regla GPR
+  ├── genes         → lista de genes y sus IDs
+  ├── objective     → función a optimizar (ej. maximizar biomasa)
+  └── compartments  → [c] citoplasma, [p] periplasma, [e] extracelular
+```
+
+---
+
+## 7. Flux Balance Analysis (FBA)
+
+### 7.1 El problema de optimización
+
+Dado que S · v = 0 tiene infinitas soluciones posibles (el sistema está subdeterminado), FBA agrega dos elementos adicionales:
+
+1. **Restricciones de desigualdad**: los flujos no pueden exceder ciertos límites (`lb ≤ v ≤ ub`).
+2. **Función objetivo**: maximizar o minimizar una reacción específica (generalmente la tasa de crecimiento).
+
+```text
+FBA como problema de programación lineal (LP):
+
+  Maximizar:    cᵀ · v          (ej. maximizar flujo de biomasa)
+  
+  Sujeto a:     S · v  =  0     (estado estacionario)
+                lb ≤ v ≤ ub     (límites de flujo)
+
+  Donde:
+    c = vector de coeficientes de la función objetivo
+    S = matriz estequiométrica
+    v = vector de flujos (la incógnita a resolver)
+    lb, ub = límites inferior y superior de cada reacción
+```
+
+### 7.2 ¿Qué nos dice FBA?
+
+FBA nos da la **distribución óptima de flujos** que maximiza el objetivo biológico bajo las condiciones impuestas:
+
+```text
+Simulación de E. coli en glucosa mínima con FBA:
+
+  Condición: uptake de glucosa = 10 mmol/gDW/h, aerobio
+  Objetivo: maximizar tasa de crecimiento (μ)
+  
+  Resultado:
+    μ_óptima  = 0.874 h⁻¹
+    
+  Flujos seleccionados:
+    Glucólisis:            10.0  mmol/gDW/h
+    Ciclo del citrato:      6.0  mmol/gDW/h
+    Fosforilación oxidativa: 7.5  mmol/gDW/h
+    Excreción de acetato:   0.4  mmol/gDW/h
+```
+
+### 7.3 Aplicaciones de FBA
+
+| Análisis                      | Pregunta                                   | Método                           |
+|:------------------------------|:-------------------------------------------|:---------------------------------|
+| **Predicción de crecimiento** | ¿Puede la cepa crecer en este medio?       | Maximizar μ                      |
+| **Knockout de genes**         | ¿Qué pasa si eliminamos este gen?          | Fijar v = 0 para esa reacción    |
+| **Producción de metabolitos** | ¿Cuánto producto puede producirse?         | Maximizar flujo del producto     |
+| **Esencialidad génica**       | ¿Qué genes son esenciales para crecer?     | Deleciones simples sistemáticas  |
+| **OptKnock**                  | ¿Qué genes delegar para forzar producción? | Programación lineal de 2 niveles |
+
+```text
+Ejemplo: FBA con knockout del gen pgi (fosfoglucosa isomerasa)
+
+  Condición normal:   μ = 0.874 h⁻¹
+  Δpgi (v_pgi = 0):   μ = 0.460 h⁻¹, flujo hacia pentosa fosfato ↑↑
+  
+  Interpretación: la deleción redirige carbono hacia la vía de
+  pentosa fosfato (útil para producción de NADPH, eritrosa-4-P,
+  aromáticos).
+```
+
+### 7.4 Limitaciones del FBA estándar
+
+FBA es una herramienta poderosa, pero tiene limitaciones importantes:
+
+```text
+Suposición de FBA          │  Limitación
+───────────────────────────┼────────────────────────────────────────
+Estado estacionario        │  No captura dinámicas temporales
+                           │
+Todas las reacciones       │  No refleja diferencias en capacidad
+tienen la misma            │  catalítica real de cada proteína/enzima
+"disponibilidad"           │
+                           │
+Objetivo = maximizar μ     │  En estrés o condiciones industriales,
+                           │  la célula no siempre maximiza crecimiento
+                           │
+Sin regulación génica      │  No captura inducción/represión
+explícita                  │  de genes según el ambiente
+```
+
+> [!WARNING]
+> La limitación más crítica para el diseño de biofábricas es que FBA trata todas las enzimas como igualmente disponibles dentro de sus límites de flujo. En la realidad, cada enzima tiene una cantidad finita de proteína y una capacidad catalítica específica (kcat). Ignorar esto puede llevar a predicciones de producción irrealmente optimistas.
+
+---
+
+## 8. Modelos con restricciones enzimáticas: GECKO
+
+### 8.1 El problema de la capacidad enzimática
+
+En FBA clásico, la única restricción sobre un flujo es el límite numérico `[lb, ub]`. Pero en la realidad, la tasa de una reacción depende de:
+
+- **cuánta proteína enzimática hay** en la célula (nivel de expresión);
+- **qué tan rápido trabaja** esa enzima (kcat: número de recambio catalítico).
+
+```text
+Relación fundamental entre flujo, proteína y kcat:
+
+     v_i  ≤  kcat_i · [E_i]
+
+  Donde:
+    v_i    = flujo de la reacción i  (mmol/gDW/h)
+    kcat_i = número de recambio de la enzima i  (1/s → convertido a 1/h)
+    [E_i]  = cantidad de enzima i  (mmol/gDW)
+
+Adicionalmente, la suma de toda la proteína enzimática
+no puede exceder la capacidad proteómica total de la célula:
+
+  Σ (MW_i · [E_i])  ≤  P_total
+
+  Donde MW_i es la masa molecular de la enzima i (g/mol)
+  y P_total es la fracción proteómica disponible (g/gDW, típicamente ~0.5)
+```
+
+### 8.2 ¿Qué es GECKO?
+
+**GECKO** (*Genome-scale model with Enzymatic Constraints using Kinetic and Omics data*) es un framework desarrollado por Benjamín Sánchez et al. que extiende los modelos GEM incorporando:
+
+1. **Valores de kcat** para cada reacción (de BRENDA, sabio-rk o predicciones de DLKcat/TurNuP).
+2. **Restricción del presupuesto proteómico** (la célula tiene un límite de cuánta proteína puede sintetizar).
+3. **Variables de proteína explícitas** en el modelo, permitiendo simular sobreexpresión, downregulation y datos proteómicos cuantitativos.
+
+```text
+FBA estándar vs. ecGEM (GECKO):
+
+FBA clásico:                    ecGEM con GECKO:
+────────────────────────────    ────────────────────────────────────────
+S · v = 0                       S_ext · v_ext = 0    (S extendida)
+lb ≤ v ≤ ub                     lb ≤ v ≤ ub
+Maximizar: cᵀ·v                 v_i ≤ kcat_i · [E_i]  ← restricción enzimática
+                                Σ MW_i · [E_i] ≤ P_total  ← presupuesto
+                                [E_i] ≥ 0
+                                Maximizar: cᵀ·v
+```
+
+### 8.3 ¿Por qué importa GECKO?
+
+```text
+Ejemplo: Producción de ácido succínico en S. cerevisiae
+
+  FBA clásico predice:            GECKO predice:        Experimento:
+  ─────────────────               ─────────────────     ────────────
+  Producción: 3.2 mmol/h          Producción: 1.8 mmol/h    ~1.9 mmol/h
+  Crecimiento: 0.41 h⁻¹           Crecimiento: 0.35 h⁻¹      ~0.36 h⁻¹
+  
+  FBA sobreestima porque          GECKO es más preciso porque
+  no considera que la célula      incorpora que el presupuesto
+  ya gasta proteína para crecer   proteómico es finito y compartido
+  y no puede asignar "infinita"   entre crecimiento y producción.
+  enzima a la producción.
+```
+
+### 8.4 Flujo de trabajo con GECKO
+
+```text
+1. Modelo GEM base (SBML / JSON)
+           │
+           ▼
+2. Base de datos de kcat
+   (BRENDA, sabio-rk, DLKcat, TurNuP)
+           │
+           ▼
+3. [Opcional] Datos de proteómica cuantitativa
+   (cuánta proteína hay en mg/gDW por condición)
+           │
+           ▼
+4. GECKO pipeline (Python)
+   → Expande S para incluir variables de proteína [E_i]
+   → Asigna kcat a cada reacción enzimática
+   → Define presupuesto proteómico total
+           │
+           ▼
+5. ecGEM listo para simulación
+   → FBA/pFBA con restricciones enzimáticas
+   → Simulaciones de knockout y sobreexpresión realistas
+   → Diseño de biofábricas con predicciones más precisas
+```
+
+> [!TIP]
+> GECKO v3 no está disponible como paquete de Python compatible con COBRApy, debe usarse COBRAToolbox:
+> https://github.com/SysBioChalmers/GECKO
+>
+> Los modelos ecGEM ya generados para *S. cerevisiae*, *E. coli* y otros organismos están en:
+> https://github.com/SysBioChalmers/ecModels
+
+---
+
+## 9. Del genoma a la biofábrica: predicción de blancos de ingeniería metabólica
+
+Esta sección integra todo lo visto y responde la pregunta central del módulo: **¿cómo usamos los modelos GEM y ecGEM para decidir qué genes modificar, cuáles eliminar y cuáles sobreexpresar para que una célula produzca lo que queremos?**
+
+### 9.1 El ciclo de diseño racional (DBTL)
+
+La ingeniería metabólica moderna sigue un ciclo iterativo:
+
+```text
+        ┌─────────────────────────────────────────────┐
+        │       Ciclo DBTL (Design-Build-Test-Learn)   │
+        └─────────────────────────────────────────────┘
+
+   ┌──────────────┐     ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+   │   DESIGN     │────▶│    BUILD     │────▶│     TEST     │────▶│    LEARN     │
+   │              │     │              │     │              │     │              │
+   │ GEM / ecGEM  │     │ Ingeniería   │     │ Cultivo +    │     │ Actualizar   │
+   │ predicen los │     │ genética     │     │ medición de  │     │ el modelo    │
+   │ blancos      │     │ (CRISPR,     │     │ producción   │     │ con nuevos   │
+   │ óptimos      │     │ clonación)   │     │ y crecimiento│     │ datos        │
+   └──────────────┘     └──────────────┘     └──────────────┘     └──────────────┘
+          ▲                                                               │
+          └───────────────────────────────────────────────────────────────┘
+```
+
+El modelo computacional actúa en la fase **DESIGN**: nos permite evaluar miles de combinaciones de modificaciones genéticas en horas, antes de tocar un solo tubo de ensayo.
+
+---
+
+### 9.2 Tipos de intervenciones que predice un modelo
+
+Un modelo GEM puede simular cuatro tipos fundamentales de intervención genética:
+
+```text
+┌──────────────────────┬──────────────────────────────────────────────────────────┐
+│ Intervención         │ Cómo se modela                                           │
+├──────────────────────┼──────────────────────────────────────────────────────────┤
+│ Deleción de gen      │ Fijar el flujo de la reacción asociada a v = 0           │
+│                      │ (usando reglas GPR para propagar el efecto)              │
+├──────────────────────┼──────────────────────────────────────────────────────────┤
+│ Sobreexpresión       │ Aumentar el límite superior (ub) de la reacción          │
+│                      │ En ecGEM: aumentar [E_i] → más capacidad catalítica      │
+├──────────────────────┼──────────────────────────────────────────────────────────┤
+│ Reducción de flujo   │ Disminuir el ub parcialmente (ej. ub × 0.3)              │
+│ (downregulation)     │ En ecGEM: reducir [E_i] disponible                       │
+├──────────────────────┼──────────────────────────────────────────────────────────┤
+│ Introducción de gen  │ Añadir una nueva reacción al modelo con lb/ub apropiados │
+│ heterólogo           │ (ruta biosintética de otro organismo)                    │
+└──────────────────────┴──────────────────────────────────────────────────────────┘
+```
+
+---
+
+### 9.3 Estrategia 1 — Deleciones: redirigir flujos eliminando rutas competidoras
+
+La idea es sencilla: si la célula tiene una ruta alternativa que compite con la producción de nuestro compuesto de interés, **eliminarla** puede forzar el carbono hacia donde queremos.
+
+```text
+Ejemplo: producción de succinato en E. coli
+
+  Red metabólica simplificada:
+
+  Glucosa ──▶ PEP ──▶ Piruvato ──┬──▶ Acetato  (ruta competidora A)
+                                 ├──▶ Etanol   (ruta competidora B)
+                                 ├──▶ Lactato  (ruta competidora C)
+                                 └──▶ OAA ──▶ Malato ──▶ Fumarato ──▶ SUCCINATO ✓
+
+  Estrategia de deleción:
+    Δpta  (fosfotransacetilasa)     → elimina ruta hacia acetato
+    Δadhb (alcohol deshidrogenasa)  → elimina ruta hacia etanol
+    Δldha (lactato deshidrogenasa)  → elimina ruta hacia lactato
+
+  Resultado predicho por FBA:
+    WT:       succinato = 0.1 mmol/gDW/h,  μ = 0.87 h⁻¹
+    Δpta:     succinato = 0.4 mmol/gDW/h,  μ = 0.75 h⁻¹
+    Δpta Δldha: succinato = 1.2 mmol/gDW/h, μ = 0.61 h⁻¹
+
+  Interpretación:
+    Cada deleción redirige más carbono hacia succinato,
+    pero a costa de reducir el crecimiento (trade-off).
+```
+
+**Cómo hacerlo con COBRApy:**
+
+```python
+from cobra.flux_analysis import single_gene_deletion, double_gene_deletion
+
+# Deleción simple sistemática: evaluar cada gen
+resultados = single_gene_deletion(model)
+
+# Filtrar genes cuya deleción aumenta la producción del producto
+# (maximizando EX_succ_e como función objetivo)
+with model:
+    model.objective = "EX_succ_e"
+    for gen_id in genes_a_evaluar:
+        with model:
+            model.genes.get_by_id(gen_id).knock_out()
+            sol = model.optimize()
+            produccion = sol.objective_value
+```
+
+---
+
+### 9.4 Estrategia 2 — Sobreexpresión: aumentar la capacidad de pasos limitantes
+
+A veces el flujo no llega al producto porque una enzima es el **paso limitante** (bottleneck) de la ruta. Sobreexpresarla aumenta su capacidad y puede disparar la producción.
+
+```text
+Ejemplo: sobreexpresión de PPC (fosfoenolpiruvato carboxilasa) para succinato
+
+  PEP + CO₂ ──(PPC)──▶ OAA  ← paso que alimenta directamente la ruta del succinato
+
+  En FBA estándar:
+    Límite original de PPC: 0 ≤ v_PPC ≤ 1000 mmol/gDW/h
+    Flujo predicho en WT:   v_PPC = 2.3 mmol/gDW/h
+
+  Sobreexpresión (en ecGEM con GECKO):
+    [E_PPC] × 3 → aumentar la cantidad de enzima disponible
+    Nuevo flujo:  v_PPC = 6.8 mmol/gDW/h
+    Producción succinato: +180% respecto al WT
+
+  En FBA clásico (sin ecGEM):
+    Simular con ub(PPC) × 3 = 3000 → menos preciso,
+    pero captura la dirección del efecto.
+```
+
+**Cómo hacerlo con COBRApy:**
+
+```python
+with model:
+    # Simular sobreexpresión: aumentar el límite superior de la reacción
+    rxn = model.reactions.get_by_id("PPC")
+    rxn.upper_bound = rxn.upper_bound * 3   # sobreexpresión 3x
+
+    sol = model.optimize()
+    print(f"Producción con sobreexpresión PPC: {sol.fluxes['EX_succ_e']:.3f}")
+```
+
+> [!NOTE]
+> En un **ecGEM (GECKO)**, la sobreexpresión se modela aumentando `[E_i]`, la variable de cantidad de proteína para esa enzima. Esto es más preciso porque respeta el presupuesto proteómico: sobreexpresar una enzima consume parte del presupuesto proteico disponible para otras enzimas.
+
+---
+
+### 9.5 Estrategia 3 — Reducción parcial de flujo (CRISPRi / RNAi)
+
+No siempre conviene eliminar completamente una reacción: a veces una **reducción parcial** (downregulation) permite mantener el crecimiento mientras se redirige el flujo. Esto es lo que hace experimentalmente el CRISPRi o el knockdown por RNAi.
+
+```text
+Ejemplo: reducción parcial de PYK (piruvato quinasa) en E. coli
+
+  PEP ──(PYK)──▶ Piruvato + ATP
+
+  Si eliminamos PYK completamente (Δpyk): la célula pierde ATP → μ cae mucho
+  Si reducimos PYK al 20%: PEP se acumula → más carbono disponible para OAA → succinato ↑
+
+  Simulación con diferentes niveles de reducción:
+
+  Reducción PYK │ v_PYK (mmol/gDW/h) │ Succinato │ μ (h⁻¹)
+  ──────────────┼────────────────────┼───────────┼─────────
+  0%  (WT)      │        8.5         │   0.1     │  0.87
+  50%           │        4.3         │   0.6     │  0.78
+  80%           │        1.7         │   1.1     │  0.65
+  100% (Δpyk)   │        0.0         │   0.8     │  0.31   ← peor que 80%!
+```
+
+**Cómo hacerlo con COBRApy:**
+
+```python
+niveles_reduccion = [1.0, 0.5, 0.2, 0.1, 0.0]  # fracción del ub original
+
+resultados = []
+with model:
+    model.objective = "EX_succ_e"
+    ub_original = model.reactions.get_by_id("PYK").upper_bound
+
+    for nivel in niveles_reduccion:
+        with model:
+            model.reactions.get_by_id("PYK").upper_bound = ub_original * nivel
+            sol = model.optimize()
+            resultados.append((nivel, sol.objective_value))
+
+for nivel, prod in resultados:
+    print(f"  PYK al {nivel*100:.0f}%:  succinato = {prod:.3f} mmol/gDW/h")
+```
+
+---
+
+### 9.6 Estrategia 4 — Introducción de rutas heterólogas
+
+En muchos casos, el microorganismo huésped **no tiene la ruta biosintética** para el compuesto deseado. La solución es introducir genes de otro organismo. El modelo permite evaluar si la ruta heteróloga es viable **antes** de clonarla.
+
+```text
+Ejemplo: producción de 1,4-butanodiol (BDO) en E. coli
+         (compuesto con múltiples aplicaciones industriales)
+
+  E. coli no produce BDO de forma natural.
+  Ruta heteróloga (tomada de varios organismos):
+
+  Succinato ──▶ Succinil-CoA ──▶ 4-HB-CoA ──▶ 4-HB ──▶ BDO
+                    ↑                ↑              ↑
+                 (SucD de        (4hbD de       (adhE2 de
+                Clostridium)    Porphyromonas)  Clostridium)
+
+  Cómo se modela:
+    1. Agregar las 3 nuevas reacciones al modelo GEM de E. coli
+    2. Agregar el metabolito BDO y su reacción de excreción (EX_bdo_e)
+    3. Ejecutar FBA maximizando EX_bdo_e
+    4. Si la solución es factible y el flujo > 0: la ruta es viable
+
+  Resultado:
+    Sin optimización adicional:  BDO = 0.8 mmol/gDW/h
+    + Deleción de rutas competidoras (succCoA se deriva más):  BDO = 2.1 mmol/gDW/h
+```
+
+**Cómo hacerlo con COBRApy:**
+
+```python
+from cobra import Reaction, Metabolite
+
+with model:
+    # Crear el nuevo metabolito
+    bdo = Metabolite('bdo_c', formula='C4H10O2', name='1,4-Butanodiol', compartment='c')
+
+    # Crear la reacción final de la ruta heteróloga (simplificada)
+    rxn_bdo = Reaction('BDO_synth')
+    rxn_bdo.name = 'BDO synthesis (heterologous)'
+    rxn_bdo.lower_bound = 0
+    rxn_bdo.upper_bound = 1000
+    # Estequiometría: 4HB → BDO (simplificado)
+    rxn_bdo.add_metabolites({
+        model.metabolites.get_by_id('4hb_c'): -1,
+        bdo: 1
+    })
+    model.add_reactions([rxn_bdo])
+
+    # Reacción de excreción
+    rxn_ex = Reaction('EX_bdo_e')
+    rxn_ex.add_metabolites({bdo: -1})
+    model.add_reactions([rxn_ex])
+
+    # Evaluar
+    model.objective = 'EX_bdo_e'
+    sol = model.optimize()
+    print(f"Producción de BDO con ruta heteróloga: {sol.objective_value:.3f}")
+```
+
+---
+
+### 9.7 Búsqueda sistemática de blancos: OptKnock y similares
+
+Evaluar manualmente todas las combinaciones posibles de modificaciones es inviable: con 1.000 genes candidatos, hay más de 10¹⁵ posibles dobles knockouts. Para esto existen algoritmos de **optimización combinatoria** sobre el modelo:
+
+```text
+Algoritmos de diseño de cepas:
+
+┌────────────────┬────────────────────────────────────────────────────────┐
+│ Algoritmo      │ Idea central                                           │
+├────────────────┼────────────────────────────────────────────────────────┤
+│ OptKnock       │ Bilevel LP: maximizar producción del compuesto         │
+│                │ sujeto a que la célula maximiza su propio crecimiento  │
+│                │ → Encuentra knockouts que "acoplan" crecimiento        │
+│                │   con producción (la célula produce para crecer)       │
+├────────────────┼────────────────────────────────────────────────────────┤
+│ RobustKnock    │ Como OptKnock pero garantiza robustez frente a         │
+│                │ variaciones en el flujo de biomasa                     │
+├────────────────┼────────────────────────────────────────────────────────┤
+│ OptForce       │ Identifica reacciones a sobreexpresar, subexpresar     │
+│                │ o delegar comparando el WT vs. el estado deseado       │
+├────────────────┼────────────────────────────────────────────────────────┤
+│ FSEOF          │ Flux Scanning based on Enforced Objective Flux:        │
+│                │ escanea el espacio de flujos para encontrar reacciones │
+│                │ correlacionadas con el producto                        │
+├────────────────┼────────────────────────────────────────────────────────┤
+│ GECKO + MOMENT │ Usa el ecGEM para identificar enzimas limitantes       │
+│                │ (con baja kcat o baja expresión) que son cuellos       │
+│                │ de botella para la producción                          │
+└────────────────┴────────────────────────────────────────────────────────┘
+```
+
+**El concepto clave detrás de OptKnock:**
+
+```text
+Problema bilevel de OptKnock:
+
+  Nivel externo (ingeniero):
+    Maximizar: producción del compuesto de interés (v_producto)
+    Eligiendo: qué reacciones delegar (v_i = 0)
+
+  Nivel interno (la célula):
+    Maximizar: tasa de crecimiento (v_biomasa)
+    Sujeto a:  S · v = 0,  lb ≤ v ≤ ub,  v_i = 0 (para genes deletados)
+
+  Resultado: un conjunto de knockouts tal que cuando la célula
+  intenta maximizar su propio crecimiento, inevitablemente produce
+  el compuesto de interés como subproducto obligatorio.
+
+  Ejemplo clásico: producción de lactato en E. coli
+    OptKnock recomienda: Δpta Δadhb Δppc
+    → La única forma de reoxidar NADH (necesario para crecer)
+      es mediante la lactato deshidrogenasa → lactato se produce obligatoriamente
+```
+
+---
+
+### 9.8 Usando modelos disponibles en BiGG y ecModels
+
+No es necesario construir un modelo desde cero. Para la mayoría de los microorganismos de interés biotecnológico ya existen modelos curados y listos para usar:
+
+```text
+Modelos GEM disponibles (ejemplos):
+
+  Organismo              │ ID del modelo │ Genes │ Reacciones │ URL
+  ───────────────────────┼───────────────┼───────┼────────────┼──────────────────
+  E. coli K-12           │ iJO1366       │ 1.366 │   2.583    │ bigg.ucsd.edu
+  S. cerevisiae S288C    │ iMM904        │   904 │   1.577    │ bigg.ucsd.edu
+  P. putida KT2440       │ iJN1463       │ 1.463 │   2.550    │ bigg.ucsd.edu
+  B. subtilis 168        │ iYO844        │   844 │   1.250    │ bigg.ucsd.edu
+  Synechocystis sp.      │ iJN678        │   678 │     863    │ bigg.ucsd.edu
+  S. venezuelae          │ iKB1014       │ 1.014 │   1.473    │ BiGG / MEMOTE
+
+  Modelos ecGEM (con restricciones enzimáticas, GECKO):
+  E. coli K-12           │ ecModel_iJO   │       │            │ github: ecModels
+  S. cerevisiae          │ ecYeast8      │       │            │ github: ecModels
+  P. putida              │ ecPputida     │       │            │ github: ecModels
+```
+
+**Flujo de trabajo práctico con modelos existentes:**
+
+```text
+PASO 1 — Descargar el modelo
+  → bigg.ucsd.edu → buscar organismo → Download JSON / SBML
+
+PASO 2 — Cargar en COBRApy
+  import cobra
+  model = cobra.io.load_json_model("iJO1366.json")
+
+PASO 3 — Definir las condiciones de cultivo
+  → Ajustar las reacciones de intercambio (EX_) según el medio experimental
+  model.reactions.get_by_id("EX_glc__D_e").lower_bound = -10   # glucosa
+  model.reactions.get_by_id("EX_o2_e").lower_bound = -20       # oxígeno
+
+PASO 4 — Verificar el modelo base
+  sol = model.optimize()
+  print(sol.objective_value)   # tasa de crecimiento predicha
+  # Comparar con μ experimental publicada para validar
+
+PASO 5 — Definir el compuesto objetivo
+  model.objective = "EX_succ_e"   # succinato, por ejemplo
+
+PASO 6 — Explorar blancos de ingeniería
+  → Deleciones simples/dobles: single_gene_deletion(), double_gene_deletion()
+  → Production envelope: production_envelope()
+  → Reducción parcial: modificar ub de reacciones específicas
+
+PASO 7 — Interpretar y priorizar
+  → Ordenar por producción predicha
+  → Filtrar los que mantienen μ > umbral mínimo (ej. μ > 0.1 h⁻¹)
+  → Verificar que las deleciones sean experimentalmente viables
+
+PASO 8 — Validar con ecGEM (GECKO) si está disponible
+  → Cargar el ecGEM correspondiente de github.com/SysBioChalmers/ecModels
+  → Repetir las simulaciones con restricciones enzimáticas
+  → Comparar predicciones FBA vs. ecGEM → descartar candidatos sobreestimados
+```
+
+---
+
+### 9.9 Resumen visual: el ciclo completo
+
+```text
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │                    GENOMA DE INTERÉS                                    │
+  │               (Módulos 5–6: secuenciación + anotación)                  │
+  └────────────────────────────────┬────────────────────────────────────────┘
+                                   │ genes + EC numbers
+                                   ▼
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │             MODELO GEM (BiGG / reconstrucción propia)                   │
+  │             metabolitos · reacciones · genes · GPR · S · v              │
+  └──────────────────────────┬─────────────────────┬────────────────────────┘
+                             │                     │
+                    FBA / pFBA              ecGEM (GECKO)
+                    (rápido, a             (más preciso,
+                    escala genómica)        con kcat)
+                             │                     │
+            ┌────────────────┼──────────────┬──────┘
+            ▼                ▼              ▼
+   ┌──────────────┐  ┌──────────────┐  ┌──────────────────────┐
+   │  Deleciones  │  │Sobreexpresión│  │  Reducción parcial   │
+   │  (v_i = 0)   │  │ (ub_i × N)   │  │  (ub_i × fracción)   │
+   │              │  │ [E_i] × N    │  │  [E_i] × fracción    │
+   └──────┬───────┘  └──────┬───────┘  └──────────┬───────────┘
+          │                 │                     │
+          └─────────────────┼─────────────────────┘
+                            │
+                            ▼
+              ┌─────────────────────────┐
+              │  Evaluación de blancos  │
+              │  OptKnock / OptForce /  │
+              │  FSEOF / producción     │
+              │  envelope               │
+              └────────────┬────────────┘
+                           │
+                           ▼
+              ┌─────────────────────────┐
+              │  Priorización:          │
+              │  producción ↑           │
+              │  crecimiento aceptable  │
+              │  modificaciones mínimas │
+              └────────────┬────────────┘
+                           │
+                           ▼
+              ┌─────────────────────────┐
+              │  CEPA DISEÑADA          │
+              │  (CRISPR, clonación,    │
+              │   sobreexpresión)       │
+              └────────────┬────────────┘
+                           │
+                           ▼
+              ┌─────────────────────────┐
+              │  Validación             │
+              │  experimental           │
+              │  → actualizar modelo    │
+              └─────────────────────────┘
+```
+
+---
+
+## 10. Cierre conceptual
+
+En este módulo ha aprendido que:
+
+- El **metabolismo** puede representarse como una **red (grafo)** de metabolitos conectados por reacciones enzimáticas, comparable en estructura a una red de transporte urbano.
+- Las **ODEs** permiten simular cómo cambian las concentraciones de metabolitos en el tiempo, pero requieren parámetros cinéticos difíciles de medir a escala genómica.
+- Los **modelos GEM** resuelven esa limitación asumiendo **estado estacionario** (S · v = 0) y formulando el problema como una optimización lineal.
+- **FBA** encuentra la distribución de flujos óptima que maximiza un objetivo biológico (como el crecimiento) dentro de las restricciones de la red.
+- **GECKO** extiende FBA incorporando la capacidad enzimática real (kcat, presupuesto proteómico), obteniendo predicciones más realistas y útiles para el diseño de biofábricas.
+- Todo este flujo **parte del genoma**: un genoma bien anotado es el insumo inicial de cualquier modelo metabólico.
+
+> [!IMPORTANT]
+> La modelación metabólica no reemplaza el experimento: lo guía. Un buen modelo reduce el espacio de búsqueda experimental de cientos de posibles modificaciones genéticas a unas pocas candidatas con mayor probabilidad de éxito, acelerando el ciclo de diseño-construcción-prueba-aprendizaje (*DBTL cycle*) en ingeniería metabólica.
+
+---
+
+## Prácticas del módulo
+
+| Práctica                                                                                  | Descripción                                                                                                                                                                       |
+|:------------------------------------------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [Práctica — Google Colab: Introducción a COBRApy](exercises/01_intro_cobrapy_colab.ipynb) | Exploración de un modelo GEM (*E. coli* iJO1366), simulaciones FBA, análisis de knockouts, exploración de la matriz estequiométrica y diseño básico de biofábricas usando COBRApy |
+
