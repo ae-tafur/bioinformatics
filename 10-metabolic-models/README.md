@@ -443,6 +443,42 @@ PASO 7: Curación manual y validación
 > [!TIP]
 > Los modelos GEM curados están disponibles en **BiGG Models** (http://bigg.ucsd.edu/) para cientos de organismos, incluyendo *E. coli* iJO1366, *S. cerevisiae* iMM904, *P. putida* iJN1463, entre muchos más.
 
+#### Herramientas para la reconstrucción de modelos GEM
+
+En la práctica, los pasos 1–7 se realizan con ayuda de software especializado. Las herramientas se dividen en dos grandes categorías:
+
+**Reconstrucción automática** — el software genera un borrador del modelo a partir del genoma anotado, que luego debe ser curado manualmente:
+
+| Herramienta       | Lenguaje     | Descripción                                                                                                                                                        | Repositorio                                                                    |
+|:------------------|:-------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------|
+| **RAVEN Toolbox** | MATLAB       | Suite completa para reconstrucción automática, curación y análisis. Integra KEGG, MetaCyc y UniProt. Incluye herramientas de gap-filling y comparación de modelos. | [github.com/SysBioChalmers/RAVEN](https://github.com/SysBioChalmers/RAVEN)     |
+| **ModelSEED**     | Web / Python | Plataforma en línea que genera un modelo GEM completo a partir de un genoma en minutos. Integrado con la plataforma KBase.                                         | [modelseed.org](https://modelseed.org)                                         |
+| **CarveMe**       | Python       | Reconstrucción top-down usando una red metabólica universal (pan-reacción). Muy rápido y adecuado para estudios comparativos de muchos genomas.                    | [github.com/cdanielmachado/carveme](https://github.com/cdanielmachado/carveme) |
+| **Merlin**        | Java         | Interfaz gráfica para reconstrucción semi-automática, especialmente útil para eucariotas y hongos.                                                                 | [merlin-sysbio.org](https://merlin-sysbio.org)                                 |
+
+**Reconstrucción y curación manual** — usadas principalmente para refinar borradores automáticos, ajustar límites, corregir GPR y realizar gap-filling dirigido:
+
+| Herramienta       | Lenguaje | Descripción                                                                                                                                                                   | Repositorio                                                                    |
+|:------------------|:---------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------|
+| **COBRApy**       | Python   | La librería estándar de Python para trabajar con modelos COBRA. Permite cargar, editar, simular y exportar modelos en SBML y JSON. Ideal para scripting y automatización.     | [github.com/opencobra/cobrapy](https://github.com/opencobra/cobrapy)           |
+| **COBRA Toolbox** | MATLAB   | La implementación original del framework COBRA. Muy completa: incluye FBA, FVA, OptKnock, MOMA, gap-filling y decenas de métodos adicionales. Referencia histórica del campo. | [github.com/opencobra/cobratoolbox](https://github.com/opencobra/cobratoolbox) |
+
+> [!NOTE]
+> El flujo de trabajo más común en la actualidad combina ambas categorías:
+> ```text
+> Genoma anotado
+>      │
+>      ▼
+> Borrador automático  ←── CarveMe o RAVEN (15–30 minutos)
+>      │
+>      ▼
+> Curación manual      ←── COBRApy o COBRA Toolbox (días a semanas)
+>      │
+>      ▼
+> Modelo curado publicado  →  BiGG / repositorio GitHub del laboratorio
+> ```
+> La curación manual sigue siendo el paso más costoso en tiempo: un modelo bien curado puede requerir semanas de trabajo comparando la literatura bioquímica con las predicciones del modelo.
+
 ### 6.4 Estructura de un archivo de modelo COBRA
 
 Los modelos se guardan en formatos estándar como **SBML** (`.xml`) o **JSON**:
@@ -463,6 +499,17 @@ Componentes de un modelo COBRA:
 ### 7.1 El problema de optimización
 
 Dado que S · v = 0 tiene infinitas soluciones posibles (el sistema está subdeterminado), FBA agrega dos elementos adicionales:
+
+> [!TIP]
+> Las mismas herramientas usadas para construir y curar modelos GEM implementan FBA y todos los análisis derivados:
+>
+> | Herramienta       | Lenguaje | Función principal en FBA                                              | Enlace                                                                         |
+> |:------------------|:---------|:----------------------------------------------------------------------|:-------------------------------------------------------------------------------|
+> | **COBRApy**       | Python   | `model.optimize()`, `production_envelope()`, `single_gene_deletion()` | [github.com/opencobra/cobrapy](https://github.com/opencobra/cobrapy)           |
+> | **COBRA Toolbox** | MATLAB   | `optimizeCbModel()`, `robustknock()`, `optKnock()`, FVA, MOMA         | [github.com/opencobra/cobratoolbox](https://github.com/opencobra/cobratoolbox) |
+> | **RAVEN Toolbox** | MATLAB   | `solveLP()`, análisis de flujos, integración con datos ómicos         | [github.com/SysBioChalmers/RAVEN](https://github.com/SysBioChalmers/RAVEN)     |
+>
+> En esta práctica usamos **COBRApy** por ser Python y correr directamente en Google Colab. COBRA Toolbox es la referencia más completa para análisis avanzados (OptKnock, MOMA, ROOM), mientras que RAVEN es especialmente potente cuando se combina con el pipeline de GECKO para modelos con restricciones enzimáticas.
 
 1. **Restricciones de desigualdad**: los flujos no pueden exceder ciertos límites (`lb ≤ v ≤ ub`).
 2. **Función objetivo**: maximizar o minimizar una reacción específica (generalmente la tasa de crecimiento).
