@@ -271,7 +271,62 @@ $$\left.\frac{d[P]}{dt}\right|_{t=0} = 2v_1 - v_2 = +4.762 \ \text{mmol/L/h} \qu
 
 $$\left.\frac{d[E]}{dt}\right|_{t=0} = v_2 = 0.000 \ \text{mmol/L/h} \quad \rightarrow \text{etanol aún no se produce}$$
 
+> [!IMPORTANT]
+> 🔍 **Aclaración sobre la estequiometría:**
+>
+> La reacción R1 es: **Glucosa → 2 Piruvato**
+>
+> Esto significa los coeficientes estequiométricos son:
+> - Glucosa: **-1** (se consume 1 molécula)
+> - Piruvato: **+2** (se producen 2 moléculas)
+>
+> Por eso las derivadas son:
+> - $\frac{d[G]}{dt} = (-1) \times v_1 = -2.381$ mmol/L/h
+> - $\frac{d[P]}{dt} = (+2) \times v_1 = +4.762$ mmol/L/h
+>
+> **Importante:** En el paso de tiempo Δt = 0.5 h, el cambio NO es el flujo completo, sino:
+> - Δ[G] = (-2.381) × 0.5 = **-1.190** mmol/L (no -2.381)
+> - Δ[P] = (+4.762) × 0.5 = **+2.381** mmol/L (no +4.762)
+>
+> La glucosa **DISMINUYE 1.190** (que es 2.381 × 0.5), no 2.381 directamente. La relación es correcta: por cada 1 glucosa consumida, se producen exactamente 2 piruvatos, pero el cambio observado depende del intervalo de tiempo (0.5 h en este caso).
+
+> [!TIP]
+> **🕐 Relación entre Flujo, Derivada y Paso de Tiempo**
+>
+> El flujo tiene unidades **por hora**: v₁ = 2.381 mmol/gDW/**h**
+>
+> La derivada expresa la **tasa de cambio por cada 1 hora**:
+> $$\frac{d[G]}{dt} = -2.381 \text{ mmol/L per } \boxed{1 \text{ hour}}$$
+>
+> Cuando integras con Euler, multiplicas por el paso de tiempo real (Δt):
+>
+> | Δt (h)  | Cálculo       | Δ[G] (mmol/L) | Interpretación               |
+> |:-------:|:--------------|:-------------:|:-----------------------------|
+> |   1.0   | -2.381 × 1.0  |    -2.381     | En 1 hora completa           |
+> |   0.5   | -2.381 × 0.5  |    -1.190     | En media hora (nuestro caso) |
+> |   0.1   | -2.381 × 0.1  |    -0.238     | En 1/10 de hora              |
+> |  0.01   | -2.381 × 0.01 |    -0.024     | En 1/100 de hora             |
+>
+> **La regla de oro:** Cambio = (derivada) × (paso de tiempo)
+> $$\Delta [X] = \frac{d[X]}{dt}\bigg|_n \times \Delta t$$
+>
+> El paso de tiempo es el **factor de escala** que dice "cuánto avanzamos".
+
 **Paso 3 — Integración numérica (pasos de Δt = 0.5 h, método de Euler explícito):**
+
+**Fórmula de Euler explícito:**
+
+$$[X]_{n+1} = [X]_n + \frac{d[X]}{dt}\bigg|_n \times \Delta t$$
+
+**Cálculo del primer paso (t = 0 → t = 0.5 h):**
+
+$$[G]_{1} = [G]_0 + \frac{d[G]}{dt}\bigg|_0 \times \Delta t = 10.0 + (-2.381) \times 0.5 = 10.0 - 1.190 = 8.810 \text{ mmol/L} \,\checkmark$$
+
+$$[P]_{1} = [P]_0 + \frac{d[P]}{dt}\bigg|_0 \times \Delta t = 0.0 + (+4.762) \times 0.5 = 0.0 + 2.381 = 2.381 \text{ mmol/L} \,\checkmark$$
+
+$$[E]_{1} = [E]_0 + \frac{d[E]}{dt}\bigg|_0 \times \Delta t = 0.0 + 0.0 \times 0.5 = 0.0 \text{ mmol/L} \,\checkmark$$
+
+**Tabla de resultados numéricos:**
 
 | t (h)  | [G] (mmol/L)  | [P] (mmol/L) | [E] (mmol/L) |  v₁   |  v₂   |
 |:------:|:-------------:|:------------:|:------------:|:-----:|:-----:|
