@@ -1156,5 +1156,5 @@ En este módulo ha aprendido que:
 
 | Práctica                                                                                  | Descripción                                                                                                                                                                       |
 |:------------------------------------------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [Práctica — Google Colab: Introducción a COBRApy](exercises/01_intro_cobrapy_colab.ipynb) | Exploración de un modelo GEM (*E. coli* iJO1366), simulaciones FBA, análisis de knockouts, exploración de la matriz estequiométrica y diseño básico de biofábricas usando COBRApy |
+| [Práctica — Google Colab: Introducción a COBRApy](exercises/01_2_intro_to_cobra_models_cobrapy_colab.ipynb) | Exploración de un modelo GEM (*E. coli* iJO1366), simulaciones FBA, análisis de knockouts, exploración de la matriz estequiométrica y diseño básico de biofábricas usando COBRApy |
 
