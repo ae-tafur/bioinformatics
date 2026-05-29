@@ -1,4 +1,4 @@
-%[text] # 🧬 PRÁCTICA: Construcción de un Modelo COBRA desde Cero
+%[text] # 🧬 Práctica: Construcción de un Modelo COBRA desde Cero
 %[text] 
 %[text] ## Introducción
 %[text] En esta práctica, usted aprenderá a \*\*construir un modelo metabólico COBRA (Constraint-Based Reconstruction and Analysis) de forma programática\*\* utilizando MATLAB.
