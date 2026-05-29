@@ -1,0 +1,1741 @@
+---
+!!omap
+- metaData:
+    id: "blankID"
+    name: "blankName"
+    date: "2026-05-29"
+- metabolites:
+    - !!omap
+      - id: "13dpg_c"
+      - name: "3-Phospho-D-glyceroyl phosphate"
+      - compartment: "c"
+      - formula: "C3H4O10P2"
+    - !!omap
+      - id: "2pg_c"
+      - name: "D-Glycerate 2-phosphate"
+      - compartment: "c"
+      - formula: "C3H4O7P"
+    - !!omap
+      - id: "3pg_c"
+      - name: "3-Phospho-D-glycerate"
+      - compartment: "c"
+      - formula: "C3H4O7P"
+    - !!omap
+      - id: "6pgc_c"
+      - name: "6-Phospho-D-gluconate"
+      - compartment: "c"
+      - formula: "C6H10O10P"
+    - !!omap
+      - id: "6pgl_c"
+      - name: "6-phospho-D-glucono-1,5-lactone"
+      - compartment: "c"
+      - formula: "C6H9O9P"
+    - !!omap
+      - id: "ac_c"
+      - name: "Acetate"
+      - compartment: "c"
+      - formula: "C2H3O2"
+    - !!omap
+      - id: "ac_e"
+      - name: "Acetate"
+      - compartment: "e"
+      - formula: "C2H3O2"
+    - !!omap
+      - id: "acald_c"
+      - name: "Acetaldehyde"
+      - compartment: "c"
+      - formula: "C2H4O"
+    - !!omap
+      - id: "acald_e"
+      - name: "Acetaldehyde"
+      - compartment: "e"
+      - formula: "C2H4O"
+    - !!omap
+      - id: "accoa_c"
+      - name: "Acetyl-CoA"
+      - compartment: "c"
+      - formula: "C23H34N7O17P3S"
+    - !!omap
+      - id: "acon_C_c"
+      - name: "Cis-Aconitate"
+      - compartment: "c"
+      - formula: "C6H3O6"
+    - !!omap
+      - id: "actp_c"
+      - name: "Acetyl phosphate"
+      - compartment: "c"
+      - formula: "C2H3O5P"
+    - !!omap
+      - id: "adp_c"
+      - name: "ADP C10H12N5O10P2"
+      - compartment: "c"
+      - formula: "C10H12N5O10P2"
+    - !!omap
+      - id: "akg_c"
+      - name: "2-Oxoglutarate"
+      - compartment: "c"
+      - formula: "C5H4O5"
+    - !!omap
+      - id: "akg_e"
+      - name: "2-Oxoglutarate"
+      - compartment: "e"
+      - formula: "C5H4O5"
+    - !!omap
+      - id: "amp_c"
+      - name: "AMP C10H12N5O7P"
+      - compartment: "c"
+      - formula: "C10H12N5O7P"
+    - !!omap
+      - id: "atp_c"
+      - name: "ATP C10H12N5O13P3"
+      - compartment: "c"
+      - formula: "C10H12N5O13P3"
+    - !!omap
+      - id: "cit_c"
+      - name: "Citrate"
+      - compartment: "c"
+      - formula: "C6H5O7"
+    - !!omap
+      - id: "co2_c"
+      - name: "CO2 CO2"
+      - compartment: "c"
+      - formula: "CO2"
+    - !!omap
+      - id: "co2_e"
+      - name: "CO2 CO2"
+      - compartment: "e"
+      - formula: "CO2"
+    - !!omap
+      - id: "coa_c"
+      - name: "Coenzyme A"
+      - compartment: "c"
+      - formula: "C21H32N7O16P3S"
+    - !!omap
+      - id: "dhap_c"
+      - name: "Dihydroxyacetone phosphate"
+      - compartment: "c"
+      - formula: "C3H5O6P"
+    - !!omap
+      - id: "e4p_c"
+      - name: "D-Erythrose 4-phosphate"
+      - compartment: "c"
+      - formula: "C4H7O7P"
+    - !!omap
+      - id: "etoh_c"
+      - name: "Ethanol"
+      - compartment: "c"
+      - formula: "C2H6O"
+    - !!omap
+      - id: "etoh_e"
+      - name: "Ethanol"
+      - compartment: "e"
+      - formula: "C2H6O"
+    - !!omap
+      - id: "f6p_c"
+      - name: "D-Fructose 6-phosphate"
+      - compartment: "c"
+      - formula: "C6H11O9P"
+    - !!omap
+      - id: "fdp_c"
+      - name: "D-Fructose 1,6-bisphosphate"
+      - compartment: "c"
+      - formula: "C6H10O12P2"
+    - !!omap
+      - id: "for_c"
+      - name: "Formate"
+      - compartment: "c"
+      - formula: "CH1O2"
+    - !!omap
+      - id: "for_e"
+      - name: "Formate"
+      - compartment: "e"
+      - formula: "CH1O2"
+    - !!omap
+      - id: "fru_e"
+      - name: "D-Fructose"
+      - compartment: "e"
+      - formula: "C6H12O6"
+    - !!omap
+      - id: "fum_c"
+      - name: "Fumarate"
+      - compartment: "c"
+      - formula: "C4H2O4"
+    - !!omap
+      - id: "fum_e"
+      - name: "Fumarate"
+      - compartment: "e"
+      - formula: "C4H2O4"
+    - !!omap
+      - id: "g3p_c"
+      - name: "Glyceraldehyde 3-phosphate"
+      - compartment: "c"
+      - formula: "C3H5O6P"
+    - !!omap
+      - id: "g6p_c"
+      - name: "D-Glucose 6-phosphate"
+      - compartment: "c"
+      - formula: "C6H11O9P"
+    - !!omap
+      - id: "glc__D_e"
+      - name: "D-Glucose"
+      - compartment: "e"
+      - formula: "C6H12O6"
+    - !!omap
+      - id: "gln__L_c"
+      - name: "L-Glutamine"
+      - compartment: "c"
+      - formula: "C5H10N2O3"
+    - !!omap
+      - id: "gln__L_e"
+      - name: "L-Glutamine"
+      - compartment: "e"
+      - formula: "C5H10N2O3"
+    - !!omap
+      - id: "glu__L_c"
+      - name: "L-Glutamate"
+      - compartment: "c"
+      - formula: "C5H8NO4"
+    - !!omap
+      - id: "glu__L_e"
+      - name: "L-Glutamate"
+      - compartment: "e"
+      - formula: "C5H8NO4"
+    - !!omap
+      - id: "glx_c"
+      - name: "Glyoxylate"
+      - compartment: "c"
+      - formula: "C2H1O3"
+    - !!omap
+      - id: "h2o_c"
+      - name: "H2O H2O"
+      - compartment: "c"
+      - formula: "H2O"
+    - !!omap
+      - id: "h2o_e"
+      - name: "H2O H2O"
+      - compartment: "e"
+      - formula: "H2O"
+    - !!omap
+      - id: "h_c"
+      - name: "H+"
+      - compartment: "c"
+      - formula: "H"
+    - !!omap
+      - id: "h_e"
+      - name: "H+"
+      - compartment: "e"
+      - formula: "H"
+    - !!omap
+      - id: "icit_c"
+      - name: "Isocitrate"
+      - compartment: "c"
+      - formula: "C6H5O7"
+    - !!omap
+      - id: "lac__D_c"
+      - name: "D-Lactate"
+      - compartment: "c"
+      - formula: "C3H5O3"
+    - !!omap
+      - id: "lac__D_e"
+      - name: "D-Lactate"
+      - compartment: "e"
+      - formula: "C3H5O3"
+    - !!omap
+      - id: "mal__L_c"
+      - name: "L-Malate"
+      - compartment: "c"
+      - formula: "C4H4O5"
+    - !!omap
+      - id: "mal__L_e"
+      - name: "L-Malate"
+      - compartment: "e"
+      - formula: "C4H4O5"
+    - !!omap
+      - id: "nad_c"
+      - name: "Nicotinamide adenine dinucleotide"
+      - compartment: "c"
+      - formula: "C21H26N7O14P2"
+    - !!omap
+      - id: "nadh_c"
+      - name: "Nicotinamide adenine dinucleotide - reduced"
+      - compartment: "c"
+      - formula: "C21H27N7O14P2"
+    - !!omap
+      - id: "nadp_c"
+      - name: "Nicotinamide adenine dinucleotide phosphate"
+      - compartment: "c"
+      - formula: "C21H25N7O17P3"
+    - !!omap
+      - id: "nadph_c"
+      - name: "Nicotinamide adenine dinucleotide phosphate - reduced"
+      - compartment: "c"
+      - formula: "C21H26N7O17P3"
+    - !!omap
+      - id: "nh4_c"
+      - name: "Ammonium"
+      - compartment: "c"
+      - formula: "H4N"
+    - !!omap
+      - id: "nh4_e"
+      - name: "Ammonium"
+      - compartment: "e"
+      - formula: "H4N"
+    - !!omap
+      - id: "o2_c"
+      - name: "O2 O2"
+      - compartment: "c"
+      - formula: "O2"
+    - !!omap
+      - id: "o2_e"
+      - name: "O2 O2"
+      - compartment: "e"
+      - formula: "O2"
+    - !!omap
+      - id: "oaa_c"
+      - name: "Oxaloacetate"
+      - compartment: "c"
+      - formula: "C4H2O5"
+    - !!omap
+      - id: "pep_c"
+      - name: "Phosphoenolpyruvate"
+      - compartment: "c"
+      - formula: "C3H2O6P"
+    - !!omap
+      - id: "pi_c"
+      - name: "Phosphate"
+      - compartment: "c"
+      - formula: "HO4P"
+    - !!omap
+      - id: "pi_e"
+      - name: "Phosphate"
+      - compartment: "e"
+      - formula: "HO4P"
+    - !!omap
+      - id: "pyr_c"
+      - name: "Pyruvate"
+      - compartment: "c"
+      - formula: "C3H3O3"
+    - !!omap
+      - id: "pyr_e"
+      - name: "Pyruvate"
+      - compartment: "e"
+      - formula: "C3H3O3"
+    - !!omap
+      - id: "q8_c"
+      - name: "Ubiquinone-8"
+      - compartment: "c"
+      - formula: "C49H74O4"
+    - !!omap
+      - id: "q8h2_c"
+      - name: "Ubiquinol-8"
+      - compartment: "c"
+      - formula: "C49H76O4"
+    - !!omap
+      - id: "r5p_c"
+      - name: "Alpha-D-Ribose 5-phosphate"
+      - compartment: "c"
+      - formula: "C5H9O8P"
+    - !!omap
+      - id: "ru5p__D_c"
+      - name: "D-Ribulose 5-phosphate"
+      - compartment: "c"
+      - formula: "C5H9O8P"
+    - !!omap
+      - id: "s7p_c"
+      - name: "Sedoheptulose 7-phosphate"
+      - compartment: "c"
+      - formula: "C7H13O10P"
+    - !!omap
+      - id: "succ_c"
+      - name: "Succinate"
+      - compartment: "c"
+      - formula: "C4H4O4"
+    - !!omap
+      - id: "succ_e"
+      - name: "Succinate"
+      - compartment: "e"
+      - formula: "C4H4O4"
+    - !!omap
+      - id: "succoa_c"
+      - name: "Succinyl-CoA"
+      - compartment: "c"
+      - formula: "C25H35N7O19P3S"
+    - !!omap
+      - id: "xu5p__D_c"
+      - name: "D-Xylulose 5-phosphate"
+      - compartment: "c"
+      - formula: "C5H9O8P"
+- reactions:
+    - !!omap
+      - id: "ACALD"
+      - name: "Acetaldehyde dehydrogenase (acetylating)"
+      - metabolites: !!omap
+          - acald_c: -1
+          - accoa_c: 1
+          - coa_c: -1
+          - h_c: 1
+          - nad_c: -1
+          - nadh_c: 1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b0351 or b1241"
+      - subsystem: "Pyruvate Metabolism"
+    - !!omap
+      - id: "ACALDt"
+      - name: "Acetaldehyde reversible transport"
+      - metabolites: !!omap
+          - acald_c: 1
+          - acald_e: -1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "s0001"
+      - subsystem: "Transport, Extracellular"
+    - !!omap
+      - id: "ACKr"
+      - name: "Acetate kinase"
+      - metabolites: !!omap
+          - ac_c: -1
+          - actp_c: 1
+          - adp_c: 1
+          - atp_c: -1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b3115 or b2296 or b1849"
+      - subsystem: "Pyruvate Metabolism"
+    - !!omap
+      - id: "ACONTa"
+      - name: "Aconitase (half-reaction A, Citrate hydro-lyase)"
+      - metabolites: !!omap
+          - acon_C_c: 1
+          - cit_c: -1
+          - h2o_c: 1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b0118 or b1276"
+      - subsystem: "Citric Acid Cycle"
+    - !!omap
+      - id: "ACONTb"
+      - name: "Aconitase (half-reaction B, Isocitrate hydro-lyase)"
+      - metabolites: !!omap
+          - acon_C_c: -1
+          - h2o_c: -1
+          - icit_c: 1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b0118 or b1276"
+      - subsystem: "Citric Acid Cycle"
+    - !!omap
+      - id: "ACt2r"
+      - name: "Acetate reversible transport via proton symport"
+      - metabolites: !!omap
+          - ac_c: 1
+          - ac_e: -1
+          - h_c: 1
+          - h_e: -1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - subsystem: "Transport, Extracellular"
+    - !!omap
+      - id: "ADK1"
+      - name: "Adenylate kinase"
+      - metabolites: !!omap
+          - adp_c: 2
+          - amp_c: -1
+          - atp_c: -1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b0474"
+      - subsystem: "Oxidative Phosphorylation"
+    - !!omap
+      - id: "AKGDH"
+      - name: "2-Oxogluterate dehydrogenase"
+      - metabolites: !!omap
+          - akg_c: -1
+          - co2_c: 1
+          - coa_c: -1
+          - nad_c: -1
+          - nadh_c: 1
+          - succoa_c: 1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b0116 and b0726 and b0727"
+      - subsystem: "Citric Acid Cycle"
+    - !!omap
+      - id: "AKGt2r"
+      - name: "2 oxoglutarate reversible transport via symport"
+      - metabolites: !!omap
+          - akg_c: 1
+          - akg_e: -1
+          - h_c: 1
+          - h_e: -1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b2587"
+      - subsystem: "Transport, Extracellular"
+    - !!omap
+      - id: "ALCD2x"
+      - name: "Alcohol dehydrogenase (ethanol)"
+      - metabolites: !!omap
+          - acald_c: 1
+          - etoh_c: -1
+          - h_c: 1
+          - nad_c: -1
+          - nadh_c: 1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b0356 or b1478 or b1241"
+      - subsystem: "Pyruvate Metabolism"
+    - !!omap
+      - id: "ATPM"
+      - name: "ATP maintenance requirement"
+      - metabolites: !!omap
+          - adp_c: 1
+          - atp_c: -1
+          - h2o_c: -1
+          - h_c: 1
+          - pi_c: 1
+      - lower_bound: 8.39
+      - upper_bound: 1000
+      - subsystem: "Biomass and maintenance functions"
+    - !!omap
+      - id: "ATPS4r"
+      - name: "ATP synthase (four protons for one ATP)"
+      - metabolites: !!omap
+          - adp_c: -1
+          - atp_c: 1
+          - h2o_c: 1
+          - h_c: 3
+          - h_e: -4
+          - pi_c: -1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "((b3736 and b3737 and b3738) and (b3731 and b3732 and b3733 and b3734 and b3735)) or ((b3736 and b3737 and b3738) and (b3731 and b3732 and b3733 and b3734 and b3735) and b3739)"
+      - subsystem: "Oxidative Phosphorylation"
+    - !!omap
+      - id: "BIOMASS_Ecoli_core_w_GAM"
+      - name: "Biomass Objective Function with GAM"
+      - metabolites: !!omap
+          - 3pg_c: -1.496
+          - accoa_c: -3.7478
+          - adp_c: 59.81
+          - akg_c: 4.1182
+          - atp_c: -59.81
+          - coa_c: 3.7478
+          - e4p_c: -0.361
+          - f6p_c: -0.0709
+          - g3p_c: -0.129
+          - g6p_c: -0.205
+          - gln__L_c: -0.2557
+          - glu__L_c: -4.9414
+          - h2o_c: -59.81
+          - h_c: 59.81
+          - nad_c: -3.547
+          - nadh_c: 3.547
+          - nadp_c: 13.0279
+          - nadph_c: -13.0279
+          - oaa_c: -1.7867
+          - pep_c: -0.5191
+          - pi_c: 59.81
+          - pyr_c: -2.8328
+          - r5p_c: -0.8977
+      - lower_bound: 0
+      - upper_bound: 1000
+      - objective_coefficient: 1
+      - subsystem: "Biomass and maintenance functions"
+    - !!omap
+      - id: "CO2t"
+      - name: "CO2 transporter via diffusion"
+      - metabolites: !!omap
+          - co2_c: 1
+          - co2_e: -1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "s0001"
+      - subsystem: "Transport, Extracellular"
+    - !!omap
+      - id: "CS"
+      - name: "Citrate synthase"
+      - metabolites: !!omap
+          - accoa_c: -1
+          - cit_c: 1
+          - coa_c: 1
+          - h2o_c: -1
+          - h_c: 1
+          - oaa_c: -1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b0720"
+      - subsystem: "Citric Acid Cycle"
+    - !!omap
+      - id: "CYTBD"
+      - name: "Cytochrome oxidase bd (ubiquinol-8: 2 protons)"
+      - metabolites: !!omap
+          - h2o_c: 1
+          - h_c: -2
+          - h_e: 2
+          - o2_c: -0.5
+          - q8_c: 1
+          - q8h2_c: -1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "(b0978 and b0979) or (b0733 and b0734)"
+      - subsystem: "Oxidative Phosphorylation"
+    - !!omap
+      - id: "D_LACt2"
+      - name: "D lactate transport via proton symport"
+      - metabolites: !!omap
+          - h_c: 1
+          - h_e: -1
+          - lac__D_c: 1
+          - lac__D_e: -1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b2975 or b3603"
+      - subsystem: "Transport, Extracellular"
+    - !!omap
+      - id: "ENO"
+      - name: "Enolase"
+      - metabolites: !!omap
+          - 2pg_c: -1
+          - h2o_c: 1
+          - pep_c: 1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b2779"
+      - subsystem: "Glycolysis/Gluconeogenesis"
+    - !!omap
+      - id: "ETOHt2r"
+      - name: "Ethanol reversible transport via proton symport"
+      - metabolites: !!omap
+          - etoh_c: 1
+          - etoh_e: -1
+          - h_c: 1
+          - h_e: -1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - subsystem: "Transport, Extracellular"
+    - !!omap
+      - id: "EX_ac_e"
+      - name: "Acetate exchange"
+      - metabolites: !!omap
+          - ac_e: -1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - subsystem: "Extracellular exchange"
+    - !!omap
+      - id: "EX_acald_e"
+      - name: "Acetaldehyde exchange"
+      - metabolites: !!omap
+          - acald_e: -1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - subsystem: "Extracellular exchange"
+    - !!omap
+      - id: "EX_akg_e"
+      - name: "2-Oxoglutarate exchange"
+      - metabolites: !!omap
+          - akg_e: -1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - subsystem: "Extracellular exchange"
+    - !!omap
+      - id: "EX_co2_e"
+      - name: "CO2 exchange"
+      - metabolites: !!omap
+          - co2_e: -1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - subsystem: "Extracellular exchange"
+    - !!omap
+      - id: "EX_etoh_e"
+      - name: "Ethanol exchange"
+      - metabolites: !!omap
+          - etoh_e: -1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - subsystem: "Extracellular exchange"
+    - !!omap
+      - id: "EX_for_e"
+      - name: "Formate exchange"
+      - metabolites: !!omap
+          - for_e: -1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - subsystem: "Extracellular exchange"
+    - !!omap
+      - id: "EX_fru_e"
+      - name: "D-Fructose exchange"
+      - metabolites: !!omap
+          - fru_e: -1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - subsystem: "Extracellular exchange"
+    - !!omap
+      - id: "EX_fum_e"
+      - name: "Fumarate exchange"
+      - metabolites: !!omap
+          - fum_e: -1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - subsystem: "Extracellular exchange"
+    - !!omap
+      - id: "EX_glc__D_e"
+      - name: "D-Glucose exchange"
+      - metabolites: !!omap
+          - glc__D_e: -1
+      - lower_bound: -10
+      - upper_bound: 1000
+      - subsystem: "Extracellular exchange"
+    - !!omap
+      - id: "EX_gln__L_e"
+      - name: "L-Glutamine exchange"
+      - metabolites: !!omap
+          - gln__L_e: -1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - subsystem: "Extracellular exchange"
+    - !!omap
+      - id: "EX_glu__L_e"
+      - name: "L-Glutamate exchange"
+      - metabolites: !!omap
+          - glu__L_e: -1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - subsystem: "Extracellular exchange"
+    - !!omap
+      - id: "EX_h2o_e"
+      - name: "H2O exchange"
+      - metabolites: !!omap
+          - h2o_e: -1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - subsystem: "Extracellular exchange"
+    - !!omap
+      - id: "EX_h_e"
+      - name: "H+ exchange"
+      - metabolites: !!omap
+          - h_e: -1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - subsystem: "Extracellular exchange"
+    - !!omap
+      - id: "EX_lac__D_e"
+      - name: "D-lactate exchange"
+      - metabolites: !!omap
+          - lac__D_e: -1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - subsystem: "Extracellular exchange"
+    - !!omap
+      - id: "EX_mal__L_e"
+      - name: "L-Malate exchange"
+      - metabolites: !!omap
+          - mal__L_e: -1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - subsystem: "Extracellular exchange"
+    - !!omap
+      - id: "EX_nh4_e"
+      - name: "Ammonia exchange"
+      - metabolites: !!omap
+          - nh4_e: -1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - subsystem: "Extracellular exchange"
+    - !!omap
+      - id: "EX_o2_e"
+      - name: "O2 exchange"
+      - metabolites: !!omap
+          - o2_e: -1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - subsystem: "Extracellular exchange"
+    - !!omap
+      - id: "EX_pi_e"
+      - name: "Phosphate exchange"
+      - metabolites: !!omap
+          - pi_e: -1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - subsystem: "Extracellular exchange"
+    - !!omap
+      - id: "EX_pyr_e"
+      - name: "Pyruvate exchange"
+      - metabolites: !!omap
+          - pyr_e: -1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - subsystem: "Extracellular exchange"
+    - !!omap
+      - id: "EX_succ_e"
+      - name: "Succinate exchange"
+      - metabolites: !!omap
+          - succ_e: -1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - subsystem: "Extracellular exchange"
+    - !!omap
+      - id: "FBA"
+      - name: "Fructose-bisphosphate aldolase"
+      - metabolites: !!omap
+          - dhap_c: 1
+          - fdp_c: -1
+          - g3p_c: 1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b2097 or b1773 or b2925"
+      - subsystem: "Glycolysis/Gluconeogenesis"
+    - !!omap
+      - id: "FBP"
+      - name: "Fructose-bisphosphatase"
+      - metabolites: !!omap
+          - f6p_c: 1
+          - fdp_c: -1
+          - h2o_c: -1
+          - pi_c: 1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b3925 or b4232"
+      - subsystem: "Glycolysis/Gluconeogenesis"
+    - !!omap
+      - id: "FORt"
+      - name: "Formate transport via diffusion"
+      - metabolites: !!omap
+          - for_c: 1
+          - for_e: -1
+      - lower_bound: -1000
+      - upper_bound: 0
+      - gene_reaction_rule: "b0904 or b2492"
+      - subsystem: "Transport, Extracellular"
+    - !!omap
+      - id: "FORt2"
+      - name: "Formate transport in via proton symport"
+      - metabolites: !!omap
+          - for_c: 1
+          - for_e: -1
+          - h_c: 1
+          - h_e: -1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b0904 or b2492"
+      - subsystem: "Transport, Extracellular"
+    - !!omap
+      - id: "FRD7"
+      - name: "Fumarate reductase"
+      - metabolites: !!omap
+          - fum_c: -1
+          - q8_c: 1
+          - q8h2_c: -1
+          - succ_c: 1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b4151 and b4152 and b4153 and b4154"
+      - subsystem: "Oxidative Phosphorylation"
+    - !!omap
+      - id: "FRUpts2"
+      - name: "Fructose transport via PEP:Pyr PTS (f6p generating)"
+      - metabolites: !!omap
+          - f6p_c: 1
+          - fru_e: -1
+          - pep_c: -1
+          - pyr_c: 1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b1817 and b1818 and b1819 and b2415 and b2416"
+      - subsystem: "Transport, Extracellular"
+    - !!omap
+      - id: "FUM"
+      - name: "Fumarase"
+      - metabolites: !!omap
+          - fum_c: -1
+          - h2o_c: -1
+          - mal__L_c: 1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b1612 or b4122 or b1611"
+      - subsystem: "Citric Acid Cycle"
+    - !!omap
+      - id: "FUMt2_2"
+      - name: "Fumarate transport via proton symport (2 H)"
+      - metabolites: !!omap
+          - fum_c: 1
+          - fum_e: -1
+          - h_c: 2
+          - h_e: -2
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b3528"
+      - subsystem: "Transport, Extracellular"
+    - !!omap
+      - id: "G6PDH2r"
+      - name: "Glucose 6-phosphate dehydrogenase"
+      - metabolites: !!omap
+          - 6pgl_c: 1
+          - g6p_c: -1
+          - h_c: 1
+          - nadp_c: -1
+          - nadph_c: 1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b1852"
+      - subsystem: "Pentose Phosphate Pathway"
+    - !!omap
+      - id: "GAPD"
+      - name: "Glyceraldehyde-3-phosphate dehydrogenase"
+      - metabolites: !!omap
+          - 13dpg_c: 1
+          - g3p_c: -1
+          - h_c: 1
+          - nad_c: -1
+          - nadh_c: 1
+          - pi_c: -1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b1779"
+      - subsystem: "Glycolysis/Gluconeogenesis"
+    - !!omap
+      - id: "GLCpts"
+      - name: "D-glucose transport via PEP:Pyr PTS"
+      - metabolites: !!omap
+          - g6p_c: 1
+          - glc__D_e: -1
+          - pep_c: -1
+          - pyr_c: 1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "(b2417 and b1101 and b2415 and b2416) or (b1817 and b1818 and b1819 and b2415 and b2416) or (b2417 and b1621 and b2415 and b2416)"
+      - subsystem: "Transport, Extracellular"
+    - !!omap
+      - id: "GLNS"
+      - name: "Glutamine synthetase"
+      - metabolites: !!omap
+          - adp_c: 1
+          - atp_c: -1
+          - gln__L_c: 1
+          - glu__L_c: -1
+          - h_c: 1
+          - nh4_c: -1
+          - pi_c: 1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b3870 or b1297"
+      - subsystem: "Glutamate Metabolism"
+    - !!omap
+      - id: "GLNabc"
+      - name: "L-glutamine transport via ABC system"
+      - metabolites: !!omap
+          - adp_c: 1
+          - atp_c: -1
+          - gln__L_c: 1
+          - gln__L_e: -1
+          - h2o_c: -1
+          - h_c: 1
+          - pi_c: 1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b0811 and b0810 and b0809"
+      - subsystem: "Transport, Extracellular"
+    - !!omap
+      - id: "GLUDy"
+      - name: "Glutamate dehydrogenase (NADP)"
+      - metabolites: !!omap
+          - akg_c: 1
+          - glu__L_c: -1
+          - h2o_c: -1
+          - h_c: 1
+          - nadp_c: -1
+          - nadph_c: 1
+          - nh4_c: 1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b1761"
+      - subsystem: "Glutamate Metabolism"
+    - !!omap
+      - id: "GLUN"
+      - name: "Glutaminase"
+      - metabolites: !!omap
+          - gln__L_c: -1
+          - glu__L_c: 1
+          - h2o_c: -1
+          - nh4_c: 1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b1812 or b0485 or b1524"
+      - subsystem: "Glutamate Metabolism"
+    - !!omap
+      - id: "GLUSy"
+      - name: "Glutamate synthase (NADPH)"
+      - metabolites: !!omap
+          - akg_c: -1
+          - gln__L_c: -1
+          - glu__L_c: 2
+          - h_c: -1
+          - nadp_c: 1
+          - nadph_c: -1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b3212 and b3213"
+      - subsystem: "Glutamate Metabolism"
+    - !!omap
+      - id: "GLUt2r"
+      - name: "L glutamate transport via proton symport  reversible"
+      - metabolites: !!omap
+          - glu__L_c: 1
+          - glu__L_e: -1
+          - h_c: 1
+          - h_e: -1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b4077"
+      - subsystem: "Transport, Extracellular"
+    - !!omap
+      - id: "GND"
+      - name: "Phosphogluconate dehydrogenase"
+      - metabolites: !!omap
+          - 6pgc_c: -1
+          - co2_c: 1
+          - nadp_c: -1
+          - nadph_c: 1
+          - ru5p__D_c: 1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b2029"
+      - subsystem: "Pentose Phosphate Pathway"
+    - !!omap
+      - id: "H2Ot"
+      - name: "H2O transport via diffusion"
+      - metabolites: !!omap
+          - h2o_c: 1
+          - h2o_e: -1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b0875 or s0001"
+      - subsystem: "Transport, Extracellular"
+    - !!omap
+      - id: "ICDHyr"
+      - name: "Isocitrate dehydrogenase (NADP)"
+      - metabolites: !!omap
+          - akg_c: 1
+          - co2_c: 1
+          - icit_c: -1
+          - nadp_c: -1
+          - nadph_c: 1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b1136"
+      - subsystem: "Citric Acid Cycle"
+    - !!omap
+      - id: "ICL"
+      - name: "Isocitrate lyase"
+      - metabolites: !!omap
+          - glx_c: 1
+          - icit_c: -1
+          - succ_c: 1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b4015"
+      - subsystem: "Anaplerotic reactions"
+    - !!omap
+      - id: "LDH_D"
+      - name: "D-lactate dehydrogenase"
+      - metabolites: !!omap
+          - h_c: 1
+          - lac__D_c: -1
+          - nad_c: -1
+          - nadh_c: 1
+          - pyr_c: 1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b2133 or b1380"
+      - subsystem: "Pyruvate Metabolism"
+    - !!omap
+      - id: "MALS"
+      - name: "Malate synthase"
+      - metabolites: !!omap
+          - accoa_c: -1
+          - coa_c: 1
+          - glx_c: -1
+          - h2o_c: -1
+          - h_c: 1
+          - mal__L_c: 1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b4014 or b2976"
+      - subsystem: "Anaplerotic reactions"
+    - !!omap
+      - id: "MALt2_2"
+      - name: "Malate transport via proton symport (2 H)"
+      - metabolites: !!omap
+          - h_c: 2
+          - h_e: -2
+          - mal__L_c: 1
+          - mal__L_e: -1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b3528"
+      - subsystem: "Transport, Extracellular"
+    - !!omap
+      - id: "MDH"
+      - name: "Malate dehydrogenase"
+      - metabolites: !!omap
+          - h_c: 1
+          - mal__L_c: -1
+          - nad_c: -1
+          - nadh_c: 1
+          - oaa_c: 1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b3236"
+      - subsystem: "Citric Acid Cycle"
+    - !!omap
+      - id: "ME1"
+      - name: "Malic enzyme (NAD)"
+      - metabolites: !!omap
+          - co2_c: 1
+          - mal__L_c: -1
+          - nad_c: -1
+          - nadh_c: 1
+          - pyr_c: 1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b1479"
+      - subsystem: "Anaplerotic reactions"
+    - !!omap
+      - id: "ME2"
+      - name: "Malic enzyme (NADP)"
+      - metabolites: !!omap
+          - co2_c: 1
+          - mal__L_c: -1
+          - nadp_c: -1
+          - nadph_c: 1
+          - pyr_c: 1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b2463"
+      - subsystem: "Anaplerotic reactions"
+    - !!omap
+      - id: "NADH16"
+      - name: "NADH dehydrogenase (ubiquinone-8 & 3 protons)"
+      - metabolites: !!omap
+          - h_c: -4
+          - h_e: 3
+          - nad_c: 1
+          - nadh_c: -1
+          - q8_c: -1
+          - q8h2_c: 1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b2276 and b2277 and b2278 and b2279 and b2280 and b2281 and b2282 and b2283 and b2284 and b2285 and b2286 and b2287 and b2288"
+      - subsystem: "Oxidative Phosphorylation"
+    - !!omap
+      - id: "NADTRHD"
+      - name: "NAD transhydrogenase"
+      - metabolites: !!omap
+          - nad_c: -1
+          - nadh_c: 1
+          - nadp_c: 1
+          - nadph_c: -1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b3962 or (b1602 and b1603)"
+      - subsystem: "Oxidative Phosphorylation"
+    - !!omap
+      - id: "NH4t"
+      - name: "Ammonia reversible transport"
+      - metabolites: !!omap
+          - nh4_c: 1
+          - nh4_e: -1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "s0001 or b0451"
+      - subsystem: "Inorganic Ion Transport and Metabolism"
+    - !!omap
+      - id: "O2t"
+      - name: "O2 transport  diffusion "
+      - metabolites: !!omap
+          - o2_c: 1
+          - o2_e: -1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "s0001"
+      - subsystem: "Transport, Extracellular"
+    - !!omap
+      - id: "PDH"
+      - name: "Pyruvate dehydrogenase"
+      - metabolites: !!omap
+          - accoa_c: 1
+          - co2_c: 1
+          - coa_c: -1
+          - nad_c: -1
+          - nadh_c: 1
+          - pyr_c: -1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b0114 and b0115 and b0116"
+      - subsystem: "Glycolysis/Gluconeogenesis"
+    - !!omap
+      - id: "PFK"
+      - name: "Phosphofructokinase"
+      - metabolites: !!omap
+          - adp_c: 1
+          - atp_c: -1
+          - f6p_c: -1
+          - fdp_c: 1
+          - h_c: 1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b3916 or b1723"
+      - subsystem: "Glycolysis/Gluconeogenesis"
+    - !!omap
+      - id: "PFL"
+      - name: "Pyruvate formate lyase"
+      - metabolites: !!omap
+          - accoa_c: 1
+          - coa_c: -1
+          - for_c: 1
+          - pyr_c: -1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "((b0902 and b0903) and b2579) or (b0902 and b0903) or (b0902 and b3114) or (b3951 and b3952)"
+      - subsystem: "Pyruvate Metabolism"
+    - !!omap
+      - id: "PGI"
+      - name: "Glucose-6-phosphate isomerase"
+      - metabolites: !!omap
+          - f6p_c: 1
+          - g6p_c: -1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b4025"
+      - subsystem: "Glycolysis/Gluconeogenesis"
+    - !!omap
+      - id: "PGK"
+      - name: "Phosphoglycerate kinase"
+      - metabolites: !!omap
+          - 13dpg_c: 1
+          - 3pg_c: -1
+          - adp_c: 1
+          - atp_c: -1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b2926"
+      - subsystem: "Glycolysis/Gluconeogenesis"
+    - !!omap
+      - id: "PGL"
+      - name: "6-phosphogluconolactonase"
+      - metabolites: !!omap
+          - 6pgc_c: 1
+          - 6pgl_c: -1
+          - h2o_c: -1
+          - h_c: 1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b0767"
+      - subsystem: "Pentose Phosphate Pathway"
+    - !!omap
+      - id: "PGM"
+      - name: "Phosphoglycerate mutase"
+      - metabolites: !!omap
+          - 2pg_c: -1
+          - 3pg_c: 1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b3612 or b4395 or b0755"
+      - subsystem: "Glycolysis/Gluconeogenesis"
+    - !!omap
+      - id: "PIt2r"
+      - name: "Phosphate reversible transport via symport"
+      - metabolites: !!omap
+          - h_c: 1
+          - h_e: -1
+          - pi_c: 1
+          - pi_e: -1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b2987 or b3493"
+      - subsystem: "Inorganic Ion Transport and Metabolism"
+    - !!omap
+      - id: "PPC"
+      - name: "Phosphoenolpyruvate carboxylase"
+      - metabolites: !!omap
+          - co2_c: -1
+          - h2o_c: -1
+          - h_c: 1
+          - oaa_c: 1
+          - pep_c: -1
+          - pi_c: 1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b3956"
+      - subsystem: "Anaplerotic reactions"
+    - !!omap
+      - id: "PPCK"
+      - name: "Phosphoenolpyruvate carboxykinase"
+      - metabolites: !!omap
+          - adp_c: 1
+          - atp_c: -1
+          - co2_c: 1
+          - oaa_c: -1
+          - pep_c: 1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b3403"
+      - subsystem: "Anaplerotic reactions"
+    - !!omap
+      - id: "PPS"
+      - name: "Phosphoenolpyruvate synthase"
+      - metabolites: !!omap
+          - amp_c: 1
+          - atp_c: -1
+          - h2o_c: -1
+          - h_c: 2
+          - pep_c: 1
+          - pi_c: 1
+          - pyr_c: -1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b1702"
+      - subsystem: "Glycolysis/Gluconeogenesis"
+    - !!omap
+      - id: "PTAr"
+      - name: "Phosphotransacetylase"
+      - metabolites: !!omap
+          - accoa_c: -1
+          - actp_c: 1
+          - coa_c: 1
+          - pi_c: -1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b2297 or b2458"
+      - subsystem: "Pyruvate Metabolism"
+    - !!omap
+      - id: "PYK"
+      - name: "Pyruvate kinase"
+      - metabolites: !!omap
+          - adp_c: -1
+          - atp_c: 1
+          - h_c: -1
+          - pep_c: -1
+          - pyr_c: 1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b1854 or b1676"
+      - subsystem: "Glycolysis/Gluconeogenesis"
+    - !!omap
+      - id: "PYRt2"
+      - name: "Pyruvate transport in via proton symport"
+      - metabolites: !!omap
+          - h_c: 1
+          - h_e: -1
+          - pyr_c: 1
+          - pyr_e: -1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - subsystem: "Transport, Extracellular"
+    - !!omap
+      - id: "RPE"
+      - name: "Ribulose 5-phosphate 3-epimerase"
+      - metabolites: !!omap
+          - ru5p__D_c: -1
+          - xu5p__D_c: 1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b3386 or b4301"
+      - subsystem: "Pentose Phosphate Pathway"
+    - !!omap
+      - id: "RPI"
+      - name: "Ribose-5-phosphate isomerase"
+      - metabolites: !!omap
+          - r5p_c: -1
+          - ru5p__D_c: 1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b2914 or b4090"
+      - subsystem: "Pentose Phosphate Pathway"
+    - !!omap
+      - id: "SUCCt2_2"
+      - name: "Succinate transport via proton symport (2 H)"
+      - metabolites: !!omap
+          - h_c: 2
+          - h_e: -2
+          - succ_c: 1
+          - succ_e: -1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b3528"
+      - subsystem: "Transport, Extracellular"
+    - !!omap
+      - id: "SUCCt3"
+      - name: "Succinate transport out via proton antiport"
+      - metabolites: !!omap
+          - h_c: 1
+          - h_e: -1
+          - succ_c: -1
+          - succ_e: 1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - subsystem: "Transport, Extracellular"
+    - !!omap
+      - id: "SUCDi"
+      - name: "Succinate dehydrogenase (irreversible)"
+      - metabolites: !!omap
+          - fum_c: 1
+          - q8_c: -1
+          - q8h2_c: 1
+          - succ_c: -1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b0721 and b0722 and b0723 and b0724"
+      - subsystem: "Oxidative Phosphorylation"
+    - !!omap
+      - id: "SUCOAS"
+      - name: "Succinyl-CoA synthetase (ADP-forming)"
+      - metabolites: !!omap
+          - adp_c: 1
+          - atp_c: -1
+          - coa_c: -1
+          - pi_c: 1
+          - succ_c: -1
+          - succoa_c: 1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b0728 and b0729"
+      - subsystem: "Citric Acid Cycle"
+    - !!omap
+      - id: "TALA"
+      - name: "Transaldolase"
+      - metabolites: !!omap
+          - e4p_c: 1
+          - f6p_c: 1
+          - g3p_c: -1
+          - s7p_c: -1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b2464 or b0008"
+      - subsystem: "Pentose Phosphate Pathway"
+    - !!omap
+      - id: "THD2"
+      - name: "NAD(P) transhydrogenase"
+      - metabolites: !!omap
+          - h_c: 2
+          - h_e: -2
+          - nad_c: 1
+          - nadh_c: -1
+          - nadp_c: -1
+          - nadph_c: 1
+      - lower_bound: 0
+      - upper_bound: 1000
+      - gene_reaction_rule: "b1602 and b1603"
+      - subsystem: "Oxidative Phosphorylation"
+    - !!omap
+      - id: "TKT1"
+      - name: "Transketolase"
+      - metabolites: !!omap
+          - g3p_c: 1
+          - r5p_c: -1
+          - s7p_c: 1
+          - xu5p__D_c: -1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b2935 or b2465"
+      - subsystem: "Pentose Phosphate Pathway"
+    - !!omap
+      - id: "TKT2"
+      - name: "Transketolase"
+      - metabolites: !!omap
+          - e4p_c: -1
+          - f6p_c: 1
+          - g3p_c: 1
+          - xu5p__D_c: -1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b2935 or b2465"
+      - subsystem: "Pentose Phosphate Pathway"
+    - !!omap
+      - id: "TPI"
+      - name: "Triose-phosphate isomerase"
+      - metabolites: !!omap
+          - dhap_c: -1
+          - g3p_c: 1
+      - lower_bound: -1000
+      - upper_bound: 1000
+      - gene_reaction_rule: "b3919"
+      - subsystem: "Glycolysis/Gluconeogenesis"
+- genes:
+    - !!omap
+      - id: "b0008"
+    - !!omap
+      - id: "b0114"
+    - !!omap
+      - id: "b0115"
+    - !!omap
+      - id: "b0116"
+    - !!omap
+      - id: "b0118"
+    - !!omap
+      - id: "b0351"
+    - !!omap
+      - id: "b0356"
+    - !!omap
+      - id: "b0451"
+    - !!omap
+      - id: "b0474"
+    - !!omap
+      - id: "b0485"
+    - !!omap
+      - id: "b0720"
+    - !!omap
+      - id: "b0721"
+    - !!omap
+      - id: "b0722"
+    - !!omap
+      - id: "b0723"
+    - !!omap
+      - id: "b0724"
+    - !!omap
+      - id: "b0726"
+    - !!omap
+      - id: "b0727"
+    - !!omap
+      - id: "b0728"
+    - !!omap
+      - id: "b0729"
+    - !!omap
+      - id: "b0733"
+    - !!omap
+      - id: "b0734"
+    - !!omap
+      - id: "b0755"
+    - !!omap
+      - id: "b0767"
+    - !!omap
+      - id: "b0809"
+    - !!omap
+      - id: "b0810"
+    - !!omap
+      - id: "b0811"
+    - !!omap
+      - id: "b0875"
+    - !!omap
+      - id: "b0902"
+    - !!omap
+      - id: "b0903"
+    - !!omap
+      - id: "b0904"
+    - !!omap
+      - id: "b0978"
+    - !!omap
+      - id: "b0979"
+    - !!omap
+      - id: "b1101"
+    - !!omap
+      - id: "b1136"
+    - !!omap
+      - id: "b1241"
+    - !!omap
+      - id: "b1276"
+    - !!omap
+      - id: "b1297"
+    - !!omap
+      - id: "b1380"
+    - !!omap
+      - id: "b1478"
+    - !!omap
+      - id: "b1479"
+    - !!omap
+      - id: "b1524"
+    - !!omap
+      - id: "b1602"
+    - !!omap
+      - id: "b1603"
+    - !!omap
+      - id: "b1611"
+    - !!omap
+      - id: "b1612"
+    - !!omap
+      - id: "b1621"
+    - !!omap
+      - id: "b1676"
+    - !!omap
+      - id: "b1702"
+    - !!omap
+      - id: "b1723"
+    - !!omap
+      - id: "b1761"
+    - !!omap
+      - id: "b1773"
+    - !!omap
+      - id: "b1779"
+    - !!omap
+      - id: "b1812"
+    - !!omap
+      - id: "b1817"
+    - !!omap
+      - id: "b1818"
+    - !!omap
+      - id: "b1819"
+    - !!omap
+      - id: "b1849"
+    - !!omap
+      - id: "b1852"
+    - !!omap
+      - id: "b1854"
+    - !!omap
+      - id: "b2029"
+    - !!omap
+      - id: "b2097"
+    - !!omap
+      - id: "b2133"
+    - !!omap
+      - id: "b2276"
+    - !!omap
+      - id: "b2277"
+    - !!omap
+      - id: "b2278"
+    - !!omap
+      - id: "b2279"
+    - !!omap
+      - id: "b2280"
+    - !!omap
+      - id: "b2281"
+    - !!omap
+      - id: "b2282"
+    - !!omap
+      - id: "b2283"
+    - !!omap
+      - id: "b2284"
+    - !!omap
+      - id: "b2285"
+    - !!omap
+      - id: "b2286"
+    - !!omap
+      - id: "b2287"
+    - !!omap
+      - id: "b2288"
+    - !!omap
+      - id: "b2296"
+    - !!omap
+      - id: "b2297"
+    - !!omap
+      - id: "b2415"
+    - !!omap
+      - id: "b2416"
+    - !!omap
+      - id: "b2417"
+    - !!omap
+      - id: "b2458"
+    - !!omap
+      - id: "b2463"
+    - !!omap
+      - id: "b2464"
+    - !!omap
+      - id: "b2465"
+    - !!omap
+      - id: "b2492"
+    - !!omap
+      - id: "b2579"
+    - !!omap
+      - id: "b2587"
+    - !!omap
+      - id: "b2779"
+    - !!omap
+      - id: "b2914"
+    - !!omap
+      - id: "b2925"
+    - !!omap
+      - id: "b2926"
+    - !!omap
+      - id: "b2935"
+    - !!omap
+      - id: "b2975"
+    - !!omap
+      - id: "b2976"
+    - !!omap
+      - id: "b2987"
+    - !!omap
+      - id: "b3114"
+    - !!omap
+      - id: "b3115"
+    - !!omap
+      - id: "b3212"
+    - !!omap
+      - id: "b3213"
+    - !!omap
+      - id: "b3236"
+    - !!omap
+      - id: "b3386"
+    - !!omap
+      - id: "b3403"
+    - !!omap
+      - id: "b3493"
+    - !!omap
+      - id: "b3528"
+    - !!omap
+      - id: "b3603"
+    - !!omap
+      - id: "b3612"
+    - !!omap
+      - id: "b3731"
+    - !!omap
+      - id: "b3732"
+    - !!omap
+      - id: "b3733"
+    - !!omap
+      - id: "b3734"
+    - !!omap
+      - id: "b3735"
+    - !!omap
+      - id: "b3736"
+    - !!omap
+      - id: "b3737"
+    - !!omap
+      - id: "b3738"
+    - !!omap
+      - id: "b3739"
+    - !!omap
+      - id: "b3870"
+    - !!omap
+      - id: "b3916"
+    - !!omap
+      - id: "b3919"
+    - !!omap
+      - id: "b3925"
+    - !!omap
+      - id: "b3951"
+    - !!omap
+      - id: "b3952"
+    - !!omap
+      - id: "b3956"
+    - !!omap
+      - id: "b3962"
+    - !!omap
+      - id: "b4014"
+    - !!omap
+      - id: "b4015"
+    - !!omap
+      - id: "b4025"
+    - !!omap
+      - id: "b4077"
+    - !!omap
+      - id: "b4090"
+    - !!omap
+      - id: "b4122"
+    - !!omap
+      - id: "b4151"
+    - !!omap
+      - id: "b4152"
+    - !!omap
+      - id: "b4153"
+    - !!omap
+      - id: "b4154"
+    - !!omap
+      - id: "b4232"
+    - !!omap
+      - id: "b4301"
+    - !!omap
+      - id: "b4395"
+    - !!omap
+      - id: "s0001"
+- compartments: !!omap
+    - c: "cytoplasm"
+    - e: "extracellular"
