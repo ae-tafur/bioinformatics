@@ -419,11 +419,11 @@ model.description = 'Small glycolysis-TCA-ethanol toy model for tutorial';
 model.version = '1.0';
 
 % Provide some basic checks / display summary
-fprintf('Model created: %d metabolites, %d reactions, %d genes\n', nMets, nRxns, numel(genes)); %[output:041e6840]
-fprintf('Objective set to reaction: %s (EX_etoh)\n', rxnIdx('EX_etoh')*0 + 'EX_etoh'); %[output:0faaee78]
+fprintf('Model created: %d metabolites, %d reactions, %d genes\n', nMets, nRxns, numel(genes));
+fprintf('Objective set to reaction: %s (EX_etoh)\n', rxnIdx('EX_etoh')*0 + 'EX_etoh');
 %%
 %[text] Ya que tenemos el modelo, veamos si encuentra alguna solución:
-sol = solveLP(model) %[output:629cac75]
+sol = solveLP(model)
 %%
 %[text] ## Parte 8: Método alternativo rápido con createModel()
 %[text] 
@@ -485,22 +485,10 @@ rxnFormulas = {
     'adp_c -> atp_c'
     };
 
-modelNew = createModel(rxns, rxnNames, rxnFormulas); %[output:115433bd]
+modelNew = createModel(rxns, rxnNames, rxnFormulas);
 
 %[appendix]{"version":"1.0"}
 %---
 %[metadata:view]
 %   data: {"layout":"inline"}
-%---
-%[output:041e6840]
-%   data: {"dataType":"text","outputData":{"text":"Model created: 22 metabolites, 19 reactions, 13 genes\n","truncated":false}}
-%---
-%[output:0faaee78]
-%   data: {"dataType":"text","outputData":{"text":"Objective set to reaction: EX_etoh (EX_etoh)\n","truncated":false}}
-%---
-%[output:629cac75]
-%   data: {"dataType":"textualVariable","outputData":{"header":"struct with fields:","name":"sol","value":"         x: [19×1 double]\n         f: 0\n      stat: 1\n       msg: 'Optimal solution found'\n    sPrice: [22×1 double]\n     rCost: [19×1 double]\n"}}
-%---
-%[output:115433bd]
-%   data: {"dataType":"text","outputData":{"text":"Adding the following Metabolites to the model:\n<->[c]\nPEP[c]\nacoa_m[c]\nadp_c[c]\nakg_m[c]\natp_c[c]\nbpg_c[c]\ncit_m[c]\nco2_c[c]\nco2_m[c]\netoh_c[c]\netoh_e[c]\nf16bp_c[c]\nf6p_c[c]\ng3p_c[c]\ng6p_c[c]\nglc_c[c]\nglc_e[c]\nmal_m[c]\nnad_c[c]\nnadh_c[c]\noaa_m[c]\npep_c[c]\npyr_c[c]\naddMultipleReactions: Adding the following reactions to the model:\nGLCtex\tglc_e[c] \t->\tglc_c[c] \nGLCpts\tPEP[c] + glc_c[c] \t->\tg6p_c[c] \nHEX\tatp_c[c] + glc_c[c] \t->\tadp_c[c] + g6p_c[c] \nPGI\t<->[c] + f6p_c[c] + g6p_c[c] \t<=>\t\nPFK\tatp_c[c] + f6p_c[c] \t->\tadp_c[c] + f16bp_c[c] \nALD\tf16bp_c[c] \t->\t2 g3p_c[c] \nGAPDH\tadp_c[c] + g3p_c[c] + nad_c[c] \t->\tatp_c[c] + bpg_c[c] + nadh_c[c] \nPGK\tbpg_c[c] \t->\tpep_c[c] \nENO\tpep_c[c] \t->\tpyr_c[c] \nPYK\tadp_c[c] + pep_c[c] \t->\tatp_c[c] + pyr_c[c] \nPDH\tpyr_c[c] \t->\tacoa_m[c] + co2_m[c] + nadh_c[c] \nCS\tacoa_m[c] + oaa_m[c] \t->\tcit_m[c] \nIDH\tcit_m[c] \t->\takg_m[c] + co2_m[c] + nadh_c[c] \nAKGDH\takg_m[c] \t->\tco2_m[c] + nadh_c[c] + oaa_m[c] \nMDH\t<->[c] + mal_m[c] + nadh_c[c] + oaa_m[c] \t<=>\t\nPDC\tpyr_c[c] \t->\tco2_c[c] + etoh_c[c] \nADH\tetoh_c[c] + nadh_c[c] \t->\tetoh_e[c] + nad_c[c] \nEX_etoh\tetoh_e[c] \t->\t\nATPSynth\tadp_c[c] \t->\tatp_c[c] \n","truncated":false}}
 %---
