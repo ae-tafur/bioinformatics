@@ -18,3 +18,9 @@
 
 # Keynote files
 *.key
+
+# Extrafiles
+extrafiles/
+
+# some results files
+/10-metabolic-models/exercises/results/
