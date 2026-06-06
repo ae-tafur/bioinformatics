@@ -1,3 +1,6 @@
+# 📄 Práctica 06: Docking Molecular con AutoDock4
+
+> 📖 **Módulo 7** — [Volver al README del módulo](../README.md) | Sección relacionada: [§9 Docking molecular](../README.md#9-docking-molecular)
 
 ## Docking Molecular
 

@@ -1,4 +1,6 @@
-# Predicción de estructura (_ab initio_)
+# 📄 Práctica 03: Predicción de estructura *ab initio* con AlphaFold2
+
+> 📖 **Módulo 7** — [Volver al README del módulo](../README.md) | Sección relacionada: [§7 Modelación ab initio y AlphaFold](../README.md#7-modelación-ab-initio-y-alphafold)
 
 ## Predicción de la estructura (_ab initio_)
 

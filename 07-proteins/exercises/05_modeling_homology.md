@@ -1,4 +1,6 @@
-# Modelación por Homología
+# 📄 Práctica 05: Modelación por Homología con HHpred y Modeller
+
+> 📖 **Módulo 7** — [Volver al README del módulo](../README.md) | Secciones relacionadas: [§6 Modelación por homología](../README.md#6-modelación-por-homología) · [§8 Evaluación de calidad](../README.md#8-evaluación-de-la-calidad-de-modelos-proteicos)
 
 El término "modelamiento por homología", también conocido como comparativo o basado en plantilla (template-based modelling, TBM), consiste en modelar la estructura en 3D de una proteína utilizando a manera de molde otra estructura ya determinada experimentalmente. La estructura de la proteína es de gran ayuda en el estudio de su función, su dinámica, las interacciones con los ligandos y con otras proteínas. ([Chalarcá-Velez, J; Gaviviria, D; 2021](https://doi.org/10.18257/raccefyn.1154))
 

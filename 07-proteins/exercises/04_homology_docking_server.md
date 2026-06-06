@@ -1,4 +1,6 @@
-# Modelado por homologia
+# 📄 Práctica 04: Modelado por homología y docking con servidores web
+
+> 📖 **Módulo 7** — [Volver al README del módulo](../README.md) | Secciones relacionadas: [§6 Modelación por homología](../README.md#6-modelación-por-homología) · [§9 Docking molecular](../README.md#9-docking-molecular)
 
 El modelado por homología es una técnica utilizada para predecir la estructura tridimensional de una proteína a partir de su secuencia de aminoácidos. Esta técnica se basa en la premisa de que las proteínas con secuencias similares suelen tener estructuras tridimensionales similares. A continuación, se describen los pasos para realizar el modelado por homología utilizando el servidor Swiss-Model:
 

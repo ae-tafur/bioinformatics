@@ -1,4 +1,6 @@
-# 📄 Práctica: Visualización de estructuras proteicas con UCSF Chimera v1.19
+# 📄 Práctica 02: Visualización de estructuras proteicas con UCSF Chimera v1.19
+
+> 📖 **Módulo 7** — [Volver al README del módulo](../README.md) | Secciones relacionadas: [§3 Niveles de estructura](../README.md#3-niveles-de-estructura-proteica) · [§4 Bases de datos](../README.md#4-bases-de-datos-de-proteínas)
 
 La práctica tiene como propósito que los estudiantes se familiaricen con el entorno de Chimera y sus principales herramientas, de manera que puedan reconocer la nomenclatura utilizada para seleccionar modelos, cadenas, residuos y átomos, así como visualizar y analizar los diferentes niveles estructurales de proteínas. Igualmente, se busca que sean capaces de identificar elementos clave de la estructura terciaria, como los puentes disulfuro, los puentes de hidrógeno y las modificaciones postraduccionales, y que exploren métodos de análisis estructural aplicados específicamente al estudio del complejo RBD-ACE2 del SARS-CoV-2.
 

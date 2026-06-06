@@ -1,4 +1,6 @@
-# 📄 Práctica: Bases de datos de proteínas y biología estructural
+# 📄 Práctica 01: Bases de datos de proteínas y biología estructural
+
+> 📖 **Módulo 7** — [Volver al README del módulo](../README.md) | Secciones relacionadas: [§4 Bases de datos](../README.md#4-bases-de-datos-de-proteínas) · [§5 Alineamiento](../README.md#5-alineamiento-de-secuencias-proteicas)
 
 Esta practica tiene como objetivo explorar las principales bases de datos de proteínas, tanto de secuencias como de estructuras, y comprender cómo se interrelacionan. A través de ejercicios prácticos, los estudiantes aprenderán a navegar y extraer información relevante para el estudio de proteínas.
 
