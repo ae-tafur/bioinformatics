@@ -175,9 +175,9 @@ def smith_waterman(seq1, seq2, match=1, mismatch=-1, gap=-2):
 
 if __name__ == "__main__":
 
-    # Same sequences used in the README examples
-    seq1 = "GCATG"
-    seq2 = "GATTG"
+    # Single pair of sequences, used to compare both alignment methods
+    seq1 = "ATGCGTACGTTAGCAATCG"
+    seq2 = "ATGCGTACGCTAGCAATCA"
 
     MATCH    =  1
     MISMATCH = -1
@@ -208,7 +208,12 @@ if __name__ == "__main__":
         else:
             match_line += "."
     print(f"  {match_line}")
-    print(f"\nScore: {score}\n")
+
+    # Calculate identity
+    matches = sum(1 for a, b in zip(aln1, aln2) if a == b)
+    identity = matches / len(aln1) * 100
+    print(f"\nScore: {score}")
+    print(f"Identity: {matches}/{len(aln1)} ({identity:.1f}%)\n")
 
     # --- Smith-Waterman (Local) ---
     print("=" * 55)
@@ -234,39 +239,10 @@ if __name__ == "__main__":
         else:
             match_line += "."
     print(f"  {match_line}")
-    print(f"\nScore: {score}\n")
-
-    # --- Bonus: try with longer biological sequences ---
-    print("=" * 55)
-    print("  BONUS: Longer sequences")
-    print("=" * 55)
-
-    gene_fragment1 = "ATGCGTACGTTAGCAATCG"
-    gene_fragment2 = "ATGCGTACGCTAGCAATCA"
-
-    print(f"\nSequences:")
-    print(f"  Seq1: {gene_fragment1}")
-    print(f"  Seq2: {gene_fragment2}\n")
-
-    aln1, aln2, score, _ = needleman_wunsch(gene_fragment1, gene_fragment2, MATCH, MISMATCH, GAP)
-
-    print("Global alignment:")
-    print(f"  {aln1}")
-    print(f"  {aln2}")
-    match_line = ""
-    for a, b in zip(aln1, aln2):
-        if a == b:
-            match_line += "*"
-        elif a == "-" or b == "-":
-            match_line += " "
-        else:
-            match_line += "."
-    print(f"  {match_line}")
-
-    # Calculate identity
-    matches = sum(1 for a, b in zip(aln1, aln2) if a == b)
-    identity = matches / len(aln1) * 100
     print(f"\nScore: {score}")
-    print(f"Identity: {matches}/{len(aln1)} ({identity:.1f}%)")
-    print()
+
+    # Calculate identity over the aligned (local) region
+    matches = sum(1 for a, b in zip(aln1, aln2) if a == b)
+    identity = matches / len(aln1) * 100 if aln1 else 0.0
+    print(f"Identity: {matches}/{len(aln1)} ({identity:.1f}%)\n")
 
