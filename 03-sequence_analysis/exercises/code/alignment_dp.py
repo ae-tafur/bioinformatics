@@ -7,7 +7,15 @@ alignment algorithms from scratch, for educational purposes.
 
 Module 3 – Sequence Analysis
 Course: Bioinformatics Fundamentals
+
+Usage
+-----
+    python3 alignment_dp.py SEQ1 SEQ2 [--match M] [--mismatch X] [--gap G]
+
+If SEQ1 / SEQ2 are omitted, two default example sequences are used.
 """
+
+import argparse
 
 
 # ---------------------------------------------------------------------------
@@ -173,15 +181,37 @@ def smith_waterman(seq1, seq2, match=1, mismatch=-1, gap=-2):
 # Main: run both algorithms with example sequences
 # ---------------------------------------------------------------------------
 
+def parse_args():
+    """Parses command-line arguments for sequences and scoring parameters."""
+    parser = argparse.ArgumentParser(
+        description="Compare Needleman-Wunsch (global) and Smith-Waterman "
+                     "(local) alignment on a single pair of sequences."
+    )
+    parser.add_argument(
+        "seq1", nargs="?", default="ATGCGTACGTTAGCAATCG",
+        help="First sequence (default: %(default)s)",
+    )
+    parser.add_argument(
+        "seq2", nargs="?", default="ATGCGTACGCTAGCAATCA",
+        help="Second sequence (default: %(default)s)",
+    )
+    parser.add_argument("--match", type=int, default=1, help="Match score (default: 1)")
+    parser.add_argument("--mismatch", type=int, default=-1, help="Mismatch penalty (default: -1)")
+    parser.add_argument("--gap", type=int, default=-2, help="Gap penalty (default: -2)")
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
 
-    # Single pair of sequences, used to compare both alignment methods
-    seq1 = "ATGCGTACGTTAGCAATCG"
-    seq2 = "ATGCGTACGCTAGCAATCA"
+    args = parse_args()
 
-    MATCH    =  1
-    MISMATCH = -1
-    GAP      = -2
+    # Single pair of sequences, used to compare both alignment methods
+    seq1 = args.seq1.upper()
+    seq2 = args.seq2.upper()
+
+    MATCH    = args.match
+    MISMATCH = args.mismatch
+    GAP      = args.gap
 
     # --- Needleman-Wunsch (Global) ---
     print("=" * 55)
