@@ -4,7 +4,7 @@
 
 En microbiología, uno de los retos más comunes es identificar un microorganismo desconocido aislado de una muestra clínica, ambiental o industrial. Aunque las pruebas bioquímicas y la morfología aportan pistas, la identificación definitiva a menudo requiere comparar marcadores moleculares — en particular, el gen **16S rRNA** — contra secuencias de referencia depositadas en bases de datos públicas.
 
-En esta práctica, usted recibirá una **secuencia 16S rRNA desconocida** correspondiente a uno de tres escenarios reales. Su trabajo será:
+En esta práctica, usted recibirá una **secuencia 16S rRNA desconocida** (una entre un banco de **20 casos reales**) correspondiente a un escenario biológico distinto. Su trabajo será:
 
 1. **Buscar secuencias similares** usando BLAST en NCBI.
 2. **Seleccionar y descargar** secuencias de referencia de al menos **10 géneros/especies diferentes**.
@@ -41,37 +41,41 @@ Esta práctica integra conceptos de los Módulos [1](../../01-introduction/READM
 
 ## 🧫 Casos de estudio
 
-Esta práctica se organiza por **casos**. El profesor indicará cuál caso trabajar. Cada caso presenta un escenario real con una secuencia 16S rRNA desconocida y un contexto biológico diferente.
+Esta práctica se organiza por **casos numerados (01 a 20)**. El profesor asignará uno o más números de caso (a cada estudiante o grupo). Cada caso es una secuencia 16S rRNA real de un aislado bacteriano, con su propio contexto biológico y ambiente de origen.
 
 > [!IMPORTANT]
-> Todas las secuencias se encuentran en el archivo [`data/unknown_seqs.fasta`](data/unknown_seqs.fasta). Descargue o copie **únicamente** la secuencia del caso asignado.
+> Todas las secuencias se encuentran en el archivo [`data/unknown_seqs.fasta`](data/unknown_seqs.fasta), con encabezados genéricos `>unknown_bacterium_01` … `>unknown_bacterium_20`. **No busque el nombre de la especie antes de hacer el ejercicio** — la identidad se descubre mediante BLAST y el árbol filogenético, no leyendo el archivo.
 
-### Caso A — Aislado clínico (bacilo Gram negativo)
+### Tabla de casos y contexto biológico
 
-**Contexto:** En el laboratorio de microbiología clínica de un hospital se aisló una bacteria de un hemocultivo. La tinción de Gram mostró **bacilos Gram negativos** y las pruebas bioquímicas iniciales indican fermentación de lactosa. Se realizó la secuenciación parcial del gen 16S rRNA para confirmar la identidad.
-
-- **Secuencia:** `>16S ribosomal RNA gene, partial sequence, unknown clinical bacterium` en `data/unknown_seqs.fasta`
-- **Pistas:** Gram negativa, bacilo, fermentadora de lactosa, origen clínico.
-- **Familia probable:** Enterobacteriaceae.
-
-### Caso B — Aislado ambiental de corteza de árbol (bacilo Gram negativo)
-
-**Contexto:** Durante un muestreo de biodiversidad en un bosque tropical, se aisló una bacteria de la corteza de un árbol de bosques del norte de Europa. La morfología muestra **bacilos Gram negativos**, no fermentadores. Se sospecha de un organismo asociado a la rizósfera.
-
-- **Secuencia:** `>16S ribosomal RNA gene, partial sequence, unknown environment bacterium` en `data/unknown_seqs.fasta`
-- **Pistas:** Gram negativa, bacilo, no fermentadora, asociada a planta/suelo.
-- **Familias probables:** Rhizobiaceae, Bradyrhizobiaceae o Xanthomonadaceae.
-
-### Caso C — Actinobacterias del suelo (dos aislados)
-
-**Contexto:** En un proyecto de bioprospección, se aislaron dos colonias de aspecto pulverulento y olor terroso de muestras de suelo agrícola. La microscopía reveló filamentos ramificados compatibles con **actinobacterias**. Se sospecha que pertenecen al género *Streptomyces*, un grupo de enorme importancia biotecnológica por su producción de antibióticos.
-
-- **Secuencias:** `>16S ribosomal RNA gene, partial sequence, unknown soil bacterium_1` y `>...unknown soil bacterium_2` en `data/unknown_seqs.fasta`
-- **Pistas:** Gram positiva (alto contenido GC), filamentosa, olor terroso, suelo agrícola.
-- **Familia probable:** Streptomycetaceae.
+| Caso   | Ambiente / origen                  | Pistas fenotípicas (sin revelar la especie)                             |
+|:------:|:-----------------------------------|:------------------------------------------------------------------------|
+|   01   | Clínico (hemocultivo)              | Gram negativa, bacilo, fermentadora de lactosa, encapsulada             |
+|   02   | Clínico (hemocultivo)              | Gram negativa, bacilo, fermentadora de lactosa                          |
+|   03   | Ambiental (corteza de árbol)       | Gram negativa, bacilo, no fermentadora, oxidasa positiva                |
+|   04   | Suelo agrícola                     | Gram positiva (alto %GC), filamentosa, olor terroso                     |
+|   05   | Suelo agrícola (segundo aislado)   | Gram positiva (alto %GC), filamentosa, olor terroso                     |
+|   06   | Suelo                              | Gram positiva, bacilo, formadora de endosporas, aerobia                 |
+|   07   | Clínico / piel                     | Gram positiva, cocos en racimos, catalasa positiva                      |
+|   08   | Marino / clínico                   | Gram negativa, bacilo curvo, oxidasa positiva, halofílica               |
+|   09   | Clínico (pulmonar)                 | Ácido-alcohol resistente, bacilo, crecimiento muy lento                 |
+|   10   | Rizosfera / suelo                  | Gram negativa, bacilo, induce tumores en plantas                        |
+|   11   | Extremófilo                        | Gram positiva (pared atípica), cocos, resistente a radiación/desecación |
+|   12   | Extremófilo (fuente termal)        | Gram negativa, bacilo, termófilo extremo                                |
+|   13   | Intestinal / alimentos fermentados | Gram positiva, bacilo, productora de ácido láctico                      |
+|   14   | Clínico (mucosa gástrica)          | Gram negativa, bacilo helicoidal, microaerófila                         |
+|   15   | Clínico / alimentos                | Gram negativa, bacilo, no fermentadora de lactosa                       |
+|   16   | Suelo                              | Gram positiva, bacilo, formadora de endosporas, productora de enzimas   |
+|   17   | Suelo                              | Gram negativa, bacilo/cocoide, fijadora de nitrógeno de vida libre      |
+|   18   | Acuático                           | Cianobacteria, fotosintética, unicelular                                |
+|   19   | Intestinal / clínico               | Gram positiva, cocos en cadenas cortas                                  |
+|   20   | Marino / sedimento                 | Gram negativa, bacilo, reductora de metales                             |
 
 > [!NOTE]
-> En el Caso C se trabaja con **dos secuencias** del mismo ambiente. Parte del análisis será determinar si ambos aislados pertenecen a la misma especie o a especies diferentes dentro del mismo género.
+> **Casos pareados:** los casos **04 y 05** provienen del mismo ambiente (suelo agrícola) y podrían pertenecer al mismo género. Si el profesor le asigna ambos, parte del análisis será determinar si son la misma especie o especies diferentes dentro del mismo género (igual que los antiguos "Caso C1/C2").
+
+> [!TIP]
+> El procedimiento de esta guía (Partes 1–8) es **el mismo sin importar qué número de caso le toque** — solo cambia el número que use al extraer su secuencia (Parte 1, Paso 2) y las pistas fenotípicas de la tabla de arriba que anotará en su informe.
 
 ---
 
@@ -91,7 +95,7 @@ Las secuencias están disponibles en la carpeta `data/` de esta práctica:
         └── unknown_seqs.fasta  ← todas las secuencias problema
 ```
 
-Abra el archivo `data/unknown_seqs.fasta` en un editor de texto y copie **únicamente** la secuencia correspondiente a su caso asignado.
+Abra el archivo `data/unknown_seqs.fasta` en un editor de texto. Los encabezados son genéricos y numerados: `>unknown_bacterium_01` hasta `>unknown_bacterium_20`. Copie **únicamente** la secuencia correspondiente al número de caso asignado.
 
 #### Paso 2 — Crear un archivo individual para su caso
 
@@ -100,35 +104,37 @@ Cree un archivo FASTA separado para su secuencia problema. Puede hacerlo de dos 
 **Opción A — Manual:** copie la secuencia y péguela en un archivo nuevo. Guárdelo como:
 
 ```text
-caso_X_unknown.fasta
+caso_NN_unknown.fasta
 ```
 
-(donde `X` es A, B o C según su caso).
+(donde `NN` es el número de caso asignado, con dos dígitos, p. ej. `caso_07_unknown.fasta`).
 
-**Opción B — Desde terminal (Codespaces):**
+**Opción B — Desde terminal (Codespaces), procedimiento genérico para cualquier caso:**
 
 ```bash
 # Crear carpeta de trabajo
 mkdir -p phylo_analysis/data phylo_analysis/results
 cd phylo_analysis
 
-# Extraer solo la secuencia de su caso (ejemplo para Caso A):
-grep -A 100 "unknown clinical" ../data/unknown_seqs.fasta | sed '/^>16S.*unknown environment/,$d' > data/caso_A_unknown.fasta
+# Defina su número de caso (dos dígitos, ej: 01, 07, 15)
+CASO="07"
+
+# Extraer SOLO la secuencia de ese caso (funciona para cualquier número, 01-20)
+awk -v id="unknown_bacterium_${CASO}" '
+  BEGIN{found=0}
+  /^>/{ if (found) exit; found = ($0 ~ ">"id"$") }
+  found{print}
+' ../data/unknown_seqs.fasta > data/caso_${CASO}_unknown.fasta
 
 # Verificar
-head data/caso_A_unknown.fasta
+head data/caso_${CASO}_unknown.fasta
 ```
 
 > [!TIP]
-> El comando `grep -A 100` busca el encabezado que contiene la palabra clave y muestra las 100 líneas siguientes. El `sed '/^>16S.*unknown environment/,$d'` elimina todo desde la siguiente secuencia en adelante. Ajuste las palabras clave según su caso:
->
-> | Caso | Comando                                                                                                                                     |
-> |:-----|:--------------------------------------------------------------------------------------------------------------------------------------------|
-> | A    | `grep -A 100 "unknown clinical" ../data/unknown_seqs.fasta \| sed '/^>16S.*unknown environment/,$d' > data/caso_A_unknown.fasta`            |
-> | B    | `grep -A 100 "unknown environment" ../data/unknown_seqs.fasta \| sed '/^>16S.*unknown soil/,$d' > data/caso_B_unknown.fasta`                |
-> | C    | `grep -A 200 "unknown soil" ../data/unknown_seqs.fasta > data/caso_C_unknown.fasta`                                                         |
->
-> **Nota sobre el Caso C:** el `grep "unknown soil"` captura **ambas** secuencias (`bacterium_1` y `bacterium_2`) porque las dos contienen la palabra `soil`. Al usar `-A 200` se incluyen las líneas de secuencia de ambas. Como son las dos últimas del archivo, no se necesita `sed` para cortar.
+> Este comando `awk` es **genérico**: funciona igual para cualquiera de los 20 casos, solo cambiando la variable `CASO`. A diferencia de un `grep` por palabra clave (que podría capturar varias secuencias si comparten una misma palabra, como "suelo" o "clínico"), este método usa el **número exacto de caso** en el encabezado (`unknown_bacterium_07$`, anclado al final de línea), por lo que nunca mezcla secuencias de casos distintos.
+
+> [!NOTE]
+> **Casos pareados (04 y 05):** si su profesor le asignó ambos números (el mismo ambiente, ver tabla de casos), repita el comando dos veces (`CASO="04"` y luego `CASO="05"`) y trabaje con ambos archivos — o combínelos en uno solo con `cat data/caso_04_unknown.fasta data/caso_05_unknown.fasta > data/caso_04_05_unknown.fasta`.
 
 #### Paso 3 — Inspección rápida de la secuencia
 
@@ -136,10 +142,10 @@ Antes de hacer BLAST, observe su secuencia:
 
 ```bash
 # Longitud aproximada (en nucleótidos)
-grep -v "^>" data/caso_A_unknown.fasta | tr -d '\n' | wc -c
+grep -v "^>" data/caso_${CASO}_unknown.fasta | tr -d '\n' | wc -c
 
 # Primeros 200 caracteres
-grep -v "^>" data/caso_A_unknown.fasta | tr -d '\n' | head -c 200
+grep -v "^>" data/caso_${CASO}_unknown.fasta | tr -d '\n' | head -c 200
 echo ""
 ```
 
@@ -213,7 +219,7 @@ Use estos criterios empíricos para 16S rRNA:
 4. Basándose solo en BLAST, ¿a qué especie cree que pertenece su secuencia desconocida? ¿Con qué nivel de confianza?
 
 > [!TIP]
-> **Para el Caso C:** ejecute BLAST para **ambas** secuencias (C1 y C2) por separado. Compare los resultados: ¿ambas dan el mismo organismo como mejor hit? ¿O sugieren especies diferentes dentro del mismo género?
+> **Si le asignaron casos pareados (04 y 05):** ejecute BLAST para **ambas** secuencias por separado. Compare los resultados: ¿ambas dan el mismo organismo como mejor hit? ¿O sugieren especies diferentes dentro del mismo género?
 
 ---
 
@@ -225,18 +231,19 @@ Esta es la parte clave de la práctica. Un árbol filogenético es tan informati
 
 A partir de los resultados de BLAST, seleccione **al menos 10 secuencias de referencia** que cumplan:
 
-| Criterio                                                | Razón                                                                                  |
-|:--------------------------------------------------------|:---------------------------------------------------------------------------------------|
-| Al menos **3–4 géneros diferentes**                     | Para dar contexto filogenético amplio                                                  |
-| Al menos **2–3 especies del género más cercano**        | Para evaluar a qué especie se acerca más su muestra                                    |
-| Al menos **1 secuencia de un grupo externo (outgroup)** | Para enraizar el árbol (por ejemplo, un Firmicute si sus hits son Proteobacteria)      |
-| Preferir secuencias de **cepas tipo** (*type strain*)   | Son la referencia oficial de cada especie                                              |
+| Criterio                                                  | Razón                                                                                  |
+|:----------------------------------------------------------|:---------------------------------------------------------------------------------------|
+| Al menos **3–4 especies diferentes pero el mismo genero** | Para dar contexto filogenético amplio                                                  |
+| Al menos **2–3 especies del género más cercano**          | Para evaluar a qué especie se acerca más su muestra                                    |
+| Al menos **1 secuencia de un grupo externo (outgroup)**   | Para enraizar el árbol (por ejemplo, un Firmicute si sus hits son Proteobacteria)      |
+| Preferir secuencias de **cepas tipo** (*type strain*)     | Son la referencia oficial de cada especie                                              |
 
 > [!TIP]
-> **¿Qué es un outgroup?** Es una secuencia de un organismo que usted sabe que es más lejano que todos los demás en su análisis. Sirve para **enraizar** el árbol (definir qué dirección es "hacia el pasado"). Por ejemplo:
-> - Si trabaja con **Enterobacteriaceae** (Caso A) → un buen outgroup podría ser *Bacillus subtilis* o *Pseudomonas aeruginosa*.
-> - Si trabaja con **Rhizobiaceae** (Caso B) → un buen outgroup podría ser *Escherichia coli*.
-> - Si trabaja con **Streptomyces** (Caso C) → un buen outgroup podría ser *Bacillus subtilis* o *Mycobacterium tuberculosis*.
+> **¿Qué es un outgroup?** Es una secuencia de un organismo que usted sabe que es más lejano que todos los demás en su análisis. Sirve para **enraizar** el árbol (definir qué dirección es "hacia el pasado"). La elección depende del grupo de BLAST que obtenga para su caso:
+> - Si sus hits son **Enterobacteriaceae** (p. ej. casos 01, 02, 15) → un buen outgroup podría ser *Bacillus subtilis* o *Pseudomonas* sp.
+> - Si sus hits son **Rhizobiales / Proteobacteria asociadas a planta** (p. ej. caso 10) → un buen outgroup podría ser *Escherichia coli*.
+> - Si sus hits son **Actinobacterias / Streptomyces** (p. ej. casos 04, 05) → un buen outgroup podría ser *Bacillus subtilis* o *Mycobacterium tuberculosis*.
+> - Para los demás casos, elija un outgroup de un **filo o clase claramente distinta** a la de sus hits principales (p. ej. un Firmicute si sus hits son Proteobacteria, o viceversa).
 
 #### Paso 2 — Descargar las secuencias de referencia
 
@@ -313,8 +320,8 @@ Necesita un **único archivo FASTA** que contenga todas las secuencias de refere
 **Opción B — Desde terminal:**
 
 ```bash
-# Combinar todas las referencias y la secuencia desconocida
-cat data/all_references.fasta data/caso_A_unknown.fasta > data/16S_analysis.fasta
+# Combinar todas las referencias y la secuencia desconocida (use su CASO asignado)
+cat data/all_references.fasta data/caso_${CASO}_unknown.fasta > data/16S_analysis.fasta
 
 # Verificar el número total de secuencias
 grep -c "^>" data/16S_analysis.fasta
@@ -325,7 +332,7 @@ grep -c "^>" data/16S_analysis.fasta
 > - Cada secuencia tiene su encabezado (`>`) en una línea independiente.
 > - No hay líneas en blanco dentro de una secuencia.
 > - El archivo tiene al menos **11 secuencias** (10 referencias + 1 desconocida).
-> - Para el **Caso C**, incluya **ambas** secuencias desconocidas (C1 y C2), lo que da al menos **12 secuencias**.
+> - Si le asignaron **casos pareados (04 y 05)**, incluya **ambas** secuencias desconocidas, lo que da al menos **12 secuencias**.
 
 #### Paso 2 — Renombrar los encabezados (recomendado)
 
@@ -340,7 +347,7 @@ Después:
 ```
 
 > [!TIP]
-> Incluya siempre el **nombre del organismo** y el **accession** en el encabezado abreviado. Así puede rastrear cada secuencia si necesita verificar algo. Para la secuencia desconocida, use algo como `>UNKNOWN_CaseA`.
+> Incluya siempre el **nombre del organismo** y el **accession** en el encabezado abreviado. Así puede rastrear cada secuencia si necesita verificar algo. Para la secuencia desconocida, use algo como `>UNKNOWN_Caso07` (reemplace `07` por su número de caso).
 
 ---
 
@@ -467,7 +474,7 @@ Ejemplo de lectura de un árbol (esquemático):
   ┌──── E. coli cepa 1
   ├──── E. coli cepa 2
 ──┤ 95%
-  ├──── UNKNOWN_CaseA         ← ¿Se agrupa con E. coli? ¿Bootstrap alto?
+  ├──── UNKNOWN_Caso07        ← ¿Se agrupa con E. coli? ¿Bootstrap alto?
   │
   ├──── Salmonella enterica
   │ 88%
@@ -487,9 +494,9 @@ Responda las siguientes preguntas en su informe:
 5. **¿Hay alguna agrupación inesperada?** ¿Alguna especie que esperaba ver lejos aparece cerca, o viceversa?
 
 > [!TIP]
-> **Para el Caso C:** preste especial atención a la relación entre C1 y C2:
+> **Si le asignaron casos pareados (04 y 05):** preste especial atención a la relación entre ambos:
 > - ¿Se agrupan juntas en la misma rama?
-> - ¿Están más cerca entre sí que de cualquier referencia de *Streptomyces*?
+> - ¿Están más cerca entre sí que de cualquier referencia del mismo género?
 > - ¿Podrían ser la misma especie o son especies diferentes del mismo género?
 
 #### Paso 3 — Exportar el árbol
@@ -525,7 +532,7 @@ Prepare un informe breve (1–2 páginas) que incluya:
 
 | Sección                               | Contenido                                                                                           |
 |:--------------------------------------|:----------------------------------------------------------------------------------------------------|
-| **Caso asignado**                     | Indique cuál caso trabajó (A, B o C) y el contexto biológico                                        |
+| **Caso asignado**                     | Indique el número de caso (01-20) que trabajó y el contexto biológico (ver tabla de casos)          |
 | **Resultados de BLAST**               | Tabla con los 10 mejores hits (accession, organismo, % Identity, Query Cover, E-value)              |
 | **Identificación preliminar**         | ¿A qué organismo apuntan los resultados de BLAST? ¿Con qué confianza?                               |
 | **Tabla de secuencias de referencia** | Lista de las secuencias incluidas en el árbol (accession, organismo, rol)                           |
@@ -541,7 +548,7 @@ Prepare un informe breve (1–2 páginas) que incluya:
 2. ¿Por qué es importante incluir un **outgroup** en el árbol? ¿Qué pasaría si no lo incluyera?
 3. Si los primeros 10 hits de BLAST tienen entre 98.5% y 99.2% de identidad con **3 géneros diferentes**, ¿puede afirmar con certeza a qué género pertenece su secuencia? ¿Qué haría para resolver la ambigüedad?
 4. ¿Por qué el gen **16S rRNA** es útil pero **no suficiente** para distinguir entre todas las especies bacterianas? ¿Qué otros marcadores o aproximaciones complementarias existen? (Revise la [sección 1.4 del README del Módulo 4](../README.md)).
-5. **Para el Caso C:** si ambas secuencias (C1 y C2) se agrupan juntas pero lejos de cualquier especie descrita de *Streptomyces*, ¿qué podría significar esto desde el punto de vista taxonómico?
+5. **Si le asignaron casos pareados (04 y 05):** si ambas secuencias se agrupan juntas pero lejos de cualquier especie de referencia descrita, ¿qué podría significar esto desde el punto de vista taxonómico?
 6. ¿Qué representan los **valores de bootstrap** en cada nodo del árbol? ¿Un nodo con bootstrap de 45% es confiable?
 7. ¿Cómo podría afectar la **calidad del alineamiento** al resultado del árbol filogenético?
 
@@ -551,11 +558,11 @@ Prepare un informe breve (1–2 páginas) que incluya:
 
 Si terminó la práctica y quiere profundizar:
 
-- **Reto 1:** Descargue **20 secuencias** (en lugar de 10) de referencia, incluyendo más especies de la familia más cercana a su secuencia desconocida. Reconstruya el árbol y compare: ¿cambia la posición de su secuencia desconocida?
+- **Reto 1:** Descargue **20 secuencias de referencia** (en lugar de 10), incluyendo más especies de la familia más cercana a su secuencia desconocida. Reconstruya el árbol y compare: ¿cambia la posición de su secuencia desconocida? (Nota: esto es independiente del número de *caso* 01-20 que le asignaron — aquí se refiere a la cantidad de secuencias de referencia en el árbol).
 
 - **Reto 2:** Exporte el árbol en formato Newick y visualícelo en [**iTOL** (Interactive Tree of Life)](https://itol.embl.de/). Explore las opciones de visualización y coloreado.
 
-- **Reto 3 (Caso C):** Calcule la **distancia genética** (en MEGA: **Distance → Compute Pairwise Distances**) entre C1 y C2. Compare ese valor con la distancia entre especies conocidas de *Streptomyces* en su árbol. ¿Están C1 y C2 más cerca entre sí que entre dos especies conocidas?
+- **Reto 3 (casos pareados 04/05):** Calcule la **distancia genética** (en MEGA: **Distance → Compute Pairwise Distances**) entre las dos secuencias. Compare ese valor con la distancia entre especies de referencia conocidas en su árbol. ¿Están más cerca entre sí que entre dos especies conocidas?
 
 - **Reto 4:** Repita el BLAST usando la base de datos `nr/nt` en lugar de `16S ribosomal RNA sequences`. ¿Cambian los resultados? ¿Aparecen hits adicionales de organismos no cultivados (*uncultured bacterium*)?
 
