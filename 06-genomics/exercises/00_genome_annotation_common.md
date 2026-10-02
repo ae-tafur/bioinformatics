@@ -8,7 +8,7 @@
 > | [Práctica A — Galaxy](01_1_genome_annotation_galaxy.md)          | Galaxy Europe | Bakta, AMRFinderPlus, PlasmidFinder, IntegronFinder, ISEScan            |
 > | [Práctica B — Google Colab](01_2_genome_annotattion_colab.ipynb) | Google Colab  | Bakta, AMRFinderPlus, PlasmidFinder, **antiSMASH** (via conda) + Python |
 >
-> Los **Casos A y B** tienen enfoque clínico. El **Caso C** (*Streptomyces venezuelae*) y el **Caso D** (*Pseudomonas abieticivorans*) tienen enfoque biotecnológico/ambiental e incluyen **antiSMASH** como herramienta adicional.
+> Esta práctica reutiliza los **mismos 20 casos** (organismos) de los Módulos 4 (filogenética) y 5 (ensamblaje). Defina el mismo número de `CASO` (01–20) que trabajó antes. Algunos casos tienen grupo taxonómico disponible en AMRFinderPlus y/o son especialmente recomendados para **antiSMASH** (género productor de metabolitos secundarios) — esto se indica en la tabla de casos más abajo.
 
 ---
 
@@ -24,7 +24,14 @@ El proceso se divide en dos grandes etapas:
 > [!TIP]
 > Para repasar los conceptos de estructura génica, tipos de genes, algoritmos de predicción y bases de datos de anotación, lea las secciones **2, 3 y 4** del [README del Módulo 6](../README.md) antes de comenzar. Estos conceptos **no se repiten aquí**.
 
-En estas prácticas trabajará con **contigs ya ensamblados** — los mismos organismos usados en el Módulo 5. Si realizó las prácticas de ensamblaje, puede usar sus propios contigs; de lo contrario, los datos están disponibles en Zenodo (ver sección de casos más abajo).
+En estas prácticas trabajará con el **mismo organismo (caso)** que usó en los Módulos 4 y 5, pero el genoma de entrada **no es su propio ensamblaje** sino el **genoma de referencia de NCBI** usado para evaluar con QUAST en el Módulo 5. Esto es intencional:
+
+- Garantiza que **todos los estudiantes con el mismo caso anoten exactamente el mismo genoma**, sin importar la calidad de su propio ensamblaje — así las comparaciones entre compañeros y con la literatura son justas.
+- Permite comparar directamente los resultados de Bakta con la anotación curada de RefSeq/GenBank para el mismo genoma.
+- Evita que un ensamblaje fragmentado o de baja calidad (muchos contigs pequeños) complique la interpretación de genes de resistencia, plásmidos o BGC.
+
+> [!TIP]
+> Si ya ensambló sus propias lecturas en el Módulo 5 y quiere comparar su ensamblaje contra el de referencia, puede ejecutar esta práctica dos veces: una con `contigs_path` apuntando al genoma de referencia (por defecto) y otra apuntando a sus propios contigs (`GenomeAssembly/caso_XX_<tech>/results/assembly/contigs.fasta`). Esto es opcional y no se pide por defecto.
 
 ---
 
@@ -101,191 +108,50 @@ Google Colab es un entorno de notebooks Python en la nube de Google. La **Práct
 
 ## 🧫 Casos de estudio
 
-El profesor indicará cuál caso trabajar. Use los datos de **un solo organismo** para no consumir espacio innecesario.
-
----
-
-### 🔴 Caso A — *Staphylococcus aureus* MRSA
-
-**Contexto clínico:**
-
-> *"Methicillin-resistant Staphylococcus aureus (MRSA) is a major pathogen causing nosocomial infections, and the clinical manifestations of MRSA range from asymptomatic colonization of the nasal mucosa to soft tissue infection to fulminant invasive disease."*
-> — [Hikichi et al. 2019](https://journals.asm.org/doi/10.1128/mra.01212-19)
-
-En esta práctica se usan los contigs de la muestra **KUN1163** del estudio citado.
-
-|                                |                                                           |
-|:-------------------------------|:----------------------------------------------------------|
-| **Organismo**                  | *Staphylococcus aureus* MRSA, muestra KUN1163             |
-| **Tamaño esperado del genoma** | ~2.8 Mb                                                   |
-| **Contenido GC**               | ~33%                                                      |
-| **Gram**                       | Positiva — coco                                           |
-| **Importancia clínica**        | Infecciones nosocomiales; resistencia a meticilina (MRSA) |
+El profesor indicará cuál caso trabajar (**mismo número usado en los Módulos 4 y 5**). Use los datos de **un solo organismo** para no consumir espacio innecesario.
 
 > [!NOTE]
-> Para este caso, al ejecutar AMRFinderPlus, use el grupo taxonómico `Staphylococcus aureus`.
+> Para el contexto biológico/clínico/ambiental detallado de cada organismo, consulte la [guía del Módulo 5](../05_sequencing/exercises/00_genome_assembly_common.md#-casos-de-estudio) (misma numeración de casos). Aquí solo se listan los datos necesarios para la anotación: genoma de referencia, grupo taxonómico de AMRFinderPlus (si existe) y si antiSMASH es especialmente recomendado.
 
-<details>
-<summary>📥 Cargar contigs en Galaxy (haga clic para expandir)</summary>
-
-En Galaxy, haga clic en `Upload` → `Paste/Fetch data` y pegue el siguiente enlace:
-
-```
-https://zenodo.org/records/17252812/files/DRR187559_contigs.fasta
-```
-
-Haga clic en `Start` y espere a que el archivo esté en **verde** antes de continuar.
-
-</details>
-
-<details>
-<summary>💻 Descargar contigs desde terminal o Colab (haga clic para expandir)</summary>
-
-```bash
-mkdir -p annotation/caso_A/data && cd annotation/caso_A
-wget https://zenodo.org/records/17252812/files/DRR187559_contigs.fasta \
-     -O data/DRR187559_contigs.fasta
-echo "✅ Contigs Caso A descargados"
-```
-
-</details>
-
----
-
-### 🔵 Caso B — *Klebsiella pneumoniae* (aislados hospitalarios, Colombia)
-
-**Contexto clínico:**
-
-> *"Klebsiella pneumoniae is one of the most important nosocomial pathogens worldwide. In Colombia, K. pneumoniae has been identified as the second most frequent microbial etiologic agent of healthcare-associated infections. We found that the spread of carbapenem resistance was mediated by successful clones belonging to sequence types (ST) such as ST11, ST1082, and ST307."*
-> — [Medina et al. 2025](https://www.nature.com/articles/s44259-025-00127-x)
-
-En esta práctica se usan los contigs de la muestra **G20000754** del estudio citado.
-
-|                                |                                                                           |
-|:-------------------------------|:--------------------------------------------------------------------------|
-| **Organismo**                  | *Klebsiella pneumoniae*, muestra G20000754                                |
-| **Tamaño esperado del genoma** | ~5.5 Mb                                                                   |
-| **Contenido GC**               | ~57%                                                                      |
-| **Gram**                       | Negativa — bacilo                                                         |
-| **Importancia clínica**        | Infecciones asociadas a la atención sanitaria; resistencia a carbapenemes |
-
-> [!NOTE]
-> Para este caso, al ejecutar AMRFinderPlus, use el grupo taxonómico `Klebsiella pneumoniae`.
-
-<details>
-<summary>📥 Cargar contigs en Galaxy (haga clic para expandir)</summary>
-
-En Galaxy, haga clic en `Upload` → `Paste/Fetch data` y pegue el siguiente enlace:
-
-```
-https://zenodo.org/records/17252812/files/ERR14828471_contigs.fasta
-```
-
-Haga clic en `Start` y espere a que el archivo esté en **verde** antes de continuar.
-
-</details>
-
-<details>
-<summary>💻 Descargar contigs desde terminal o Colab (haga clic para expandir)</summary>
-
-```bash
-mkdir -p annotation/caso_B/data && cd annotation/caso_B
-wget https://zenodo.org/records/17252812/files/ERR14828471_contigs.fasta \
-     -O data/ERR14828471_contigs.fasta
-echo "✅ Contigs Caso B descargados"
-```
-
-</details>
-
----
-
-### 🟢 Caso C — *Streptomyces venezuelae* (actinobacteria de importancia biotecnológica)
-
-**Contexto biotecnológico:**
-
-> *Streptomyces venezuelae* ATCC 10712 es una actinobacteria Gram positiva del suelo, productora natural del antibiótico **cloranfenicol** y de numerosos compuestos bioactivos. Es uno de los organismos modelo más estudiados para la biosíntesis de productos naturales, sporulación y regulación génica en bacterias filamentosas.
-> — [Pullan,S.T. et al. 2011](https://doi.org/10.1186/1471-2164-12-175)
-> 
-A diferencia de los casos A y B (patógenos clínicos), este caso tiene un enfoque **biotecnológico**: en lugar de buscar resistencias y virulencia, el análisis se orienta a **identificar clústeres de genes biosintéticos (BGC)** — las "fábricas moleculares" que producen antibióticos y otros metabolitos secundarios de valor industrial y farmacéutico.
-
-|                                       |                                                                        |
-|:--------------------------------------|:-----------------------------------------------------------------------|
-| **Organismo**                         | *Streptomyces venezuelae* ATCC 10712                                   |
-| **Accesión del genoma de referencia** | GCF_000253235.1                                                        |
-| **Tamaño del genoma**                 | ~8.2 Mb                                                                |
-| **Contenido GC**                      | ~72%                                                                   |
-| **Gram**                              | Positiva — filamentosa                                                 |
-| **Importancia**                       | Bioproducción de antibióticos, productos naturales, biología sintética |
-
-> [!NOTE]
-> En este caso se usa directamente el **genoma de referencia completo** (GCF_000253235.1) en lugar de contigs ensamblados, ya que *S. venezuelae* ATCC 10712 tiene un genoma terminado y bien anotado — ideal para observar la diferencia entre una anotación automatizada y la anotación curada en RefSeq.
->
-> Para AMRFinderPlus no existe un grupo taxonómico específico para *Streptomyces* — use la búsqueda genérica sin especificar organismo.
+| Caso | Especie                             | Tamaño genoma  | Referencia (anotación)   | Grupo AMRFinderPlus          | antiSMASH recomendado   |
+|:----:|:------------------------------------|:---------------|:-------------------------|:-----------------------------|:-----------------------:|
+|  01  | *Klebsiella pneumoniae*             | ~5.5 Mb        | GCF_061393185.1          | `Klebsiella_pneumoniae`      |            —            |
+|  02  | *Escherichia coli*                  | ~5.0 Mb        | GCF_030285565.1 ⚠️       | `Escherichia`                |            —            |
+|  03  | *Pseudomonas abieticivorans*        | ~6.7 Mb        | GCF_023509015.1          | `Pseudomonas_aeruginosa`     |            ✅            |
+|  04  | *Streptomyces venezuelae*           | ~8.2 Mb        | GCA_050632295.1          | — (sin grupo)                |            ✅            |
+|  05  | *Streptomyces coelicolor*           | ~8.7 Mb        | GCF_047824265.1          | — (sin grupo)                |            ✅            |
+|  06  | *Bacillus subtilis*                 | ~4.2 Mb        | GCF_982518465.1          | — (sin grupo)                |            ✅            |
+|  07  | *Staphylococcus aureus* (MRSA)      | ~2.8 Mb        | GCF_982303505.1          | `Staphylococcus_aureus`      |            —            |
+|  08  | *Vibrio cholerae*                   | ~4.0 Mb        | GCF_055797365.1          | `Vibrio_cholerae`            |            —            |
+|  09  | *Mycobacterium tuberculosis*        | ~4.4 Mb        | GCF_061392705.1          | `Mycobacterium_tuberculosis` |            —            |
+|  10  | *Agrobacterium tumefaciens*         | ~5.6 Mb        | GCA_047731285.1          | — (sin grupo)                |            —            |
+|  11  | *Deinococcus radiodurans*           | ~3.3 Mb        | GCF_045277105.1          | — (sin grupo)                |            —            |
+|  12  | *Thermus thermophilus*              | ~2.1 Mb        | GCF_059705435.1          | — (sin grupo)                |            —            |
+|  13  | *Lactobacillus acidophilus*         | ~2.0 Mb        | GCF_988235355.1          | — (sin grupo)                |            —            |
+|  14  | *Helicobacter pylori*               | ~1.6 Mb        | GCA_059997335.1          | — (sin grupo)                |            —            |
+|  15  | *Salmonella enterica*               | ~4.8 Mb        | GCF_061253545.1          | `Salmonella`                 |            —            |
+|  16  | *Bacillus licheniformis*            | ~4.3 Mb        | GCA_055397075.1          | — (sin grupo)                |            —            |
+|  17  | *Paenibacillus polymyxa*            | ~5.8 Mb        | GCF_056645015.1          | — (sin grupo)                |            ✅            |
+|  18  | *Synechocystis* sp.                 | ~3.6 Mb        | GCA_987480225.1          | — (sin grupo)                |            —            |
+|  19  | *Enterococcus faecalis*             | ~3.0 Mb        | GCA_061255735.1          | `Enterococcus_faecalis`      |            —            |
+|  20  | *Shewanella oneidensis*             | ~4.9 Mb        | GCF_000146165.2          | — (sin grupo)                |            —            |
 
 > [!IMPORTANT]
-> **La herramienta adicional clave para este caso es antiSMASH**, que predice Clústeres de Genes Biosintéticos (BGC). antiSMASH está disponible en la **Práctica B (Google Colab)**. En la Práctica A (Galaxy), se puede usar el servidor web antiSMASH directamente.
-
-<details>
-<summary>📥 Cargar genoma en Galaxy (haga clic para expandir)</summary>
-
-En Galaxy, haga clic en `Upload` → `Paste/Fetch data` y pegue el siguiente enlace:
-
-```
-https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/253/235/GCF_000253235.1_ASM25323v1/GCF_000253235.1_ASM25323v1_genomic.fna.gz
-```
-
-Haga clic en `Start`. Galaxy descomprimirá el archivo automáticamente.
-
-</details>
-
-<details>
-<summary>💻 Descargar genoma desde terminal o Colab (haga clic para expandir)</summary>
-
-```bash
-mkdir -p annotation/caso_C/data && cd annotation/caso_C
-wget "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/253/235/GCF_000253235.1_ASM25323v1/GCF_000253235.1_ASM25323v1_genomic.fna.gz" \ 
-     -O data/GCF_000253235.1_genomic.fna.gz
-gunzip data/GCF_000253235.1_genomic.fna.gz
-echo "✅ Genoma Caso C descargado: $(grep -c '>' GCF_000253235.1_genomic.fna) secuencias"
-```
-
-</details>
-
----
-
-### 🟣 Caso D — *Pseudomonas abieticivorans* (bacteria degradadora de diterpenos del suelo)
-
-**Contexto ambiental y biotecnológico:**
-
-> *"Pseudomonas abieticivorans* is a soil bacterium with the remarkable ability to degrade abietic acid and other diterpenoid resin acids — major components of conifer forest litter and paper-mill effluents. Its genome encodes an extensive repertoire for aromatic and terpenoid compound catabolism, positioning it as a promising candidate for bioremediation and biotransformation applications."*
-> — [Ristinmaa, A.S. et al. et al. 2023, *Nature Communications*](https://doi.org/10.1038/s41467-023-43867-y)
-
-A diferencia de los casos A y B (patógenos clínicos) y del Caso C (*Streptomyces*), este caso tiene un enfoque **ambiental y de biorremediación**: el análisis se orienta a identificar rutas de degradación de compuestos aromáticos y diterpenos, y a explorar el potencial biotecnológico del organismo.
-
-|                                       |                                                          |
-|:--------------------------------------|:---------------------------------------------------------|
-| **Organismo**                         | *Pseudomonas abieticivorans*                             |
-| **Accesión del genoma de referencia** | GCF_023509015.1                                          |
-| **Tamaño del genoma**                 | ~6.7 Mb (cromosoma único, genoma completo)               |
-| **Contenido GC**                      | ~63%                                                     |
-| **Gram**                              | Negativa — bacilo                                        |
-| **Importancia**                       | Biorremediación, degradación de diterpenos, biocatálisis |
-
-> [!NOTE]
-> Al igual que en el Caso C, se usa el **genoma de referencia completo** (GCF_023509015.1) — un cromosoma único sin gaps. Esto permite observar la diferencia en calidad de anotación entre un genoma *finished* y un borrador fragmentado.
+> **⚠️ Caso 02 — nota especial:** en el Módulo 5 este caso usó **dos genomas de referencia distintos** (uno por bloque Illumina/Nanopore, porque las lecturas provienen de cepas diferentes — ver guía del Módulo 5). Para anotación se usa un **único** genoma: `GCF_030285565.1` (genoma completo, cepa C51), por ser el ensamblaje *finished* (cromosoma cerrado) y dar una anotación más limpia que el borrador de 74 contigs del otro genoma.
 >
-> Para AMRFinderPlus, use el grupo taxonómico `Pseudomonas aeruginosa` como el más cercano disponible.
-
-> [!TIP]
-> **antiSMASH también es relevante para este caso.** Aunque *Pseudomonas* es menos conocido que *Streptomyces* por producción de metabolitos secundarios, los genomas de *P. abieticivorans* contienen BGC para sideróforos, lipopéptidos y otros compuestos bioactivos. Úselo en la **Práctica B (Colab)** o en el servidor web.
+> **Casos sin grupo taxonómico en AMRFinderPlus:** igual se ejecuta la herramienta, solo que sin el flag `--organism` (búsqueda genérica por homología, sin la curación adicional específica de especie). Esto no impide detectar genes de resistencia, solo reduce la resolución de algunas reglas específicas de la especie.
+>
+> **antiSMASH recomendado (✅):** son géneros con historial conocido de producción de metabolitos secundarios (antibióticos, sideróforos, lipopéptidos). **Puede ejecutar antiSMASH en cualquier caso** — el paso 9 del notebook no está restringido — pero en los casos marcados es más probable encontrar BGC interesantes para las preguntas de reflexión.
 
 <details>
 <summary>📥 Cargar genoma en Galaxy (haga clic para expandir)</summary>
 
-En Galaxy, haga clic en `Upload` → `Paste/Fetch data` y pegue el siguiente enlace:
+En Galaxy, haga clic en `Upload` → `Paste/Fetch data` y pegue la URL de referencia de su caso (columna "Referencia" de la tabla — use el [listado completo de URLs de la guía del Módulo 5](../05_sequencing/exercises/00_genome_assembly_common.md) para construir la URL FTP, o pida la lista al profesor).
+
+Formato general de la URL FTP de NCBI:
 
 ```
-https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/023/509/015/GCF_023509015.1_ASM2350901v1/GCF_023509015.1_ASM2350901v1_genomic.fna.gz
+https://ftp.ncbi.nlm.nih.gov/genomes/all/<GCF_o_GCA>/<3-dig>/<3-dig>/<3-dig>/<accesion>_<nombre_ensamblaje>/<accesion>_<nombre_ensamblaje>_genomic.fna.gz
 ```
 
 Haga clic en `Start`. Galaxy descomprimirá el archivo automáticamente.
@@ -295,13 +161,14 @@ Haga clic en `Start`. Galaxy descomprimirá el archivo automáticamente.
 <details>
 <summary>💻 Descargar genoma desde terminal o Colab (haga clic para expandir)</summary>
 
+En la Práctica B (Colab), la descarga es automática: solo defina `CASO = "01"` (o el número asignado) en la celda de configuración y ejecute — el notebook ya tiene embebidas las 20 URLs de referencia. Para Galaxy o terminal manual:
+
 ```bash
-mkdir -p annotation/caso_D/data && cd annotation/caso_D
-wget "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/023/509/015/GCF_023509015.1_ASM2350901v1/GCF_023509015.1_ASM2350901v1_genomic.fna.gz" \
-     -O data/GCF_023509015.1_genomic.fna.gz
-gunzip data/GCF_023509015.1_genomic.fna.gz
-mv data/GCF_023509015.1_genomic.fna data/contigs.fasta
-echo "✅ Genoma Caso D descargado: $(grep -c '>' data/contigs.fasta) secuencias"
+mkdir -p annotation/caso_XX/data && cd annotation/caso_XX
+wget "<URL_de_referencia_de_su_caso>" -O data/ref_genomic.fna.gz
+gunzip data/ref_genomic.fna.gz
+mv data/ref_genomic.fna data/contigs.fasta
+echo "✅ Genoma descargado: $(grep -c '>' data/contigs.fasta) secuencias"
 ```
 
 </details>
@@ -365,9 +232,9 @@ Responda estas preguntas con base en el [README del Módulo 6](../README.md):
 4. ¿Qué es un gen de copia única conservado (*single-copy core gene*)? ¿Para qué se usa en evaluación de calidad?
 5. ¿Cuál es la diferencia entre un gen de resistencia en el cromosoma y uno en un plásmido? ¿Por qué importa clínicamente?
 6. ¿Qué es un integrón y por qué su detección es relevante en microbiología clínica?
-7. Para el caso asignado: con base en el contexto clínico/biotecnológico, ¿qué elementos esperaría encontrar?
-8. **Solo Caso C:** ¿Qué es un clúster de genes biosintéticos (BGC)? ¿Por qué *Streptomyces* es el género bacteriano más prolífico en producción de metabolitos secundarios?
-9. **Solo Caso C:** ¿Qué diferencia hay entre anotar un genoma completo (*finished*) y un borrador (*draft*) con muchos contigs?
+7. Para el caso asignado: consultando la guía del Módulo 5, ¿qué elementos esperaría encontrar (resistencias, plásmidos, BGC) dado su contexto clínico/biotecnológico/ambiental?
+8. **Si su caso tiene antiSMASH recomendado (✅ en la tabla):** ¿qué es un clúster de genes biosintéticos (BGC)? ¿Qué géneros bacterianos son conocidos por ser prolíficos productores de metabolitos secundarios?
+9. Todos los genomas de esta práctica son ensamblajes *finished* (completos) de NCBI. ¿Qué ventaja tiene esto frente a anotar un borrador (*draft*) con muchos contigs pequeños?
 
 ---
 
@@ -385,13 +252,8 @@ Néron, B., et al., 2022. IntegronFinder 2.0: identification and analysis of int
 
 Xie, Z., & Tang, H., 2017. ISEScan: automated identification of insertion sequence elements in prokaryotic genomes. *Bioinformatics* 33:3340–3347. [10.1093/bioinformatics/btx433](https://doi.org/10.1093/bioinformatics/btx433)
 
-Hikichi, M., et al., 2019. *Microbiology Resource Announcements* 8. [10.1128/mra.01212-19](https://doi.org/10.1128/mra.01212-19)
-
-Medina et al., 2025. *npj Antimicrobials and Resistance*. [10.1038/s44259-025-00127-x](https://doi.org/10.1038/s44259-025-00127-x)
-
-Pullan, S.T.. et al., et al., 2011. *BMC Genomics* 12. [10.1186/1471-2164-12-175](https://doi.org/10.1186/1471-2164-12-175)
-
-Ristinmaa, A.S. et al., et al., 2023. *Nature Communications* 14. [10.1038/s41467-023-43867-y](https://doi.org/10.1038/s41467-023-43867-y)
-
 Blin, K., et al., 2023. antiSMASH 7.0: new and improved predictions for detection, regulation and visualisation. *Nucleic Acids Research* 51:W46–W50. [10.1093/nar/gkad344](https://doi.org/10.1093/nar/gkad344)
+
+> [!NOTE]
+> Para las referencias bibliográficas específicas de cada organismo (artículo de origen de la cepa, contexto clínico/ambiental), consulte la bibliografía de la [guía del Módulo 5](../05_sequencing/exercises/00_genome_assembly_common.md).
 
