@@ -196,7 +196,7 @@ Así como en el Transmilenio existen múltiples rutas para llegar de un punto A 
 
 ---
 
-## 5. Ecuaciones diferenciales ordinarias (ODEs) para simular el metabolismo
+~~## 5. Ecuaciones diferenciales ordinarias (ODEs) para simular el metabolismo
 
 ### 5.1 ¿Qué son las ODEs en este contexto?
 
@@ -331,48 +331,52 @@ $$[E]_{1} = [E]_0 + \frac{d[E]}{dt}\bigg|_0 \times \Delta t = 0.0 + 0.0 \times 0
 | t (h)  | [G] (mmol/L)  | [P] (mmol/L) | [E] (mmol/L) |  v₁   |  v₂   |
 |:------:|:-------------:|:------------:|:------------:|:-----:|:-----:|
 |  0.0   |    10.000     |    0.000     |    0.000     | 2.381 | 0.000 |
-|  0.5   |     8.810     |    2.381     |    0.000     | 2.291 | 4.297 |
-|  1.0   |     7.665     |    0.537     |    2.149     | 2.185 | 3.302 |
-|  1.5   |     6.572     |    0.213     |    3.800     | 2.065 | 2.760 |
-|  2.0   |     5.539     |    0.139     |    5.180     | 1.929 | 2.545 |
-|  3.0   |     3.595     |    0.104     |    7.853     | 1.608 | 2.282 |
-|  4.0   |     1.864     |    0.090     |    9.970     | 1.201 | 2.121 |
-|  5.0   |     0.500     |    0.080     |    11.482    | 0.625 | 2.000 |
-|  6.0   |     0.032     |    0.030     |    12.710    | 0.140 | 1.429 |
-|  7.0   |     0.001     |    0.003     |    13.066    | 0.005 | 0.067 |
-|  8.0   |     0.000     |    0.000     |    13.070    | 0.000 | 0.000 |
+|  0.5   |     8.813     |    0.734     |    1.640     | 2.366 | 3.929 |
+|  1.0   |     7.635     |    1.047     |    3.683     | 2.346 | 4.198 |
+|  1.5   |     6.468     |    1.250     |    5.814     | 2.321 | 4.311 |
+|  2.0   |     5.316     |    1.383     |    7.985     | 2.285 | 4.368 |
+|  3.0   |     3.088     |    1.449     |    12.375    | 2.152 | 4.394 |
+|  4.0   |     1.103     |    1.081     |    16.714    | 1.720 | 4.219 |
+|  5.0   |     0.060     |    0.034     |    19.846    | 0.267 | 0.731 |
+|  6.0   |     0.000     |    0.000     |    19.999    | 0.002 | 0.006 |
+|  7.0   |     0.000     |    0.000     |    20.000    | 0.000 | 0.000 |
 
 > [!NOTE]
 > 📌 Lectura de la tabla:
-> - **t = 0 → 0.5 h:** `v₁ ≫ v₂` porque hay mucha glucosa pero aún no hay piruvato. El piruvato se acumula rápidamente hasta ~2.38 mmol/L.
-> - **t = 0.5 → 1.5 h:** Ahora `v₂` se dispara (piruvato disponible, alta concentración). El piruvato cae velozmente y el etanol empieza a acumularse.
-> - **t > 1.5 h:** El piruvato se estabiliza en un nivel bajo (~0.1 mmol/L): lo que produce R1 es casi igual a lo que consume R2. **Este es el estado cuasi-estacionario que FBA asume desde t = 0.**
-> - **t ≈ 8 h:** Toda la glucosa se agotó. El etanol final es ~13.07 mmol/L (el rendimiento no es exactamente 2:1 por las cinéticas de saturación a bajas concentraciones).
+> - **t = 0 → 0.5 h (transitorio):** en t = 0 solo funciona R1, porque aún no hay piruvato (`v₂ = 0`). En cuanto aparece, `v₂` crece rápido y el piruvato se acumula (~0.7 mmol/L a las 0.5 h).
+> - **t = 0.5 → 2 h:** `v₂` sigue aumentando hacia `2·v₁` (≈ 4.7) y el piruvato sube despacio (hasta ~1.4 mmol/L). El etanol se acumula casi linealmente.
+> - **t ≈ 2 → 3.5 h (cuasi-estado estacionario):** `[P]` se mantiene casi constante (~1.4 mmol/L) porque `2·v₁ ≈ v₂`, y la razón `v₂ / v₁` es ≈ 2. **Este es el régimen que el FBA asume desde t = 0**, con `S·v = 0`.
+> - **t ≈ 4 → 6 h:** la glucosa se agota, `v₁` cae y el piruvato restante se convierte en etanol.
+> - **t ≥ 7 h:** el etanol final es **20 mmol/L**. Como 2[G] + [P] + [E] se conserva, cada glucosa produce 2 etanoles, sin importar la cinética.
 
 **Representación gráfica de la dinámica:**
 
 ```text
 [mmol/L]
-  10 ┤
-     │  G ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░
-   8 ┤
-     │
-   6 ┤                         E  ░░░░░░░░░░░░░░░░▓▓▓▓▓▓▓▓▓▓▓▓
-     │
-   4 ┤
-     │
-   2 ┤          P ▲ (pico ~t=0.5h)
-     │              ╲_______________ ≈ 0.1 mmol/L (cuasi-estacionario)
-   0 ┤─────┬─────────┬─────────┬──────────┬─────────▶ t (h)
-     0    0.5       2.0       4.0        6.0       8.0
+  20 ┤                              E     E     E     E
+  18 ┤
+  16 ┤                        E
+  14 ┤
+  12 ┤                  E
+  10 ┤G
+   8 ┤      G     E
+   6 ┤            G
+   4 ┤      E           G
+   2 ┤      P     P     P     GP
+   0 ┤EP                            GP    GP    GP    GP
+     └┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────▶ t (h)
+      0     1     2     3     4     5     6     7     8
 
-  ▓▓ Glucosa [G] — decrece suavemente al inicio (alta saturación), luego se agota
-  ░░ Etanol  [E] — sigue a [G] con retraso; se acumula mientras hay glucosa
-     Piruvato [P] — pico transitorio al inicio, luego nivel bajo cuasi-estacionario
+  G  Glucosa — baja casi linealmente (enzima saturada) y se agota hacia las 5 h
+  E  Etanol  — sube de forma casi lineal hasta 20 mmol/L (10 G × 2)
+  P  Piruvato — sube a ~1.4, se mantiene (cuasi-estacionario) y cae a 0 al agotarse G
 ```
+> [!NOTE]
+> 📌 Lectura de la grafica:
+> la glucosa [G] baja casi linealmente mientras la enzima está saturada (G ≫ Km) y se agota hacia las 5 h. El etanol [E] sube hasta 20 mmol/L, que es 2 × la glucosa inicial. El piruvato [P] es un pool pequeño: sube hasta ~1.4 mmol/L, se mantiene casi constante (cuasi-estacionario) mientras 2·v₁ ≈ v₂, y cae a 0 cuando la glucosa se acaba.
 
 > [!TIP]
-> El piruvato acumulándose transitoriamente antes de ser consumido es un ejemplo clásico de **metabolito intermediario con dinámica no obvia**. Los sistemas cinéticos (ODEs) capturan este transitorio; FBA asume que [P] ya está en estado estacionario desde t = 0. Ambas aproximaciones son útiles: las ODEs para entender **cómo cambia** el sistema en el tiempo, y FBA para predecir el **estado final óptimo** a escala genómica sin necesidad de conocer los parámetros cinéticos de cada enzima.
+> El piruvato acumulándose transitoriamente antes de ser consumido es un ejemplo clásico de **metabolito intermediario con dinámica no obvia**. Los sistemas cinéticos (ODEs) capturan este transitorio; FBA asume que [P] ya está en estado estacionario desde t = 0. Ambas aproximaciones son útiles: las ODEs para entender **cómo cambia** el sistema en el tiempo, y FBA para predecir el **estado final óptimo** a escala genómica sin necesidad de conocer los parámetros cinéticos de cada enzima.~~
 
 ### 5.3 El problema de escalar: de 3 a 3.000 reacciones
 
